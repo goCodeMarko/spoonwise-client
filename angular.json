@@ -23,7 +23,11 @@
             "main": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
-            "assets": ["src/assets", "src/favicon.ico", "src/manifest.webmanifest"],
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              "src/manifest.webmanifest"
+            ],
             "styles": [
               "node_modules/chartist/dist/chartist.css",
               "src/styles.css",
@@ -110,7 +114,8 @@
               "browserTarget": "material:build:production"
             },
             "development": {
-              "browserTarget": "material:build:development"
+              "browserTarget": "material:build:development",
+              "hmr": true
             }
           }
         },
@@ -129,7 +134,11 @@
             "tsConfig": "tsconfig.spec.json",
             "scripts": ["node_modules/jquery/dist/jquery.min.js"],
             "styles": ["src/styles.css", "src/assets/styles/style.scss"],
-            "assets": ["src/assets", "src/favicon.ico", "src/manifest.webmanifest"]
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              "src/manifest.webmanifest"
+            ]
           }
         },
         "lint": {
