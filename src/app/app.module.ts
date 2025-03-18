@@ -35,8 +35,9 @@ import { ViewSnapshotModalComponent } from "./modals/view-snapshot-modal/view-sn
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { CameraModalComponent } from "./modals/camera-modal/camera-modal.component";
 import { ImagePreloadService } from "./shared/services/image-preload.service";
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import { ServiceWorkerModule } from "@angular/service-worker";
+import { environment } from "../environments/environment";
+import { BuyerModule } from "./buyer/buyer.module";
 // import { WebcamModule } from "ngx-webcam";
 
 @NgModule({
@@ -67,13 +68,14 @@ import { environment } from '../environments/environment';
     MatTooltipModule,
     TransactionModule,
     MatButtonToggleModule,
+    BuyerModule,
     // WebcamModule,
     RouterModule.forRoot(AppRoutes),
-    ServiceWorkerModule.register('ngsw-worker.js', {
+    ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: "registerWhenStable:30000",
     }),
   ],
   providers: [

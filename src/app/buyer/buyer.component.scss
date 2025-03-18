@@ -1,0 +1,48 @@
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fb5630;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 50px 20px 20px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+}
+
+.content {
+  margin-top: 10px;
+}
+
+.search-button {
+  height: 50px !important;
+}
+
+.icon-size {
+  font-size: 40px;
+}
+
+mat-icon {
+  font-size: 50px;
+  color: white;
+}
+
+.mat-icon-size {
+  width: 50px;
+  height: 50px;
+}
+
+button {
+  border-radius: 10px;
+  color: white;
+}
+
+button:disabled {
+  background-color: transparent !important;
+  color: transparent !important;
+}

@@ -1,0 +1,59 @@
+<h4>Search Filter</h4>
+
+<mat-nav-list>
+  <b> Store Rating</b>
+
+  <form [formGroup]="ratingForm" style="display: flex; justify-content: center">
+    <ngx-star-rating formControlName="rating" [id]="'rating'"></ngx-star-rating>
+  </form>
+  <div style="display: flex; justify-content: center">
+    <div style="display: ruby">
+      <ng-template #myTemplate> and Up</ng-template>
+      {{ ratingForm.value.rating }} Star
+      <div *ngIf="ratingForm.value.rating < 5">
+        <ng-container *ngTemplateOutlet="myTemplate"></ng-container>
+      </div>
+    </div>
+  </div>
+  <b>Category</b>
+  <form [formGroup]="categoriesFG">
+    <mat-nav-list>
+      <div
+        *ngFor="let category of this.categoriesFromLS"
+        style="margin-top: 3px"
+      >
+        <label>
+          <input type="checkbox" [formControlName]="category.id" />
+          {{ category.name }}
+        </label>
+      </div>
+    </mat-nav-list>
+  </form>
+
+  <b> Special Offers</b>
+  <mat-radio-group
+    aria-labelledby="example-radio-group-label"
+    class="example-radio-group"
+    [(ngModel)]="selectedOffer"
+  >
+    <mat-nav-list>
+      <mat-radio-button
+        class="example-radio-button"
+        *ngFor="let specialOffer of this.specialOffersFromLS"
+        [value]="specialOffer.id"
+        style="display: block; margin-top: 3px"
+      >
+        {{ specialOffer.name }}
+      </mat-radio-button>
+      <mat-radio-button
+        class="example-radio-button"
+        [value]=""
+        style="display: block; margin-top: 3px"
+      >
+        Show All
+      </mat-radio-button>
+    </mat-nav-list>
+  </mat-radio-group>
+
+  <button (click)="apply()" style="margin-top: 2em">Apply</button>
+</mat-nav-list>

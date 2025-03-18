@@ -1,0 +1,53 @@
+<swiper
+  [loop]="true"
+  [autoHeight]="true"
+  [allowTouchMove]="true"
+  [autoplay]="{ delay: 1000, disableOnInteraction: true }"
+  [pagination]="{ clickable: true }"
+  [navigation]="false"
+  class="custom-swiper"
+>
+  <ng-template
+    *ngFor="let src of images; let i = index"
+    data-swiper-autoplay="2000"
+    swiperSlide
+  >
+    <img [src]="src" alt="" class="swiper-image" />
+  </ng-template>
+</swiper>
+<div class="prod-bar">
+  <div class="price">
+    <b>{{ product.price | currency : "PHP" : "symbol" }}</b>
+  </div>
+  <div>
+    {{ product.name }}
+  </div>
+</div>
+
+<div class="prod-desc">
+  <div>
+    {{ product.description }}
+  </div>
+</div>
+
+<div class="gs-main-button-group">
+  <div class="gs-main-button-group-horizontal">
+    <ng-container>
+      <div class="ms-icon-container">
+        <button mat-icon-button>
+          <mat-icon style="font-size: x-large">question_answer</mat-icon>
+        </button>
+        <div class="ms-icon-text">Chat Now</div>
+      </div>
+    </ng-container>
+
+    <ng-container>
+      <div class="ms-icon-container">
+        <button mat-icon-button>
+          <mat-icon style="font-size: x-large">shopping_cart</mat-icon>
+        </button>
+        <div class="ms-icon-text">Add to Cart</div>
+      </div>
+    </ng-container>
+  </div>
+</div>

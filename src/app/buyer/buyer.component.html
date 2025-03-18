@@ -1,0 +1,111 @@
+<section class="sticky-header">
+  <ng-template #searchbar>
+    <div class="input-group search">
+      <input
+        type="search"
+        class="form-control"
+        placeholder="Search"
+        aria-label="Search"
+        aria-describedby="search-addon"
+        (keyup.enter)="search()"
+        [(ngModel)]="searchInput"
+      />
+
+      <button type="button" mat-flat-button style="background-color: #00c6c8">
+        <mat-icon style="font-size: x-large" (click)="search()"
+          >search</mat-icon
+        >
+      </button>
+    </div>
+
+    <div class="filters">
+      <button mat-icon-button class="mat-icon-size" (click)="openBottomSheet()">
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+    </div>
+  </ng-template>
+
+  <div *ngIf="routerOutletComponent != 'ProductListComponent'; else searchbar">
+    <div class="filters">
+      <button mat-icon-button class="mat-icon-size" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="cart">
+    <button mat-icon-button class="mat-icon-size">
+      <mat-icon
+        matBadge="10"
+        matBadgeSize="medium"
+        [matBadgeHidden]="false"
+        matBadgeColor="accent"
+        >shopping_basket</mat-icon
+      >
+    </button>
+  </div>
+  <div></div>
+</section>
+
+<div *ngIf="routerOutletComponent == 'ProductListComponent'">
+  <div *ngIf="!isMapLoading; else loading">
+    <app-map
+      [shops]="this.shops"
+      [subject]="subject"
+      [radius]="radius"
+    ></app-map>
+  </div>
+</div>
+
+<ng-template #loading>
+  <p>Loading data...</p>
+</ng-template>
+<section style="background-color: #00c6c8; color: white">
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      margin-left: 7px;
+      margin-right: 7px;
+    "
+  >
+    <div>
+      <mat-form-field appearance="outline" style="color: white">
+        <mat-select [formControl]="selectControl">
+          <mat-option value="latest">Latest</mat-option>
+          <mat-option value="nearest">Nearest</mat-option>
+          <mat-option value="cheapest">Cheapest</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <!-- put here -->
+
+      <button
+        [disabled]="this.meta.page === 1"
+        (click)="prev()"
+        mat-flat-button
+        style="background-color: #00c6c8; height: 100%"
+      >
+        <mat-icon style="font-size: x-large" (click)="search()"
+          >arrow_back_ios</mat-icon
+        >
+      </button>
+      {{ this.meta.page }} of {{ this.meta.pages }}
+      <button
+        [disabled]="this.meta.page === this.meta.pages"
+        (click)="next()"
+        mat-flat-button
+        style="background-color: #00c6c8; height: 100%"
+      >
+        <mat-icon style="font-size: x-large" (click)="search()"
+          >arrow_forward_ios</mat-icon
+        >
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <router-outlet (activate)="fromRouterOutlet($event)"></router-outlet>
+</section>

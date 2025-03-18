@@ -1,0 +1,39 @@
+<div class="container">
+  <ng-container *ngFor="let prod of products; let i = index">
+    <div class="card" (click)="viewProduct(prod._id)">
+      <img [src]="prod.images[0]" alt="Product Image" />
+      <div class="card-content">
+        <h5 class="line-clamp">
+          {{ prod.name }}
+        </h5>
+        <div style="display: flex; justify-content: space-between">
+          <p class="price-color">
+            {{ prod.price | currency : "PHP" : "symbol" }}
+          </p>
+          <p>~{{ prod.distance }}km</p>
+        </div>
+
+        <div
+          style="
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+          "
+        >
+          <ng-container *ngFor="let b of prod.specialOffers">
+            <small style="background-color: greenyellow; padding: 10px">{{
+              b.name
+            }}</small>
+          </ng-container>
+        </div>
+
+        <div style="position: absolute; top: 0px; right: 7px">
+          {{ prod.rating }}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

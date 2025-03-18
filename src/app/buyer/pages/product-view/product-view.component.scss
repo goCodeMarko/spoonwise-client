@@ -1,0 +1,102 @@
+.swiper-container {
+  width: 100%;
+  height: auto;
+  margin: 50px auto;
+}
+
+.swiper-slide {
+  background: #f1f1f1;
+  color: #000;
+  text-align: center;
+  line-height: auto;
+}
+
+/* Ensure the Swiper container takes the desired space */
+.custom-swiper {
+  width: 100%;
+  max-width: 800px; /* Adjust slider width */
+  height: auto; /* Set slider height */
+}
+
+/* Image styling for responsiveness and object-fit */
+.swiper-image {
+  width: 100%; /* Makes the image responsive */
+  height: 100%; /* Ensure it fills the slide */
+  object-fit: cover; /* Crop to fit the slide */
+  border-radius: 8px; /* Optional: Rounds corners */
+  margin-top: 2em;
+}
+
+.prod-bar {
+  color: black;
+  margin-left: 7px;
+  margin-right: 7px;
+  & .price {
+    color: #fb5630;
+    font-size: larger;
+    font-weight: bolder;
+  }
+}
+
+.prod-desc {
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+.gs-main-button-group {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed !important;
+  bottom: 0px;
+  left: 0px;
+  width: 100vw !important;
+  background-color: #00c6c8;
+  padding: 5px 5px 8px 5px;
+
+  .gs-main-button-group-horizontal {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 0.5em !important;
+    flex-direction: row !important;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+  }
+}
+
+.ms-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  min-height: 50px;
+  justify-content: flex-start;
+  line-height: 1em;
+  position: relative;
+
+  .mat-icon-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  button {
+    width: 100%;
+
+    mat-icon {
+      font-size: 40px !important;
+      text-align: center !important;
+      width: 100%;
+      color: white;
+    }
+  }
+
+  .ms-icon-text {
+    margin-top: 4px;
+    color: white;
+  }
+}
+@media (max-width: 355px) {
+  .ms-icon-container {
+    max-width: 60px;
+    min-width: 60px;
+  }
+}

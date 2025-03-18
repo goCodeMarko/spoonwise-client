@@ -4,7 +4,7 @@ import { SecurityGuard } from "./guards/security.guard";
 import { LoginComponent } from "./login/login.component";
 
 export const AppRoutes: Routes = [
-  { path: "", redirectTo: "login", pathMatch: "full" }, // Redirect root URL to login
+  // { path: "", redirectTo: "login", pathMatch: "full" }, // Redirect root URL to login
   {
     path: "login",
     component: LoginComponent,
@@ -20,6 +20,18 @@ export const AppRoutes: Routes = [
             (m) => m.TransactionModule
           ),
         canActivate: [SecurityGuard],
+      },
+    ],
+  },
+  {
+    path: "",
+    component: FullComponent,
+    children: [
+      {
+        path: "",
+        loadChildren: () =>
+          import("./buyer/buyer.module").then((m) => m.BuyerModule),
+        canActivate: [],
       },
     ],
   },

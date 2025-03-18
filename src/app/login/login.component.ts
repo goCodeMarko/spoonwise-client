@@ -87,16 +87,7 @@ export class LoginComponent implements OnInit {
             console.log("token has been set!");
 
             await this.getTransaction();
-            console.log("transaction id has been fetch!");
-
-            if (this.transactionId) {
-              this.auth.navigate(
-                "/app/transaction/cashout",
-                this.transactionId
-              );
-            } else {
-              this.auth.navigate("/app/transaction", "");
-            }
+            this.auth.navigate("/", "");
 
             console.log("User has been navigated!");
           } catch (error) {
