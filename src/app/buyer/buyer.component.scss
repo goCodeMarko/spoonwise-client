@@ -12,11 +12,11 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-  z-index: 999999;
+  z-index: 2;
 }
 
 .content {
-  margin-top: 10px;
+  margin-top: 3.5em;
 }
 
 .search-button {
@@ -45,4 +45,17 @@ button {
 button:disabled {
   background-color: transparent !important;
   color: transparent !important;
+}
+
+.custom-badge .mat-badge-content {
+  background-color: #4caf50; /* Green */
+  color: white; /* Text color */
+}
+
+.mat-icon-button .mat-icon {
+  line-height: 40px;
+}
+
+.shopping-cart {
+  text-align: center;
 }

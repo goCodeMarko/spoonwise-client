@@ -1,8 +1,62 @@
-import { Component, OnInit } from "@angular/core";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewContainerRef,
+  ViewEncapsulation,
+} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
+import {
+  BottomSheetProvider,
+  BottomSheetContent,
+} from "swipe-bottom-sheet/angular";
 import * as _ from "lodash";
+import { Store } from "@ngrx/store";
+import { Observable, Subject } from "rxjs";
+import {
+  addToCart,
+  removeFromCart,
+  updateCart,
+  clearCartError,
+} from "../../../shared/store/cart/cart.actions";
+import {
+  selectCartItems,
+  selectLineItemCount,
+  selectCartError,
+} from "../../../shared/store/cart/cart.selectors";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
+export interface LineItem {
+  checked?: boolean;
+  productId: string;
+  name: string;
+  qty: number;
+  orderQty: number;
+  images: string[];
+  expiryDate: string;
+  price: number;
+  description: string;
+  category: string[];
+  specialOffers: string[];
+}
+
+export interface Shop {
+  checked?: boolean;
+  shopId: string;
+  businessName: string;
+  coordinates: {
+    lat: number;
+    lon: number;
+  };
+  address1: string;
+  address2: string;
+}
+
+export interface CartItem {
+  shop: Shop;
+  lineItems: LineItem[];
+}
 interface IProduct {
   _id: string;
   shopId: string;
@@ -48,6 +102,7 @@ import SwiperCore, {
   Thumbs,
   Controller,
 } from "swiper";
+import { takeUntil } from "rxjs/operators";
 
 // install Swiper components
 SwiperCore.use([
@@ -66,21 +121,113 @@ SwiperCore.use([
   selector: "app-product-view",
   templateUrl: "./product-view.component.html",
   styleUrls: ["./product-view.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
-export class ProductViewComponent implements OnInit {
+export class ProductViewComponent implements OnInit, OnDestroy {
   product!: IProduct;
+  orderQty: number = 1;
   images = [];
   productId: string | null;
   productOnLoad = true;
+  public sendRequestBtnOnLoad = false;
+  output = "";
+  cartItems!: CartItem[];
+  cartItems$: Observable<CartItem[]>;
+  lineItemCount$: Observable<number>;
+  stateError$: Observable<any>;
+  private destroy$ = new Subject<void>();
 
-  constructor(private hrs: HttpRequestService, private route: ActivatedRoute) {
+  constructor(
+    private hrs: HttpRequestService,
+    private route: ActivatedRoute,
+    private sheet: BottomSheetProvider,
+    private vcRef: ViewContainerRef,
+    private store: Store,
+    private _snackBar: MatSnackBar
+  ) {
+    sheet.rootVcRef = vcRef;
     this.productId = this.route.snapshot.paramMap.get("id");
-    console.log(this.productId);
+
+    this.cartItems$ = this.store
+      .select(selectCartItems)
+      .pipe(takeUntil(this.destroy$));
+    this.lineItemCount$ = this.store
+      .select(selectLineItemCount)
+      .pipe(takeUntil(this.destroy$));
+    this.stateError$ = this.store
+      .select(selectCartError)
+      .pipe(takeUntil(this.destroy$));
   }
 
   ngOnInit(): void {
     this.getProduct();
+
+    this.store.subscribe((state) => {
+      console.log("///////////////////////////// Full State:", state);
+    });
+
+    this.cartItems$.subscribe((data) => {
+      this.cartItems = data;
+    });
+
+    this.lineItemCount$.subscribe((data) => {});
+
+    this.stateError$.subscribe((error) => {
+      if (error) {
+        if (
+          error.message ==
+          "Invalid order quantity. Ensure quantity is between 1 and 1."
+        ) {
+          console.log("---------------error", error.message);
+          this.product.qty = error.data.currentProductStock;
+          this.orderQty = error.data.currentProductStock;
+          this._snackBar.open(error.message, "", {
+            duration: 3000,
+            verticalPosition: "top",
+          });
+        }
+      }
+
+      this.store.dispatch(clearCartError());
+    });
   }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  addToCart() {
+    this.store.dispatch(
+      addToCart({
+        shop: { shopId: this.product.shop._id, ...this.product.shop },
+        lineItem: {
+          orderQty: this.orderQty,
+          productId: this.product._id,
+          qty: this.product.qty,
+          name: this.product.name,
+          images: this.product.images,
+          expiryDate: this.product.expiryDate,
+          price: this.product.price,
+          specialOffers: this.product.specialOffers,
+          description: this.product.description,
+          category: this.product.category,
+        },
+      })
+    );
+  }
+
+  removeItem(productId: string) {
+    this.store.dispatch(removeFromCart({ productId }));
+  }
+
+  updateCart(productId: string, orderQty: number) {
+    this.store.dispatch(updateCart({ productId, orderQty }));
+  }
+
+  // clearCart() {
+  //   this.store.dispatch(clearCart());
+  // }
 
   getProduct() {
     this.productOnLoad = true;
@@ -93,10 +240,40 @@ export class ProductViewComponent implements OnInit {
         if (res.success && _.has(res, "data")) {
           this.product = res.data;
           this.images = res.data.images;
+
+          this.productQtyInTheCart();
         } else {
         }
         this.productOnLoad = false;
       }
     );
+  }
+
+  private productQtyInTheCart() {
+    const shop = this.cartItems.find(
+      (shop) => shop.shop.shopId == this.product.shopId
+    );
+    if (shop) {
+      const product = shop.lineItems.find(
+        (lineItem) => lineItem.productId == this.product._id
+      );
+
+      if (product) this.orderQty = product.orderQty;
+    }
+  }
+
+  async openSheet<T>(content: BottomSheetContent<T>) {
+    this.output = "";
+
+    const value = await this.sheet.show(content, {
+      title: "",
+      stops: [3500, 500],
+    });
+
+    this.output = value;
+  }
+
+  onQtyChange(qty: any) {
+    this.orderQty = qty;
   }
 }

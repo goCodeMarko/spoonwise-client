@@ -2,6 +2,8 @@ import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import * as _ from "lodash";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { Observable } from "rxjs";
 
 interface params {
   skip: number;
@@ -27,7 +29,8 @@ export class ProductListComponent implements OnInit {
   constructor(
     private hrs: HttpRequestService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +48,10 @@ export class ProductListComponent implements OnInit {
       else delete this.queryParams.specialOffer;
 
       this.getProducts();
+    });
+
+    this.store.subscribe((state) => {
+      console.log("///////////////////////////// Full State:", state);
     });
   }
 

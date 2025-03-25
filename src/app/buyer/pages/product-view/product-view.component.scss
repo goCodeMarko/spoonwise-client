@@ -24,7 +24,6 @@
   height: 100%; /* Ensure it fills the slide */
   object-fit: cover; /* Crop to fit the slide */
   border-radius: 8px; /* Optional: Rounds corners */
-  margin-top: 2em;
 }
 
 .prod-bar {
@@ -99,4 +98,7 @@
     max-width: 60px;
     min-width: 60px;
   }
+}
+.swiper {
+  z-index: 0;
 }

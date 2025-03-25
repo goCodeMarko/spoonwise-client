@@ -1,53 +1,135 @@
-<swiper
-  [loop]="true"
-  [autoHeight]="true"
-  [allowTouchMove]="true"
-  [autoplay]="{ delay: 1000, disableOnInteraction: true }"
-  [pagination]="{ clickable: true }"
-  [navigation]="false"
-  class="custom-swiper"
->
-  <ng-template
-    *ngFor="let src of images; let i = index"
-    data-swiper-autoplay="2000"
-    swiperSlide
+<div *ngIf="!productOnLoad">
+  <swiper
+    [loop]="true"
+    [autoHeight]="true"
+    [allowTouchMove]="true"
+    [pagination]="{ clickable: true }"
+    [navigation]="false"
+    class="custom-swiper"
   >
-    <img [src]="src" alt="" class="swiper-image" />
+    <ng-template
+      *ngFor="let src of images; let i = index"
+      data-swiper-autoplay="2000"
+      swiperSlide
+    >
+      <img [src]="src" alt="" class="swiper-image" />
+    </ng-template>
+  </swiper>
+
+  <div>{{ output }}</div>
+  <div class="prod-bar">
+    <div class="price">
+      <b>{{ product.price | currency : "PHP" : "symbol" }}</b>
+    </div>
+    <div>
+      {{ product.name }}
+    </div>
+  </div>
+
+  <div class="prod-desc">
+    <div>
+      {{ product.description }}
+    </div>
+  </div>
+
+  <div class="gs-main-button-group">
+    <div class="gs-main-button-group-horizontal">
+      <ng-container>
+        <div class="ms-icon-container">
+          <button mat-icon-button>
+            <mat-icon style="font-size: x-large">question_answer</mat-icon>
+          </button>
+          <div class="ms-icon-text">Chat Now</div>
+        </div>
+      </ng-container>
+
+      <ng-container>
+        <div class="ms-icon-container">
+          <button mat-icon-button (click)="openSheet(mySheet)">
+            <mat-icon style="font-size: x-large">shopping_cart</mat-icon>
+          </button>
+          <div class="ms-icon-text">Add to Cart</div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-template #mySheet let-context>
+    <ul class="sheet-list">
+      <div style="justify-items: center; margin-bottom: 15px">
+        <div
+          style="
+            margin-top: 8px;
+            width: 40px;
+            height: 5px;
+            background-color: #7f7f7f1a;
+            border-radius: 20px;
+          "
+        ></div>
+      </div>
+
+      <div style="margin: 0px 20px 20px 20px">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+          <div>
+            <img [src]="images[0]" alt="Product Image" width="200px" />
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: flex-start;
+              align-items: flex-end;
+            "
+          >
+            <div>
+              <b
+                style="color: #fb5630; font-size: larger; font-weight: bolder"
+                >{{ product.price | currency : "PHP" : "symbol" }}</b
+              >
+              <p>Stock: {{ product.qty }}</p>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div style="display: flex; justify-content: space-between">
+          <div>Quantity</div>
+          <div>
+            <app-counter
+              [value]="orderQty"
+              [step]="1"
+              [min]="1"
+              [max]="product.qty"
+              [wrap]="false"
+              (onQtyChange)="onQtyChange($event)"
+            ></app-counter>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          background-color: #7f7f7f1a;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 30px 5vw;
+        "
+      >
+        <div style="width: 550px">
+          <button
+            (click)="addToCart()"
+            mat-flat-button
+            color="main-green"
+            class="btn-block fw-bold"
+          >
+            <ng-container *ngIf="!sendRequestBtnOnLoad; else loadupdate">
+              Add to Cart
+            </ng-container>
+            <ng-template #loadupdate>
+              <i class="fas fa-circle-notch fa-spin"></i>
+            </ng-template>
+          </button>
+        </div>
+      </div>
+    </ul>
   </ng-template>
-</swiper>
-<div class="prod-bar">
-  <div class="price">
-    <b>{{ product.price | currency : "PHP" : "symbol" }}</b>
-  </div>
-  <div>
-    {{ product.name }}
-  </div>
-</div>
-
-<div class="prod-desc">
-  <div>
-    {{ product.description }}
-  </div>
-</div>
-
-<div class="gs-main-button-group">
-  <div class="gs-main-button-group-horizontal">
-    <ng-container>
-      <div class="ms-icon-container">
-        <button mat-icon-button>
-          <mat-icon style="font-size: x-large">question_answer</mat-icon>
-        </button>
-        <div class="ms-icon-text">Chat Now</div>
-      </div>
-    </ng-container>
-
-    <ng-container>
-      <div class="ms-icon-container">
-        <button mat-icon-button>
-          <mat-icon style="font-size: x-large">shopping_cart</mat-icon>
-        </button>
-        <div class="ms-icon-text">Add to Cart</div>
-      </div>
-    </ng-container>
-  </div>
 </div>

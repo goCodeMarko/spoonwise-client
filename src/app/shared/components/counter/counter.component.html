@@ -1,0 +1,31 @@
+<div style="display: flex; width: 100%">
+  <button
+    mat-button
+    mat-icon-button
+    matPrefix
+    aria-label="Remove"
+    (click)="updateQty(-_step)"
+    [disabled]="shouldDisableDecrement(_value)"
+  >
+    <mat-icon>remove</mat-icon>
+  </button>
+  <input
+    matInput
+    style="text-align: center; width: 40px"
+    type="number"
+    [(ngModel)]="_value"
+    (focus)="setColor('primary')"
+    (blur)="setColor('default')"
+    readonly
+  />
+  <button
+    mat-button
+    mat-icon-button
+    matSuffix
+    aria-label="Add"
+    (click)="updateQty(_step)"
+    [disabled]="shouldDisableIncrement(_value)"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

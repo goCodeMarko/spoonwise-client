@@ -1,0 +1,15 @@
+mat-form-field {
+  width: 40px !important;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.no-underline .mat-mdc-text-field-wrapper {
+  border-bottom: none !important; /* Remove bottom border */
+  box-shadow: none !important; /* Remove focus outline */
+}

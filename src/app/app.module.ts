@@ -39,6 +39,12 @@ import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
 import { BuyerModule } from "./buyer/buyer.module";
 // import { WebcamModule } from "ngx-webcam";
+import { StoreModule } from "@ngrx/store";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { cartReducer } from "./shared/store/cart/cart.reducers";
+import { EffectsModule } from "@ngrx/effects";
+import { CartEffects } from "./shared/store/cart/cart.effects";
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
   declarations: [
@@ -68,6 +74,8 @@ import { BuyerModule } from "./buyer/buyer.module";
     MatTooltipModule,
     TransactionModule,
     MatButtonToggleModule,
+    MatFormFieldModule,
+    MatInputModule,
     BuyerModule,
     // WebcamModule,
     RouterModule.forRoot(AppRoutes),
@@ -77,6 +85,11 @@ import { BuyerModule } from "./buyer/buyer.module";
       // or after 30 seconds (whichever comes first).
       registrationStrategy: "registerWhenStable:30000",
     }),
+    StoreModule.forRoot({ cart: cartReducer }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Keeps the last 25 states
+    }),
+    EffectsModule.forRoot([CartEffects]),
   ],
   providers: [
     HttpRequestService,

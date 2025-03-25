@@ -4,6 +4,9 @@ import { InternetConnectionService } from "./shared/internet-connection/internet
 import { ImagePreloadService } from "./shared/services/image-preload.service";
 import { SwPush } from "@angular/service-worker";
 import { HttpRequestService } from "./http-request/http-request.service";
+import { Store } from "@ngrx/store";
+import { CartItem } from "./shared/models/cart-item.model";
+import { setCart } from "./shared/store/cart/cart.actions";
 
 @Component({
   selector: "app-root",
@@ -15,7 +18,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     internetConnection: InternetConnectionService,
-    imagePreloadService: ImagePreloadService
+    imagePreloadService: ImagePreloadService,
+    private store: Store
   ) {
     // Subscribe to the internet connection status
     internetConnection.getConnectionStatus().subscribe((status) => {
@@ -43,5 +47,8 @@ export class AppComponent implements OnInit {
     imagePreloadService.preload(imagesToPreload);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("===============");
+    this.store.dispatch(setCart());
+  }
 }

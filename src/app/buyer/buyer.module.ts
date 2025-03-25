@@ -19,8 +19,14 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NgxStarRatingModule } from "ngx-star-rating";
 import { MatRadioModule } from "@angular/material/radio";
-import { NgxUsefulSwiperModule } from "ngx-useful-swiper";
 import { SwiperModule } from "swiper/angular";
+import { BottomSheetModule } from "swipe-bottom-sheet/angular";
+import { CounterComponent } from "../shared/components/counter/counter.component";
+import { MatInputModule } from "@angular/material/input";
+import { SharedModule } from "../shared/shared.module";
+import { CartComponent } from "./pages/cart/cart.component";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { CheckoutComponent } from './pages/checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +35,8 @@ import { SwiperModule } from "swiper/angular";
     ProductViewComponent,
     MapComponent,
     BottomSheetComponent,
+    CartComponent,
+    CheckoutComponent,
   ],
   imports: [
     CommonModule,
@@ -42,11 +50,13 @@ import { SwiperModule } from "swiper/angular";
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
     MatCheckboxModule,
     NgxStarRatingModule,
     MatRadioModule,
     SwiperModule,
+    BottomSheetModule,
+    MatSnackBarModule,
+    SharedModule,
   ],
 })
 export class BuyerModule {}

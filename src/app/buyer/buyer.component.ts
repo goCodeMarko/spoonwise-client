@@ -7,6 +7,13 @@ import { HttpRequestService } from "../http-request/http-request.service";
 import * as _ from "lodash";
 import { AuthService } from "../authorization/auth.service";
 import { Location } from "@angular/common";
+import { Store } from "@ngrx/store";
+import { Observable } from "rxjs";
+
+import {
+  selectLineItemCount,
+  selectOrderQtyCount,
+} from "./../shared/store/cart/cart.selectors";
 
 interface Meta {
   limit: number;
@@ -28,14 +35,33 @@ export class BuyerComponent implements OnInit {
   radius: number = 3000;
   searchInput: string | null = null;
   isMapLoading: boolean = true;
+  lineItemCount$: Observable<number>;
+  lineItemCount: number = 0;
+  orderQtyCount$: Observable<number>;
+  orderQtyCount: number = 0;
+
   constructor(
     private bottomSheet: MatBottomSheet,
     private router: Router,
     private route: ActivatedRoute,
     private hrs: HttpRequestService,
     private auth: AuthService,
-    private location: Location
-  ) {}
+    private location: Location,
+    private store: Store
+  ) {
+    this.lineItemCount$ = this.store.select(selectLineItemCount);
+    this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
+
+    this.lineItemCount$.subscribe((data) => {
+      console.log("//////////////////////////", data);
+      this.lineItemCount = data;
+    });
+
+    this.orderQtyCount$.subscribe((data) => {
+      console.log("//////////////////////////", data);
+      this.orderQtyCount = data;
+    });
+  }
 
   ngOnInit(): void {
     // Detect changes on mat-select

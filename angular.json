@@ -30,7 +30,7 @@
             ],
             "styles": [
               "node_modules/chartist/dist/chartist.css",
-              "src/styles.css",
+              "src/styles.scss",
               "src/assets/styles/style.scss",
               "./node_modules/swiper/swiper-bundle.css"
             ],
@@ -134,7 +134,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "scripts": ["node_modules/jquery/dist/jquery.min.js"],
-            "styles": ["src/styles.css", "src/assets/styles/style.scss"],
+            "styles": ["src/styles.scss", "src/assets/styles/style.scss"],
             "assets": [
               "src/assets",
               "src/favicon.ico",

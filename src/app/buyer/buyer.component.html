@@ -26,25 +26,51 @@
   </ng-template>
 
   <div *ngIf="routerOutletComponent != 'ProductListComponent'; else searchbar">
-    <div class="filters">
+    <div
+      class="filters"
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+      "
+    >
       <button mat-icon-button class="mat-icon-size" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
+
+      <div
+        style="flex: 1; text-align: center; color: white; font-size: larger"
+        *ngIf="routerOutletComponent === 'CartComponent'"
+      >
+        Shopping Cart ({{ orderQtyCount }})
+      </div>
+      <div
+        style="flex: 1; text-align: center; color: white; font-size: larger"
+        *ngIf="routerOutletComponent === 'CheckoutComponent'"
+      >
+        Checkout
+      </div>
     </div>
   </div>
 
-  <div class="cart">
-    <button mat-icon-button class="mat-icon-size">
+  <div
+    class="cart"
+    *ngIf="
+      routerOutletComponent !== 'CartComponent' &&
+      routerOutletComponent !== 'CheckoutComponent'
+    "
+  >
+    <button [routerLink]="'/cart'" mat-icon-button class="mat-icon-size">
       <mat-icon
-        matBadge="10"
+        [matBadge]="lineItemCount"
         matBadgeSize="medium"
         [matBadgeHidden]="false"
-        matBadgeColor="accent"
+        matBadgeColor="main-green"
         >shopping_basket</mat-icon
       >
     </button>
   </div>
-  <div></div>
 </section>
 
 <div *ngIf="routerOutletComponent == 'ProductListComponent'">
