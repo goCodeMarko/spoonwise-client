@@ -1,0 +1,64 @@
+<div class="content">
+  <div
+    style="
+      background-color: rgb(223, 223, 223);
+      color: black;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 1em;
+    "
+  >
+    <div style="display: flex; align-items: center; gap: 1em">
+      <div>
+        <img
+          [src]="authUser.profile_picture.url"
+          alt=""
+          width="65"
+          style="border-radius: 50%"
+        />
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <div style="font-size: 20px">
+          {{ authUser.fullname }}
+        </div>
+        <div>{{ points }} points</div>
+      </div>
+    </div>
+  </div>
+  <mat-tab-group
+    mat-align-tabs="start"
+    animationDuration="0ms"
+    (selectedTabChange)="onTabChange($event)"
+  >
+    <mat-tab label="To Pay">
+      <ng-container *ngIf="selectedTab == 'to_pay'">
+        <app-order-list [type]="selectedTab"></app-order-list>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="For Review">
+      <ng-container *ngIf="selectedTab == 'for_review'">
+        <app-order-list [type]="selectedTab"></app-order-list>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="To Pack">
+      <ng-container *ngIf="selectedTab == 'to_pack'">
+        <app-order-list [type]="selectedTab"></app-order-list>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="Ready For Pick-up">
+      <ng-container *ngIf="selectedTab == 'for_pickup'">
+        <app-order-list [type]="selectedTab"></app-order-list>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="To Receive">
+      <ng-container *ngIf="selectedTab == 'to_receive'">
+        <app-order-list [type]="selectedTab"></app-order-list>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="Cancelled">
+      <ng-container *ngIf="selectedTab == 'cancelled'">
+        <app-order-list [type]="selectedTab"></app-order-list>
+      </ng-container>
+    </mat-tab>
+  </mat-tab-group>
+</div>

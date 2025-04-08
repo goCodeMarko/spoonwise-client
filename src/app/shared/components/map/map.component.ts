@@ -6,6 +6,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ViewEncapsulation,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscriber } from "rxjs";

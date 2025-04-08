@@ -1,4 +1,4 @@
-<div style="height: 80vh; overflow-y: scroll">
+<div style="height: 80vh; overflow-y: scroll; margin-top: 50px">
   <div
     style="
       display: flex;
@@ -7,6 +7,99 @@
       margin: 0px 10px 10px 10px;
     "
   >
+    <div>
+      <div>Payment Method</div>
+
+      <div class="option-container">
+        <div
+          class="option"
+          (click)="changePaymentMethod('ONLINE')"
+          [class.selected]="paymentMethod === 'ONLINE'"
+        >
+          Online Payment
+        </div>
+
+        <div
+          class="option"
+          (click)="changePaymentMethod('CASH')"
+          [class.selected]="paymentMethod === 'CASH'"
+        >
+          Cash
+        </div>
+
+        <!-- Hidden Radio Buttons -->
+        <input
+          type="radio"
+          name="options"
+          value="ONLINE"
+          [(ngModel)]="paymentMethod"
+          hidden
+        />
+        <input
+          type="radio"
+          name="options"
+          value="CASH"
+          [(ngModel)]="paymentMethod"
+          hidden
+        />
+      </div>
+    </div>
+
+    <div>
+      <div>Shipping Option</div>
+      <div class="option-container">
+        <div
+          class="option"
+          (click)="changeShippingOption('LALAMOVE')"
+          [class.selected]="shippingOption === 'LALAMOVE'"
+          [class.disabled]="disabledLalamoveBtn"
+          [attr.disabled]="disabledLalamoveBtn ? true : null"
+        >
+          Lalamove
+        </div>
+
+        <div
+          class="option"
+          (click)="changeShippingOption('STORE_PICKUP')"
+          [class.selected]="shippingOption === 'STORE_PICKUP'"
+        >
+          Store Pickup
+        </div>
+
+        <div
+          hidden="true"
+          class="option"
+          (click)="changeShippingOption('MEETUP')"
+          [class.selected]="shippingOption === 'MEETUP'"
+        >
+          Meetup
+        </div>
+
+        <!-- Hidden Radio Buttons -->
+        <input
+          type="radio"
+          name="options"
+          value="ONLINE"
+          [(ngModel)]="shippingOption"
+          hidden
+        />
+        <input
+          type="radio"
+          name="options"
+          value="STORE_PICKUP"
+          [(ngModel)]="shippingOption"
+          hidden
+        />
+        <input
+          type="radio"
+          name="options"
+          value="MEETUP"
+          [(ngModel)]="shippingOption"
+          hidden
+        />
+      </div>
+    </div>
+
     <div
       *ngFor="let cart of checkedLineItems; let i = index"
       style="

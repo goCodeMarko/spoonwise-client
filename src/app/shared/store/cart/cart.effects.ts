@@ -18,6 +18,8 @@ export interface LineItem {
   description: string;
   category: string[];
   specialOffers: string[];
+  commision?: number;
+  points?: number;
 }
 
 export interface Shop {

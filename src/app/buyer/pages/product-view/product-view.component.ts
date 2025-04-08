@@ -135,6 +135,8 @@ export class ProductViewComponent implements OnInit, OnDestroy {
   cartItems$: Observable<CartItem[]>;
   lineItemCount$: Observable<number>;
   stateError$: Observable<any>;
+  reviewSheetLoad = true;
+  reviews: any[] = [];
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -240,7 +242,7 @@ export class ProductViewComponent implements OnInit, OnDestroy {
         if (res.success && _.has(res, "data")) {
           this.product = res.data;
           this.images = res.data.images;
-
+          this.getReviews(res.data.shopId);
           this.productQtyInTheCart();
         } else {
         }
@@ -271,6 +273,31 @@ export class ProductViewComponent implements OnInit, OnDestroy {
     });
 
     this.output = value;
+  }
+
+  async openReviews<T>(content: BottomSheetContent<T>, shopId: string) {
+    this.output = "";
+
+    const value = await this.sheet.show(content, {
+      title: "",
+      stops: [3500, 500],
+    });
+
+    this.output = value;
+  }
+  async getReviews(shopId: string) {
+    this.hrs.request(
+      "get",
+      `order/getShopReviews/${shopId}`,
+      {},
+      async (res: { data: object[]; success: boolean }) => {
+        if (res.success && _.has(res, "data")) {
+          this.reviews = res.data;
+          console.log("----------this.reviews ", this.reviews);
+        }
+        this.reviewSheetLoad = false;
+      }
+    );
   }
 
   onQtyChange(qty: any) {

@@ -265,3 +265,33 @@ mat-card {
 .gs-modal-content {
   margin: 10px !important;
 }
+.mat-tab-header-pagination {
+  z-index: 1;
+}
+
+.sheet-content {
+  z-index: 99;
+}
+
+.sheet-backdrop {
+  z-index: 98;
+}
+
+/* styles.scss */
+input.star-5:checked ~ label.star:before {
+  text-shadow: none !important;
+}
+label.star:hover:before {
+  transform: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+}
+
+label.star:before {
+  transition: none !important;
+}
+label.star {
+  padding: 3px !important;
+  font-size: 24px !important;
+  color: gainsboro !important;
+}

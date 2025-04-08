@@ -6,6 +6,7 @@ import { ProductViewComponent } from "./pages/product-view/product-view.componen
 import { SecurityGuard } from "../guards/security.guard";
 import { CartComponent } from "./pages/cart/cart.component";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
+import { ProfileComponent } from "./pages/profile/profile.component";
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
       {
         path: "checkout",
         component: CheckoutComponent,
+      },
+      {
+        path: "profile",
+        component: ProfileComponent,
       },
     ],
   },

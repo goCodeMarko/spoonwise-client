@@ -5,6 +5,9 @@ import { HttpRequestService } from "../http-request/http-request.service";
 import { trigger, style, animate, transition } from "@angular/animations";
 import * as moment from "moment";
 import * as _ from "lodash";
+import { Store } from "@ngrx/store";
+import { setCart } from "./../shared/store/cart/cart.actions";
+import { setToPay } from "./../shared/store/order/order.actions";
 
 interface IUser {
   email: string;
@@ -43,7 +46,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private hrs: HttpRequestService,
-    private auth: AuthService
+    private auth: AuthService,
+    private store: Store
   ) {
     this.loginForm = this.fb.group({
       email: [""],
@@ -86,7 +90,8 @@ export class LoginComponent implements OnInit {
           try {
             await this.auth.setToken(data.data);
             console.log("token has been set!");
-
+            this.store.dispatch(setCart());
+            this.store.dispatch(setToPay());
             await this.getTransaction();
             this.auth.navigate("/", "");
 

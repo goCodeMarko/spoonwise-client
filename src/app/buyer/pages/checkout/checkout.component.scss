@@ -12,3 +12,31 @@
   align-items: center;
   justify-content: end;
 }
+
+.option-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.option {
+  min-width: 160px;
+  padding: 15px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.selected {
+  border-color: #007bff;
+  background-color: #007bff;
+  color: white;
+}
+
+/* Disabled State */
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none; /* Prevents clicking */
+}

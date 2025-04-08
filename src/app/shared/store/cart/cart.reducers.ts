@@ -13,6 +13,8 @@ export interface LineItem {
   description: string;
   category: string[];
   specialOffers: string[];
+  commision?: number;
+  points?: number;
 }
 
 export interface Shop {
@@ -91,7 +93,14 @@ export const cartReducer = createReducer(
                     ),
                     // Add the new product (updated version)
                     lineItem,
-                  ],
+                  ].map((item) => {
+                    const total = item.orderQty * item.price;
+                    return {
+                      ...item,
+                      commission: +(total * 0.1).toFixed(2),
+                      points: +(total * 0.01).toFixed(2),
+                    };
+                  }),
                   shop: shop.shop,
                 };
               }),

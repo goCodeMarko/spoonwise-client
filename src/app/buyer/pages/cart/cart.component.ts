@@ -14,6 +14,8 @@ import {
   selectLineItemTotal,
   selectOrderQtyCount,
   selectCheckedLineItemCount,
+  selectCommissionPoints,
+  selectPoints,
 } from "../../../shared/store/cart/cart.selectors";
 import { debounceTime, takeUntil } from "rxjs/operators";
 import { Router } from "@angular/router";
@@ -32,6 +34,8 @@ export interface LineItem {
   description: string;
   category: string[];
   specialOffers: string[];
+  commision?: number;
+  points?: number;
 }
 
 export interface Shop {
@@ -78,6 +82,9 @@ export class CartComponent implements OnInit {
   private debounceMap: { [productId: string]: Subject<any> } = {};
   forCheckout: CartItem[] = [];
 
+  // commission: number = 0;
+  // selectCommissionPoints$: Observable<number>;
+
   constructor(
     private store: Store,
     private router: Router,
@@ -106,51 +113,50 @@ export class CartComponent implements OnInit {
   ngOnInit(): void {
     this.cartItems$.subscribe((data) => {
       console.log("//////////////////cartItems$ cartcompomemt", data);
-      if (!this.isFilled) {
-        const sortedData = JSON.parse(JSON.stringify(data));
-        const response = sortedData
-          .sort((a: any, b: any) =>
-            a.shop.businessName.localeCompare(b.shop.businessName)
-          )
-          .map((shop: any) => {
-            // if (_.size(this.cartItems) > 0) {
-            //   // Find the corresponding shop in existing cartItems
-            //   const existingShop = this.cartItems.find(
-            //     (cartShop: any) => cartShop.shop.shopId === shop.shop.shopId
-            //   );
+      // if (!this.isFilled) {
+      const sortedData = JSON.parse(JSON.stringify(data));
+      const response = sortedData
+        .sort((a: any, b: any) =>
+          a.shop.businessName.localeCompare(b.shop.businessName)
+        )
+        .map((shop: any) => {
+          // if (_.size(this.cartItems) > 0) {
+          //   // Find the corresponding shop in existing cartItems
+          //   const existingShop = this.cartItems.find(
+          //     (cartShop: any) => cartShop.shop.shopId === shop.shop.shopId
+          //   );
 
-            //   shop.lineItems = shop.lineItems.map((item: any) => {
-            //     if (existingShop) {
-            //       // Find the corresponding lineItem in the existing shop
-            //       const existingItem = existingShop.lineItems.find(
-            //         (cartItem: any) => cartItem.productId === item.productId
-            //       );
-            //       console.log("------item.orderQty", item.orderQty);
-            //       console.log(
-            //         "------existingItem.orderQty",
-            //         existingItem!.orderQty
-            //       );
-            //       if (existingItem && existingItem.orderQty <= item.orderQty) {
-            //         item.orderQty = item.orderQty;
-            //       }
-            //     }
-            //     return item;
-            //   });
-            // }
+          //   shop.lineItems = shop.lineItems.map((item: any) => {
+          //     if (existingShop) {
+          //       // Find the corresponding lineItem in the existing shop
+          //       const existingItem = existingShop.lineItems.find(
+          //         (cartItem: any) => cartItem.productId === item.productId
+          //       );
+          //       console.log("------item.orderQty", item.orderQty);
+          //       console.log(
+          //         "------existingItem.orderQty",
+          //         existingItem!.orderQty
+          //       );
+          //       if (existingItem && existingItem.orderQty <= item.orderQty) {
+          //         item.orderQty = item.orderQty;
+          //       }
+          //     }
+          //     return item;
+          //   });
+          // }
 
-            // Sort lineItems by name within each shop
-            shop.lineItems.sort((a: any, b: any) =>
-              a.name.localeCompare(b.name)
-            );
-            return shop;
-          });
+          // Sort lineItems by name within each shop
+          shop.lineItems.sort((a: any, b: any) => a.name.localeCompare(b.name));
+          return shop;
+        });
 
-        this.cartItems = response;
-        if (_.size(this.cartItems) > 0) {
-          this.isFilled = true;
-        }
-        console.log("----------this.cartItems", this.cartItems);
-      }
+      // if (_.size(this.cartItems) > 0) {
+      //   this.isFilled = true;
+      // }
+      console.log("----------this.cartItems", this.cartItems);
+      // }
+
+      this.cartItems = response;
     });
 
     this.selectLineItemTotal$.subscribe((data) => {
@@ -162,6 +168,11 @@ export class CartComponent implements OnInit {
     this.selectCheckedLineItemCount$.subscribe((data) => {
       this.checkedLineItemCount = data;
     });
+
+    // this.selectCommissionPoints$.subscribe((data) => {
+    //   console.log("----------commsionCheckout", data);
+    //   this.commission = data;
+    // });
 
     this.stateError$.subscribe((error) => {
       if (error) {
@@ -222,6 +233,8 @@ export class CartComponent implements OnInit {
         specialOffers: lineItem.specialOffers,
         description: lineItem.description,
         category: lineItem.category,
+        points: lineItem.points,
+        commission: lineItem.commission,
       },
     });
 

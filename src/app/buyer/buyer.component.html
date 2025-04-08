@@ -76,6 +76,7 @@
 <div *ngIf="routerOutletComponent == 'ProductListComponent'">
   <div *ngIf="!isMapLoading; else loading">
     <app-map
+      class="buyer-component"
       [shops]="this.shops"
       [subject]="subject"
       [radius]="radius"
@@ -135,3 +136,7 @@
 <section class="content">
   <router-outlet (activate)="fromRouterOutlet($event)"></router-outlet>
 </section>
+
+<app-sticky-footer
+  *ngIf="routerOutletComponent === 'ProductListComponent'"
+></app-sticky-footer>

@@ -7,6 +7,7 @@ import { HttpRequestService } from "./http-request/http-request.service";
 import { Store } from "@ngrx/store";
 import { CartItem } from "./shared/models/cart-item.model";
 import { setCart } from "./shared/store/cart/cart.actions";
+import { setToPay } from "./shared/store/order/order.actions";
 
 @Component({
   selector: "app-root",
@@ -42,6 +43,9 @@ export class AppComponent implements OnInit {
       "assets/images/gcash.png",
       "assets/images/cash.png",
       "assets/images/noDataFound.png",
+      "assets/images/logo/lalamove-icon.webp",
+      "assets/images/logo/lalamove-whole-logo.png",
+      "assets/icons/check.png",
     ];
     // Preload the listed images
     imagePreloadService.preload(imagesToPreload);
@@ -50,5 +54,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     console.log("===============");
     this.store.dispatch(setCart());
+    this.store.dispatch(setToPay());
   }
 }

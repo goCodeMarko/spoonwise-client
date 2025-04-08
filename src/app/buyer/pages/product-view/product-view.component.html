@@ -32,6 +32,41 @@
     </div>
   </div>
 
+  <div
+    matRipple
+    (click)="openReviews(reviewSheet, product.shopId)"
+    style="
+      background-color: rgb(223, 223, 223);
+      color: black;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 1em;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+
+      -webkit-user-drag: none;
+      -webkit-tap-highlight-color: transparent;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1em;
+      "
+    >
+      <div>
+        <b
+          >Shop Reviews <span>{{ product.totalReviews }}</span></b
+        >
+      </div>
+      <div><mat-icon style="font-size: x-large">chevron_right</mat-icon></div>
+    </div>
+  </div>
+
   <div class="gs-main-button-group">
     <div class="gs-main-button-group-horizontal">
       <ng-container>
@@ -128,6 +163,64 @@
               <i class="fas fa-circle-notch fa-spin"></i>
             </ng-template>
           </button>
+        </div>
+      </div>
+    </ul>
+  </ng-template>
+
+  <ng-template #reviewSheet let-context>
+    <ul class="sheet-list">
+      <div style="justify-items: center; margin-bottom: 15px">
+        <div
+          style="
+            margin-top: 8px;
+            width: 40px;
+            height: 5px;
+            background-color: #7f7f7f1a;
+            border-radius: 20px;
+          "
+        ></div>
+      </div>
+
+      <div style="margin: 0px 20px 20px 20px">
+        <div *ngIf="reviewSheetLoad">
+          <div
+            style="display: flex; align-items: center; justify-content: center"
+          >
+            Loading...
+          </div>
+        </div>
+
+        <div *ngIf="!reviewSheetLoad">
+          <section
+            style="
+              background: #f9f9f9;
+              padding: 7px;
+              border-radius: 15px;
+              margin-bottom: 1em;
+            "
+            *ngFor="let review of reviews; let i = index"
+          >
+            <div style="display: flex; justify-content: space-between">
+              <div>
+                <div>{{ review?.buyer }}</div>
+                <div>
+                  <ngx-star-rating
+                    [(ngModel)]="review.rate"
+                    disabled="true"
+                  ></ngx-star-rating>
+                </div>
+              </div>
+              <div>
+                <div>
+                  {{ review?.date | date : "MMMM d, y h:mm a" }}
+                </div>
+              </div>
+            </div>
+            <div>
+              {{ review?.comment }}
+            </div>
+          </section>
         </div>
       </div>
     </ul>

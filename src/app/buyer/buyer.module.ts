@@ -26,7 +26,13 @@ import { MatInputModule } from "@angular/material/input";
 import { SharedModule } from "../shared/shared.module";
 import { CartComponent } from "./pages/cart/cart.component";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { CheckoutComponent } from "./pages/checkout/checkout.component";
+import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer/sticky-footer.component";
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { MatTabsModule } from "@angular/material/tabs";
+import { OrderListComponent } from "../shared/components/order-list/order-list.component";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatRippleModule } from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -37,6 +43,9 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
     BottomSheetComponent,
     CartComponent,
     CheckoutComponent,
+    StickyFooterComponent,
+    ProfileComponent,
+    OrderListComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +66,10 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
     BottomSheetModule,
     MatSnackBarModule,
     SharedModule,
+    MatTabsModule,
+    MatChipsModule,
+    MatInputModule,
+    MatRippleModule,
   ],
 })
 export class BuyerModule {}

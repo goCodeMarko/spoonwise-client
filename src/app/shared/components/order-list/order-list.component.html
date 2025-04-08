@@ -1,0 +1,532 @@
+<div style="height: 80vh; overflow-y: scroll">
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div
+      *ngFor="let order of orderItems; let i = index"
+      style="
+        background-color: rgb(223, 223, 223);
+        color: black;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 1em;
+      "
+    >
+      <div>
+        <div>
+          <div style="display: flex; flex-direction: column">
+            <div style="display: flex; justify-content: space-between">
+              <div>
+                <b style="font-weight: 700">{{ "#" + order.orderId }}</b>
+              </div>
+              <div>
+                {{
+                  order.latestStatus.status == "TO_PAY"
+                    ? order.paymentMethod == "CASH"
+                      ? "TO_PAY"
+                      : order?.invoice?.status == "PAID"
+                      ? order?.invoice?.status
+                      : order.latestStatus.status
+                    : order.latestStatus.status
+                }}
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <div>
+                <b style="font-weight: 700">{{ order.shop.businessName }}</b>
+              </div>
+              <div>
+                <ngx-star-rating
+                  *ngIf="order.reviews.rate > 0"
+                  [(ngModel)]="order.reviews.rate"
+                  disabled="true"
+                ></ngx-star-rating>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr
+          style="
+            border: none;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.2);
+          "
+        />
+
+        <div
+          *ngFor="let lineItem of order.cart; let i = index"
+          style="
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 16px;
+            margin-bottom: 10px;
+          "
+        >
+          <div>
+            <img
+              [src]="lineItem.images[0]"
+              alt=""
+              style="
+                width: 110px;
+                height: auto;
+                object-fit: cover;
+                border-radius: 15px;
+              "
+            />
+          </div>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+            "
+          >
+            <div class="line-clamp">
+              {{ lineItem.name }}
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 7px">
+              <div *ngFor="let offer of lineItem.specialOffers; let i = index">
+                {{ offer.name }}
+              </div>
+              <div></div>
+            </div>
+            <div style="display: flex; justify-content: space-between">
+              <div style="display: flex; flex-direction: column">
+                <div>Stocks: {{ lineItem.qty }}</div>
+
+                <b>{{ lineItem.price | currency : "PHP" : "symbol" }}</b>
+              </div>
+
+              <div>x{{ lineItem.orderQty }}</div>
+              <div *ngIf="order.latestStatus.status == 'TO_RECEIVE'">
+                <ng-container
+                  *ngIf="
+                    lineItem.latestStatus.status == 'ORDER_RECEIVED';
+                    else orderReceiveBtn
+                  "
+                >
+                  <mat-chip-list aria-label="Dog selection">
+                    <mat-chip style="background: rgba(0, 0, 0, 0.2)">
+                      <mat-chip-avatar>
+                        <img
+                          src="assets/icons/check.png"
+                          alt="Photo of a Shiba Inu"
+                          width="24"
+                        />
+                      </mat-chip-avatar>
+                      Received
+                    </mat-chip>
+                  </mat-chip-list>
+                </ng-container>
+                <ng-template #orderReceiveBtn>
+                  <button
+                    (click)="
+                      orderReceived(order.orderId, order.shop._id, lineItem._id)
+                    "
+                  >
+                    Order Receive
+                  </button>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin: 0px" />
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        "
+      >
+        <div>Total {{ order.totalItems }} Item(s)</div>
+        <div>
+          <b style="color: #fb5630">{{
+            order.subtotal | currency : "PHP" : "symbol"
+          }}</b>
+        </div>
+      </div>
+
+      <hr
+        style="
+          margin-top: 1em;
+          border: none;
+          height: 1px;
+          background-color: rgba(0, 0, 0, 0.2);
+        "
+      />
+
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <div style="display: flex; flex-direction: column">
+          <div>{{ order.paymentMethod }}</div>
+          <div>{{ order.shippingOption }}</div>
+        </div>
+        <div>
+          <div *ngIf="order.latestStatus.status == 'TO_RECEIVE'">
+            <button
+              *ngIf="order.reviews.rate == 0"
+              (click)="
+                openStoreRatingSheet(
+                  storeRatingSheet,
+                  order.orderId,
+                  order.shop._id
+                )
+              "
+            >
+              Rate Store
+            </button>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: row-reverse; gap: 7px">
+          <div
+            *ngIf="
+              order.buyer == account._id &&
+              order.latestStatus.status == 'TO_PAY' &&
+              order.paymentMethod == 'ONLINE' &&
+              order?.invoice?.url
+            "
+          >
+            <button (click)="payNow(order?.invoice?.url)">Pay Now</button>
+          </div>
+          <div>
+            <div
+              *ngIf="
+                (order.shop._id == account.shopId &&
+                  order.latestStatus.status == 'FOR_REVIEW') ||
+                (order.latestStatus.status == 'TO_PAY' &&
+                  order.buyer == account._id)
+              "
+            >
+              <button
+                [disabled]="isCancelBtnLoad"
+                (click)="cancel(order.orderId, order.shop._id)"
+                style="min-width: 150px"
+              >
+                <ng-container *ngIf="!isCancelBtnLoad; else cancelBtnLoad">
+                  Cancel
+                </ng-container>
+                <ng-template #cancelBtnLoad>
+                  <i class="fas fa-circle-notch fa-spin"></i>
+                </ng-template>
+              </button>
+            </div>
+
+            <div
+              *ngIf="
+                ['FOR_PICKUP', 'TO_RECEIVE'].includes(
+                  order.latestStatus.status
+                ) &&
+                order.shippingOption == 'LALAMOVE' &&
+                order.buyer == account._id &&
+                order.paymentMethod == 'ONLINE' &&
+                order?.invoice?.status == 'PAID'
+              "
+            >
+              <button
+                (click)="openSheet(mySheet, order.shop._id, order.orderId)"
+              >
+                <img
+                  src="../../assets/images/logo/lalamove-icon.webp"
+                  width="30"
+                />
+                Lalamove Delivery
+              </button>
+            </div>
+
+            <div
+              *ngIf="
+                ['FOR_PICKUP', 'TO_RECEIVE'].includes(
+                  order.latestStatus.status
+                ) &&
+                ['STORE_PICKUP', 'MEET_UP'].includes(order.shippingOption) &&
+                order.buyer == account._id
+              "
+              (click)="pickUpMeetUp(order.orderId, order.shop._id)"
+            >
+              <button>
+                {{ order.shippingOption == "PICK_UP" ? "PICK UP" : "MEET UP" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #mySheet let-context (closed)="onBottomSheetClosed()">
+  <ul class="sheet-list">
+    <div style="justify-items: center; margin-bottom: 15px">
+      <div
+        style="
+          margin-top: 8px;
+          width: 40px;
+          height: 5px;
+          background-color: #7f7f7f1a;
+          border-radius: 20px;
+        "
+      ></div>
+    </div>
+
+    <div
+      *ngIf="isLalamoveLoad; else contentLalamove"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
+      "
+    >
+      <div>Loading...</div>
+    </div>
+
+    <!-- CONTENT -->
+    <ng-template #contentLalamove>
+      <div style="margin: 0px 20px 20px 20px">
+        <div
+          *ngIf="
+            lalamoveStatus == 'NONE' ||
+            lalamoveStatus == 'EXPIRED_CANCELED_REJECTED'
+          "
+        >
+          <div
+            style="display: flex; align-items: center; justify-content: center"
+          >
+            <div>
+              <img
+                src="../../assets/images/logo/lalamove-whole-logo.png"
+                width="250"
+              />
+            </div>
+          </div>
+          <div style="display: flex; gap: 3em">
+            <div>
+              <div>Price</div>
+              <div>Service Type</div>
+              <div>Pick-up</div>
+              <div>Drop</div>
+              <div>Distance</div>
+            </div>
+            <div>
+              <div>
+                {{
+                  lalamoveQoutationData.priceBreakdown.total
+                    | currency : "PHP" : "symbol"
+                }}
+              </div>
+              <div>
+                {{ lalamoveQoutationData.serviceType }}
+              </div>
+              <div>{{ lalamoveQoutationData.stops[0].address }}</div>
+              <div>{{ lalamoveQoutationData.stops[1].address }}</div>
+              <div>
+                {{
+                  lalamoveQoutationData.distance.value +
+                    lalamoveQoutationData.distance.unit
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              background-color: #f9f9f9;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 30px 5vw;
+            "
+          >
+            <div style="width: 550px">
+              <button
+                mat-flat-button
+                color="main-green"
+                class="btn-block fw-bold"
+                (click)="findDriver()"
+              >
+                <ng-container> Find Driver </ng-container>
+                <ng-template #loadupdate>
+                  <i class="fas fa-circle-notch fa-spin"></i>
+                </ng-template>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          style="margin-bottom: 47px"
+          *ngIf="
+            ['ASSIGNING_DRIVER', 'PICKED_UP', 'ON_GOING', 'COMPLETED'].includes(
+              lalamoveStatus
+            )
+          "
+        >
+          <div>
+            <iframe
+              [src]="lalamoveOrder.shareLink"
+              width="100%"
+              height="600px"
+              frameborder="0"
+            ></iframe>
+          </div>
+
+          <div
+            *ngIf="
+              ['PICKED_UP', 'ON_GOING', 'COMPLETED', CANCELLED].includes(
+                lalamoveStatus
+              )
+            "
+            style="
+              display: flex;
+              gap: 3em;
+              margin-top: 0px;
+              background: #f9f9f9;
+              padding: 7px;
+              border-radius: 0px 0px 10px 10px;
+              display: flex;
+              gap: 3em;
+            "
+          >
+            <div>
+              <div>Price</div>
+              <div>Pick-up</div>
+              <div>Drop</div>
+              <div>Distance</div>
+
+              <div>Driver Contact No.</div>
+            </div>
+            <div>
+              <div>
+                {{
+                  lalamoveOrder.priceBreakdown.total
+                    | currency : "PHP" : "symbol"
+                }}
+              </div>
+
+              <div>{{ lalamoveOrder.stops[0].address }}</div>
+              <div>{{ lalamoveOrder.stops[1].address }}</div>
+              <div>
+                {{ lalamoveOrder.distance.value + lalamoveOrder.distance.unit }}
+              </div>
+              <div>
+                {{ lalamoveDriver.phone }}
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="this.lalamoveOrder.status == 'ASSIGNING_DRIVER'"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 30px 5vw;
+            "
+          >
+            <div style="width: 550px">
+              <button
+                mat-flat-button
+                color="main-green"
+                class="btn-block fw-bold"
+                (click)="stopFinding(lalamoveOrder)"
+              >
+                <ng-container> Stop Finding </ng-container>
+                <ng-template #loadupdate>
+                  <i class="fas fa-circle-notch fa-spin"></i>
+                </ng-template>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ul>
+</ng-template>
+
+<ng-template #storeRatingSheet let-context>
+  <ul class="sheet-list">
+    <div style="justify-items: center; margin-bottom: 15px">
+      <div
+        style="
+          margin-top: 8px;
+          width: 40px;
+          height: 5px;
+          background-color: #7f7f7f1a;
+          border-radius: 20px;
+        "
+      ></div>
+    </div>
+
+    <div style="margin: 0px 20px 20px 20px">
+      <form
+        [formGroup]="ratingForm"
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div>
+          <ngx-star-rating
+            formControlName="rating"
+            [id]="'rating'"
+          ></ngx-star-rating>
+        </div>
+        <div>
+          <textarea
+            matInput
+            formControlName="comment"
+            rows="5"
+            maxlength="400"
+            placeholder="Write your review or comments..."
+            style="
+              border: 3px solid #f9f9f9;
+              border-radius: 15px;
+              padding: 15px;
+              resize: none;
+              width: 80vw;
+            "
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 5vw;
+      "
+    >
+      <div style="width: 550px">
+        <button
+          (click)="storeRate()"
+          mat-flat-button
+          color="main-green"
+          class="btn-block fw-bold"
+        >
+          <ng-container *ngIf="!storeRateBtnOnLoad; else storeRateLoad">
+            Rate
+          </ng-container>
+          <ng-template #storeRateLoad>
+            <i class="fas fa-circle-notch fa-spin"></i>
+          </ng-template>
+        </button>
+      </div>
+    </div>
+  </ul>
+</ng-template>

@@ -59,6 +59,12 @@ export class CheckoutComponent implements OnInit {
   selectLineItemTotal$: Observable<number>;
   lineItemTotal: number = 0;
   private destroy$ = new Subject<void>();
+  paymentMethod: string = "ONLINE";
+  shippingOption: string = "LALAMOVE";
+  disabledLalamoveBtn = false;
+
+  // commission: number = 0;
+  // selectCommission$: Observable<number>;
 
   constructor(
     private store: Store,
@@ -97,16 +103,49 @@ export class CheckoutComponent implements OnInit {
     this.selectLineItemTotal$.subscribe((data) => {
       this.lineItemTotal = data;
     });
+
+    // this.selectCommission$.subscribe((data) => {
+    //   console.log("----------commsionCheckout", data);
+    //   this.commission = data;
+    // });
+  }
+
+  changePaymentMethod(value: string) {
+    this.paymentMethod = value;
+    if (value == "CASH") {
+      this.disabledLalamoveBtn = true;
+      if (this.shippingOption == "LALAMOVE")
+        this.shippingOption = "STORE_PICKUP";
+    } else {
+      this.disabledLalamoveBtn = false;
+    }
+  }
+
+  changeShippingOption(value: string) {
+    this.shippingOption = value;
+    if (value == "CASH") {
+      if (this.shippingOption == "LALAMOVE")
+        this.shippingOption = "STORE_PICKUP";
+    }
   }
 
   checkoutAPI() {
     this.hrs.request(
       "post",
       `order/checkout`,
-      { totalPayment: this.lineItemTotal, cart: this.checkedLineItems },
+      {
+        totalPayment: this.lineItemTotal,
+        cart: this.checkedLineItems,
+        paymentMethod: this.paymentMethod,
+        shippingOption: this.shippingOption,
+      },
       async (res: any) => {
         if (res.success) {
-          window.location.href = res.data.invoice.url;
+          if (this.paymentMethod == "ONLINE") {
+            window.location.href = res.data.invoice.url;
+          } else {
+            window.location.href = window.location.origin;
+          }
         } else {
         }
       }

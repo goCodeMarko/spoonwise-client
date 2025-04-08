@@ -42,8 +42,10 @@ import { BuyerModule } from "./buyer/buyer.module";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { cartReducer } from "./shared/store/cart/cart.reducers";
+import { orderReducer } from "./shared/store/order/order.reducers";
 import { EffectsModule } from "@ngrx/effects";
 import { CartEffects } from "./shared/store/cart/cart.effects";
+import { OrderEffects } from "./shared/store/order/order.effects";
 import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
@@ -85,11 +87,11 @@ import { MatFormFieldModule } from "@angular/material/form-field";
       // or after 30 seconds (whichever comes first).
       registrationStrategy: "registerWhenStable:30000",
     }),
-    StoreModule.forRoot({ cart: cartReducer }),
+    StoreModule.forRoot({ cart: cartReducer, order: orderReducer }),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Keeps the last 25 states
     }),
-    EffectsModule.forRoot([CartEffects]),
+    EffectsModule.forRoot([CartEffects, OrderEffects]),
   ],
   providers: [
     HttpRequestService,

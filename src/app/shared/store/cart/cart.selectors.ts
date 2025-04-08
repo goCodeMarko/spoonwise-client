@@ -68,3 +68,36 @@ export const selectCartError = createSelector(
   selectCartState,
   (state) => state.error
 );
+
+export const selectPoints = createSelector(selectCartState, (state) => {
+  const totalPoints =
+    state.cart.reduce(
+      (total, shop) =>
+        total +
+        shop.lineItems
+          .filter((lineItem) => lineItem.checked)
+          .reduce(
+            (lineItemTotal, item) => lineItemTotal + item.price * item.orderQty,
+            0
+          ),
+      0
+    ) * 0.01;
+  return parseFloat(totalPoints.toFixed(2));
+});
+
+export const selectCommissionPoints = createSelector(
+  selectCartState,
+  (state) => {
+    return state.cart.map((shop) => ({
+      ...shop,
+      lineItems: shop.lineItems.map((item) => {
+        const total = item.orderQty * item.price;
+        return {
+          ...item,
+          commission: +(total * 0.1).toFixed(2),
+          points: +(total * 0.01).toFixed(2),
+        };
+      }),
+    }));
+  }
+);
