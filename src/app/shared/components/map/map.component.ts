@@ -25,25 +25,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   circle: any;
   @Input() radius: number = 3000;
 
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    console.log("---------MapComponent:ngAfterViewInit", this.subject);
     this.loadMap();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["radius"]) {
-      console.log("Radius changed:", changes["radius"]);
-      console.log("Previous:", changes["radius"].previousValue);
-      console.log("Current:", changes["radius"].currentValue);
-
+    if (changes["radius"] && this.map) {
       L.circle([this.subject.coordinates.lat, this.subject.coordinates.lon], {
         color: "transparent",
         fillColor: "#00c6c8",
@@ -54,8 +45,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  /*
-  private getCurrentPosition(): any {
+  /*private getCurrentPosition(): any {
     return new Observable((observer: Subscriber<any>) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position: any) => {
@@ -70,8 +60,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
         observer.error();
       }
     });
-  }
-    */
+  }*/
 
   private loadMap(): void {
     this.map = L.map("map", {

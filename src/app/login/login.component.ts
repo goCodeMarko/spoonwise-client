@@ -88,12 +88,18 @@ export class LoginComponent implements OnInit {
       async (data: IResponse) => {
         if (data.success) {
           try {
-            await this.auth.setToken(data.data);
+            const user = await this.auth.setToken(data.data);
             console.log("token has been set!");
-            this.store.dispatch(setCart());
-            this.store.dispatch(setToPay());
-            await this.getTransaction();
-            this.auth.navigate("/", "");
+            console.log("-------------------", data);
+            if (data.data.account.role == "buyer") {
+              this.store.dispatch(setCart());
+              this.store.dispatch(setToPay());
+              this.auth.navigate("/", "");
+            } else if (data.data.account.role == "seller") {
+              console.log("yoww");
+
+              this.auth.navigate("/shop/add-product", "");
+            }
 
             console.log("User has been navigated!");
           } catch (error) {

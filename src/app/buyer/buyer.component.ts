@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { MatBottomSheet } from "@angular/material/bottom-sheet";
-import { BottomSheetComponent } from "./components/bottom-sheet/bottom-sheet.component";
 import { ActivatedRoute, Route, Router } from "@angular/router";
 import { FormControl } from "@angular/forms";
 import { HttpRequestService } from "../http-request/http-request.service";
@@ -33,38 +31,25 @@ export class BuyerComponent implements OnInit {
   shops: any[] = [];
   subject: object = {};
   radius: number = 3000;
-  searchInput: string | null = null;
   isMapLoading: boolean = true;
-  lineItemCount$: Observable<number>;
-  lineItemCount: number = 0;
   orderQtyCount$: Observable<number>;
   orderQtyCount: number = 0;
 
   constructor(
-    private bottomSheet: MatBottomSheet,
     private router: Router,
     private route: ActivatedRoute,
     private hrs: HttpRequestService,
     private auth: AuthService,
-    private location: Location,
     private store: Store
   ) {
-    this.lineItemCount$ = this.store.select(selectLineItemCount);
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
 
-    this.lineItemCount$.subscribe((data) => {
-      console.log("//////////////////////////", data);
-      this.lineItemCount = data;
-    });
-
     this.orderQtyCount$.subscribe((data) => {
-      console.log("//////////////////////////", data);
       this.orderQtyCount = data;
     });
   }
 
   ngOnInit(): void {
-    // Detect changes on mat-select
     this.selectControl.valueChanges.subscribe((value) => {
       this.router.navigate([], {
         relativeTo: this.route,
@@ -78,19 +63,7 @@ export class BuyerComponent implements OnInit {
     this.getSpecialOffers();
 
     this.route.queryParams.subscribe((params) => {
-      console.log("----------queryParams", params);
       if (params.radius) this.radius = params.radius;
-    });
-  }
-
-  search() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        search: this.searchInput ? this.searchInput : null,
-        page: 1,
-      },
-      queryParamsHandling: "merge",
     });
   }
 
@@ -114,6 +87,17 @@ export class BuyerComponent implements OnInit {
     });
   }
 
+  search(searchInput?: string) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: searchInput ? searchInput : null,
+        page: 1,
+      },
+      queryParamsHandling: "merge",
+    });
+  }
+
   getSpecialOffers() {
     this.hrs.request(
       "get",
@@ -125,10 +109,6 @@ export class BuyerComponent implements OnInit {
         }
       }
     );
-  }
-
-  openBottomSheet(): void {
-    this.bottomSheet.open(BottomSheetComponent);
   }
 
   next() {
@@ -151,20 +131,15 @@ export class BuyerComponent implements OnInit {
     });
   }
 
-  goBack() {
-    this.location.back();
-  }
-
   fromRouterOutlet(component: any) {
+    console.log(
+      "------------component.constructor.name",
+      component.constructor.name
+    );
     this.routerOutletComponent = component.constructor.name;
-    console.log("------------component", component.constructor.name);
+
     component.newMeta.subscribe((value: Meta) => {
       this.meta = value;
     });
-    // if (component.hideMainButton) {
-    //   component.hideMainButton.subscribe((value: boolean) => {
-    //     this.hideMainButton = value;
-    //   });
-    // }
   }
 }

@@ -26,7 +26,7 @@ export class SecurityGuard implements CanActivate {
     return (async (): Promise<boolean> => {
       const role: string = await this.auth.checkRole();
 
-      if (["frontliner", "admin"].includes(role)) {
+      if (["buyer", "seller"].includes(role)) {
         return true;
       } else {
         this.router.navigate(["/login"]);

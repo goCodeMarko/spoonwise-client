@@ -16,6 +16,11 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatChipsModule } from "@angular/material/chips";
+import { StickyHeaderComponent } from "./components/sticky-header/sticky-header.component";
+import { MatBadgeModule } from "@angular/material/badge";
+import { MatButtonModule } from "@angular/material/button";
+import { RouterModule } from "@angular/router";
+import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer.component";
 
 @NgModule({
   declarations: [
@@ -25,6 +30,8 @@ import { MatChipsModule } from "@angular/material/chips";
     LongPressDirective,
     ImageHandlerDirective,
     CounterComponent,
+    StickyHeaderComponent,
+    StickyFooterComponent,
   ],
   imports: [
     MatCardModule,
@@ -34,6 +41,10 @@ import { MatChipsModule } from "@angular/material/chips";
     FormsModule,
     MatInputModule,
     MatChipsModule,
+    MatIconModule,
+    MatBadgeModule,
+    MatButtonModule,
+    RouterModule,
   ],
   exports: [
     AccordionAnchorDirective,
@@ -42,6 +53,8 @@ import { MatChipsModule } from "@angular/material/chips";
     LongPressDirective,
     ImageHandlerDirective,
     CounterComponent,
+    StickyHeaderComponent,
+    StickyFooterComponent,
   ],
   providers: [MenuItems],
 })

@@ -1,0 +1,109 @@
+<section class="sticky-header">
+  <ng-template #searchbar>
+    <div class="input-group search">
+      <input
+        type="search"
+        class="form-control"
+        placeholder="Search"
+        aria-label="Search"
+        aria-describedby="search-addon"
+        (keyup.enter)="emitSearch()"
+        [(ngModel)]="searchInput"
+      />
+
+      <!-- <button type="button" mat-flat-button style="background-color: #00c6c8">
+        <mat-icon style="font-size: x-large" (click)="search()"
+          >search</mat-icon
+        >
+      </button> -->
+
+      <button
+        mat-flat-button
+        style="height: 70px; text-align: center"
+        (click)="openBottomSheet()"
+      >
+        <img src="assets/icons/search.png" width="50" />
+      </button>
+    </div>
+
+    <div class="filters">
+      <button
+        mat-icon-button
+        color="primary"
+        style="width: 70px; height: 70px"
+        (click)="openBottomSheet()"
+      >
+        <img src="assets/icons/color.png" width="50" />
+      </button>
+    </div>
+  </ng-template>
+
+  <div *ngIf="routerOutletComponent != 'ProductListComponent'; else searchbar">
+    <div
+      class="filters"
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+      "
+    >
+      <button mat-icon-button class="mat-icon-size" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <div
+        style="flex: 1; text-align: center; color: white; font-size: larger"
+        *ngIf="routerOutletComponent === 'CartComponent'"
+      >
+        Shopping Cart ({{ orderQtyCount }})
+      </div>
+      <div
+        style="flex: 1; text-align: center; color: white; font-size: larger"
+        *ngIf="routerOutletComponent === 'CheckoutComponent'"
+      >
+        Checkout
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="cart"
+    style="position: relative"
+    *ngIf="
+      routerOutletComponent !== 'CartComponent' &&
+      routerOutletComponent !== 'CheckoutComponent' &&
+      showCart
+    "
+  >
+    <div
+      *ngIf="lineItemCount"
+      style="
+        position: absolute;
+        top: -4px;
+        right: 3px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: white;
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+        font-size: 13px;
+      "
+    >
+      {{ lineItemCount }}
+    </div>
+    <button
+      [routerLink]="'/cart'"
+      mat-icon-button
+      color="primary"
+      style="width: 70px; height: 70px; position: relative"
+    >
+      <img src="assets/icons/shopping-bag.png" width="50" />
+    </button>
+  </div>
+</section>

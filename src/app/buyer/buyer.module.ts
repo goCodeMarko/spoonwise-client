@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
 import { BuyerRoutingModule } from "./buyer-routing.module";
 import { BuyerComponent } from "./buyer.component";
 import { ProductListComponent } from "./pages/product-list/product-list.component";
@@ -10,24 +9,21 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatBottomSheetModule } from "@angular/material/bottom-sheet";
-import { BottomSheetComponent } from "./components/bottom-sheet/bottom-sheet.component";
+import { BottomSheetComponent } from "../shared/components/bottom-sheet/bottom-sheet.component";
 import { MatListModule } from "@angular/material/list";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatSelectModule } from "@angular/material/select";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NgxStarRatingModule } from "ngx-star-rating";
 import { MatRadioModule } from "@angular/material/radio";
 import { SwiperModule } from "swiper/angular";
 import { BottomSheetModule } from "swipe-bottom-sheet/angular";
-import { CounterComponent } from "../shared/components/counter/counter.component";
 import { MatInputModule } from "@angular/material/input";
 import { SharedModule } from "../shared/shared.module";
 import { CartComponent } from "./pages/cart/cart.component";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
-import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer/sticky-footer.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { OrderListComponent } from "../shared/components/order-list/order-list.component";
@@ -43,11 +39,11 @@ import { MatRippleModule } from "@angular/material/core";
     BottomSheetComponent,
     CartComponent,
     CheckoutComponent,
-    StickyFooterComponent,
     ProfileComponent,
     OrderListComponent,
   ],
   imports: [
+    SharedModule,
     CommonModule,
     BuyerRoutingModule,
     MatIconModule,
@@ -65,7 +61,6 @@ import { MatRippleModule } from "@angular/material/core";
     SwiperModule,
     BottomSheetModule,
     MatSnackBarModule,
-    SharedModule,
     MatTabsModule,
     MatChipsModule,
     MatInputModule,

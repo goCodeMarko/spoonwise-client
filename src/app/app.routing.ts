@@ -35,5 +35,17 @@ export const AppRoutes: Routes = [
       },
     ],
   },
+  {
+    path: "shop",
+    component: FullComponent,
+    children: [
+      {
+        path: "",
+        loadChildren: () =>
+          import("./seller/seller.module").then((m) => m.SellerModule),
+        canActivate: [SecurityGuard],
+      },
+    ],
+  },
   { path: "**", redirectTo: "login", pathMatch: "full" }, // Wildcard route for unknown routes
 ];

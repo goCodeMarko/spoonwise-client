@@ -1,77 +1,7 @@
-<section class="sticky-header">
-  <ng-template #searchbar>
-    <div class="input-group search">
-      <input
-        type="search"
-        class="form-control"
-        placeholder="Search"
-        aria-label="Search"
-        aria-describedby="search-addon"
-        (keyup.enter)="search()"
-        [(ngModel)]="searchInput"
-      />
-
-      <button type="button" mat-flat-button style="background-color: #00c6c8">
-        <mat-icon style="font-size: x-large" (click)="search()"
-          >search</mat-icon
-        >
-      </button>
-    </div>
-
-    <div class="filters">
-      <button mat-icon-button class="mat-icon-size" (click)="openBottomSheet()">
-        <mat-icon>filter_alt</mat-icon>
-      </button>
-    </div>
-  </ng-template>
-
-  <div *ngIf="routerOutletComponent != 'ProductListComponent'; else searchbar">
-    <div
-      class="filters"
-      style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 16px;
-      "
-    >
-      <button mat-icon-button class="mat-icon-size" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-
-      <div
-        style="flex: 1; text-align: center; color: white; font-size: larger"
-        *ngIf="routerOutletComponent === 'CartComponent'"
-      >
-        Shopping Cart ({{ orderQtyCount }})
-      </div>
-      <div
-        style="flex: 1; text-align: center; color: white; font-size: larger"
-        *ngIf="routerOutletComponent === 'CheckoutComponent'"
-      >
-        Checkout
-      </div>
-    </div>
-  </div>
-
-  <div
-    class="cart"
-    *ngIf="
-      routerOutletComponent !== 'CartComponent' &&
-      routerOutletComponent !== 'CheckoutComponent'
-    "
-  >
-    <button [routerLink]="'/cart'" mat-icon-button class="mat-icon-size">
-      <mat-icon
-        [matBadge]="lineItemCount"
-        matBadgeSize="medium"
-        [matBadgeHidden]="false"
-        matBadgeColor="main-green"
-        >shopping_basket</mat-icon
-      >
-    </button>
-  </div>
-</section>
+<app-sticky-header
+  [routerOutletComponent]="routerOutletComponent"
+  (onSearch)="search($event)"
+></app-sticky-header>
 
 <div *ngIf="routerOutletComponent == 'ProductListComponent'">
   <div *ngIf="!isMapLoading; else loading">
@@ -87,7 +17,7 @@
 <ng-template #loading>
   <p>Loading data...</p>
 </ng-template>
-<section style="background-color: #00c6c8; color: white">
+<section style="background-color: white; color: black; margin-top: 1em">
   <div
     style="
       display: flex;
@@ -108,27 +38,52 @@
     <div>
       <!-- put here -->
 
-      <button
+      <!-- <button
         [disabled]="this.meta.page === 1"
         (click)="prev()"
         mat-flat-button
-        style="background-color: #00c6c8; height: 100%"
+        style="background-color: white; height: 100%"
       >
-        <mat-icon style="font-size: x-large" (click)="search()"
+        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
+          >arrow_back_ios</mat-icon
+        >
+      </button> -->
+
+      <button
+        [disabled]="this.meta.page === 1"
+        (click)="prev()"
+        mat-icon-button
+        color="primary"
+        style="width: 70px; height: 70px; position: relative"
+      >
+        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
           >arrow_back_ios</mat-icon
         >
       </button>
       {{ this.meta.page }} of {{ this.meta.pages }}
+
       <button
         [disabled]="this.meta.page === this.meta.pages"
         (click)="next()"
-        mat-flat-button
-        style="background-color: #00c6c8; height: 100%"
+        mat-icon-button
+        color="primary"
+        style="width: 70px; height: 70px; position: relative"
       >
-        <mat-icon style="font-size: x-large" (click)="search()"
+        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
           >arrow_forward_ios</mat-icon
         >
       </button>
+
+      <!-- <button
+        [disabled]="this.meta.page === this.meta.pages"
+        (click)="next()"
+        mat-flat-button
+        style="background-color: white; height: 100%"
+      >
+        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
+          >arrow_forward_ios</mat-icon
+        >
+      </button> -->
     </div>
   </div>
 </section>
@@ -138,5 +93,5 @@
 </section>
 
 <app-sticky-footer
-  *ngIf="routerOutletComponent === 'ProductListComponent'"
+  *ngIf="routerOutletComponent == 'ProductListComponent'"
 ></app-sticky-footer>
