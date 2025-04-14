@@ -13,7 +13,7 @@ export class HttpRequestService {
     switch (method) {
       case "download":
         return this.http
-          .get(`${environment.SERVER_URL}${endpoint}`, {
+          .get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
             params: payload,
             observe: "events",
             responseType: "blob",
@@ -33,7 +33,7 @@ export class HttpRequestService {
         //     ? environment.SERVER_URL_81
         //     : environment.SERVER_URL;
         return this.http
-          .get(`${environment.SERVER_URL}${endpoint}`, {
+          .get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
             params: payload,
           })
           .subscribe(
@@ -48,8 +48,8 @@ export class HttpRequestService {
       case "post":
         const URL =
           endpoint === "serviceWorker/subscribe"
-            ? environment.SERVER_URL_444
-            : environment.SERVER_URL;
+            ? environment.SERVER_URL_MAIN
+            : environment.SERVER_URL_CLUSTERS;
         return this.http.post(`${URL}${endpoint}`, payload).subscribe(
           (response) => {
             return callback(response);
@@ -61,7 +61,7 @@ export class HttpRequestService {
 
       case "put":
         return this.http
-          .put(`${environment.SERVER_URL}${endpoint}`, payload)
+          .put(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, payload)
           .subscribe(
             (response) => {
               return callback(response);

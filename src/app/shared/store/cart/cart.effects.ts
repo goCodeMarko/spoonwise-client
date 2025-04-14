@@ -48,7 +48,7 @@ export class CartEffects {
     this.actions$.pipe(
       ofType(CartActions.setCart),
       mergeMap(() =>
-        this.http.get(`${environment.SERVER_URL}user/getCart`).pipe(
+        this.http.get(`${environment.SERVER_URL_CLUSTERS}user/getCart`).pipe(
           map((data: any) => {
             console.log("===============", data);
             let cart: CartItem[] = data.data;
@@ -67,7 +67,10 @@ export class CartEffects {
       ofType(CartActions.addToCart),
       mergeMap(({ shop, lineItem }) =>
         this.http
-          .post(`${environment.SERVER_URL}user/addToCart`, { shop, lineItem })
+          .post(`${environment.SERVER_URL_CLUSTERS}user/addToCart`, {
+            shop,
+            lineItem,
+          })
           .pipe(
             map(() => CartActions.addToCartSuccess({ shop, lineItem })),
             catchError((error) => {

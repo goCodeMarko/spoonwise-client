@@ -15,15 +15,17 @@ export class OrderEffects {
     this.actions$.pipe(
       ofType(OrderActions.setToPay),
       mergeMap(() =>
-        this.http.get(`${environment.SERVER_URL}order/getOrders/to_pay`).pipe(
-          map((data: any) => {
-            let order: Order[] = data.data;
-            return OrderActions.setToPaySuccess({ order });
-          }),
-          catchError((error: any) =>
-            of(OrderActions.setToPayFailure({ error: error.message }))
+        this.http
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_pay`)
+          .pipe(
+            map((data: any) => {
+              let order: Order[] = data.data;
+              return OrderActions.setToPaySuccess({ order });
+            }),
+            catchError((error: any) =>
+              of(OrderActions.setToPayFailure({ error: error.message }))
+            )
           )
-        )
       )
     )
   );
@@ -33,7 +35,7 @@ export class OrderEffects {
       ofType(OrderActions.setForReview),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL}order/getOrders/for_review`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/for_review`)
           .pipe(
             map((data: any) => {
               console.log("----------for_review", data);
@@ -52,16 +54,18 @@ export class OrderEffects {
     this.actions$.pipe(
       ofType(OrderActions.setToPack),
       mergeMap(() =>
-        this.http.get(`${environment.SERVER_URL}order/getOrders/to_pack`).pipe(
-          map((data: any) => {
-            console.log("----------to_pack", data);
-            let order: Order[] = data.data;
-            return OrderActions.setToPackSuccess({ order });
-          }),
-          catchError((error: any) =>
-            of(OrderActions.setToPackFailure({ error: error.message }))
+        this.http
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_pack`)
+          .pipe(
+            map((data: any) => {
+              console.log("----------to_pack", data);
+              let order: Order[] = data.data;
+              return OrderActions.setToPackSuccess({ order });
+            }),
+            catchError((error: any) =>
+              of(OrderActions.setToPackFailure({ error: error.message }))
+            )
           )
-        )
       )
     )
   );
@@ -71,7 +75,7 @@ export class OrderEffects {
       ofType(OrderActions.setForPickup),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL}order/getOrders/for_pickup`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/for_pickup`)
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
@@ -90,7 +94,7 @@ export class OrderEffects {
       ofType(OrderActions.setToReceive),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL}order/getOrders/to_receive`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_receive`)
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
@@ -109,7 +113,7 @@ export class OrderEffects {
       ofType(OrderActions.setCancelled),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL}order/getOrders/cancelled`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/cancelled`)
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
@@ -128,12 +132,15 @@ export class OrderEffects {
       ofType(OrderActions.setLineItemOrderReceived),
       mergeMap(({ orderId, shopId, lineItemId }) =>
         this.http
-          .put(`${environment.SERVER_URL}order/updateOrderLineItemStatus`, {
-            orderId,
-            shopId,
-            lineItemId,
-            status: "ORDER_RECEIVED",
-          })
+          .put(
+            `${environment.SERVER_URL_CLUSTERS}order/updateOrderLineItemStatus`,
+            {
+              orderId,
+              shopId,
+              lineItemId,
+              status: "ORDER_RECEIVED",
+            }
+          )
           .pipe(
             map((data: any) => {
               let order: Order = data.data;
@@ -161,7 +168,7 @@ export class OrderEffects {
       ofType(OrderActions.setReviews),
       mergeMap(({ orderId, shopId, rating, comment }) =>
         this.http
-          .put(`${environment.SERVER_URL}order/updateStoreReviews`, {
+          .put(`${environment.SERVER_URL_CLUSTERS}order/updateStoreReviews`, {
             orderId,
             shopId,
             rating,

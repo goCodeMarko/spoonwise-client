@@ -17,7 +17,7 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io(environment.WEBSOCKET); // Change the URL to your server's address
+    this.socket = io(environment.WEBSOCKET_MAIN); // Change the URL to your server's address
   }
 
   public sendMessage(message: { type: strings; data: any }): void {
