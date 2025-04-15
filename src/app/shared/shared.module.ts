@@ -21,6 +21,7 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { MatButtonModule } from "@angular/material/button";
 import { RouterModule } from "@angular/router";
 import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer.component";
+import { ImageCachePipe } from "./pipes/image-cache.pipe";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer.
     CounterComponent,
     StickyHeaderComponent,
     StickyFooterComponent,
+    ImageCachePipe,
   ],
   imports: [
     MatCardModule,
