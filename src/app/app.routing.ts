@@ -31,7 +31,7 @@ export const AppRoutes: Routes = [
         path: "",
         loadChildren: () =>
           import("./buyer/buyer.module").then((m) => m.BuyerModule),
-        canActivate: [],
+        canActivate: [SecurityGuard],
       },
     ],
   },
