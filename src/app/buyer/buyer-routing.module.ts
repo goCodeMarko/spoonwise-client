@@ -12,6 +12,7 @@ const routes: Routes = [
   {
     path: "",
     component: BuyerComponent,
+    canActivate: [SecurityGuard],
     children: [
       { path: "", component: ProductListComponent },
       {
