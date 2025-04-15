@@ -31,8 +31,7 @@
 
 .prod-bar {
   color: black;
-  margin-left: 7px;
-  margin-right: 7px;
+
   & .price {
     color: #fb5630;
     font-size: larger;
@@ -41,8 +40,6 @@
 }
 
 .prod-desc {
-  margin-left: 7px;
-  margin-right: 7px;
 }
 
 .gs-main-button-group {
@@ -52,7 +49,8 @@
   left: 0px;
   width: 100vw !important;
   background-color: #00c6c8;
-  padding: 5px 5px 8px 5px;
+  padding: 7px;
+  height: 81px;
 
   .gs-main-button-group-horizontal {
     display: flex !important;

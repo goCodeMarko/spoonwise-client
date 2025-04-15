@@ -198,6 +198,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       top: 7px;
       color:red;
       padding: 4px;
+      border: none;
     }
 
     .leaflet-control-zoom-out {

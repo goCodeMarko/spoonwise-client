@@ -1,4 +1,7 @@
-<div *ngIf="!productOnLoad" style="margin-top: 70px">
+<div
+  *ngIf="!productOnLoad"
+  style="margin-top: 70px; margin-bottom: 90px; background: white; padding: 7px"
+>
   <swiper
     [loop]="true"
     [autoHeight]="true"
@@ -36,10 +39,11 @@
     matRipple
     (click)="openReviews(reviewSheet, product.shopId)"
     style="
-      background-color: rgb(223, 223, 223);
+      background-color: #f6f6f6;
       color: black;
-      padding: 25px;
+      padding: 20px 7px;
       border-radius: 8px;
+      margin-top: 7px;
       margin-bottom: 1em;
       cursor: pointer;
       user-select: none;
@@ -55,7 +59,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1em;
+        gap: 7px;
       "
     >
       <div>
@@ -91,12 +95,12 @@
 
   <ng-template #mySheet let-context>
     <ul class="sheet-list">
-      <div style="justify-items: center; margin-bottom: 15px">
+      <div style="justify-items: center; margin-bottom: 7px">
         <div
           style="
-            margin-top: 8px;
+            margin-top: 7px;
             width: 40px;
-            height: 5px;
+            height: 7px;
             background-color: #7f7f7f1a;
             border-radius: 20px;
           "
@@ -170,10 +174,10 @@
 
   <ng-template #reviewSheet let-context>
     <ul class="sheet-list">
-      <div style="justify-items: center; margin-bottom: 15px">
+      <div style="justify-items: center; margin-bottom: 7px">
         <div
           style="
-            margin-top: 8px;
+            margin-top: 7px;
             width: 40px;
             height: 5px;
             background-color: #7f7f7f1a;
@@ -182,7 +186,7 @@
         ></div>
       </div>
 
-      <div style="margin: 0px 20px 20px 20px">
+      <div style="margin: 7px">
         <div *ngIf="reviewSheetLoad">
           <div
             style="display: flex; align-items: center; justify-content: center"
@@ -197,7 +201,7 @@
               background: #f9f9f9;
               padding: 7px;
               border-radius: 15px;
-              margin-bottom: 1em;
+              margin-bottom: 7px;
             "
             *ngFor="let review of reviews; let i = index"
           >

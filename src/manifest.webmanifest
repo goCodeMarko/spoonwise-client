@@ -1,11 +1,11 @@
 {
-  "name": "GC Portal",
-  "short_name": "GC Portal",
-  "theme_color": "#7684f1",
+  "name": "Spoonwise",
+  "short_name": "Spoonwise",
+  "theme_color": "#fb5630",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./",
+  "start_url": "/login",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",

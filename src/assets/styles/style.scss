@@ -266,7 +266,16 @@ mat-card {
   margin: 10px !important;
 }
 .mat-tab-header-pagination {
-  z-index: 1;
+  z-index: 1 !important;
+}
+
+.mat-tab-header {
+  z-index: 1 !important;
+  background: white;
+  border: none;
+}
+.mat-tab-body {
+  background: #f6f6f6;
 }
 
 .sheet-content {

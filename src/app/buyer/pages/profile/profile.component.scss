@@ -7,8 +7,11 @@
   bottom: 0px;
   left: 0px;
   width: 100vw !important;
-  background-color: transparent;
-  padding: 5px 5px 8px 5px;
+
+  background-color: white;
+  height: 81px;
+  padding: 7px;
+  z-index: 2;
 
   .gs-main-button-group-horizontal {
     display: flex !important;
