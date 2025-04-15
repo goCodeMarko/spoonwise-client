@@ -33,7 +33,6 @@ import { ImageCachePipe } from "./pipes/image-cache.pipe";
     CounterComponent,
     StickyHeaderComponent,
     StickyFooterComponent,
-    ImageCachePipe,
   ],
   imports: [
     MatCardModule,
