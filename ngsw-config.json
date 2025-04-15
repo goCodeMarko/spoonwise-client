@@ -21,9 +21,19 @@
       "resources": {
         "files": [
           "/assets/**",
-          "/*.(webp|svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)",
-          "https://res.cloudinary.com/dhmkfau4h/image/authenticated/s--KLKiatWL--/v1744459982/spoonwise/**"
+          "/*.(webp|svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "cloudinary-images",
+      "urls": ["https://res.cloudinary.com/dhmkfau4h/image/**"],
+      "cacheConfig": {
+        "maxSize": 100,
+        "maxAge": "7d",
+        "strategy": "performance"
       }
     }
   ]
