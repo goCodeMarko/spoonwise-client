@@ -1,3 +1,38 @@
 .content {
-  margin-top: 70px;
+  margin-top: 90px;
+}
+.gs-main-button-group {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed !important;
+  bottom: 0px;
+  left: 0px;
+  width: 100vw !important;
+  background-color: transparent;
+  padding: 5px 5px 8px 5px;
+
+  .gs-main-button-group-horizontal {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 0.5em !important;
+    flex-direction: row !important;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+  }
+}
+
+.ms-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  min-height: 50px;
+  justify-content: flex-start;
+  line-height: 1em;
+  position: relative;
+
+  .mat-icon-button {
+    width: 40px;
+    height: 40px;
+  }
 }

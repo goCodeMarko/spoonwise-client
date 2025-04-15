@@ -53,6 +53,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  logout(): void {}
+
   onTabChange(event: any) {
     console.log("0-------------event.index", event.index);
     switch (event.index) {
