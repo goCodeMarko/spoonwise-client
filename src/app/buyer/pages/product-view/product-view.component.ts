@@ -124,6 +124,7 @@ SwiperCore.use([
   encapsulation: ViewEncapsulation.None,
 })
 export class ProductViewComponent implements OnInit, OnDestroy {
+  static componentName = "ProductViewComponent";
   product!: IProduct;
   orderQty: number = 1;
   images = [];

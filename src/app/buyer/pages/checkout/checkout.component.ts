@@ -54,6 +54,7 @@ export interface CartItem {
   styleUrls: ["./checkout.component.scss"],
 })
 export class CheckoutComponent implements OnInit {
+  static componentName = "CheckoutComponent";
   checkedLineItems!: CartItem[];
   selectCheckedLineItems$: Observable<CartItem[]>;
   selectLineItemTotal$: Observable<number>;

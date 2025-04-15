@@ -19,6 +19,7 @@ import { Observable, Subject } from "rxjs";
   styleUrls: ["./profile.component.scss"],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+  static componentName = "ProfileComponent";
   selectedTab = "to_pay";
   points: number = 0;
   points$: Observable<number>;

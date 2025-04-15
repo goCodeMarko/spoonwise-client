@@ -61,6 +61,7 @@ export interface CartItem {
   styleUrls: ["./cart.component.scss"],
 })
 export class CartComponent implements OnInit {
+  static componentName = "CartComponent";
   cartItems!: CartItem[];
   cartItems$: Observable<CartItem[]>;
   lineItemCount$: Observable<number>;

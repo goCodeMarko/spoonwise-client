@@ -132,8 +132,9 @@ export class BuyerComponent implements OnInit {
   }
 
   fromRouterOutlet(component: any) {
-    console.log("------------component.constructor.name", component);
-    this.routerOutletComponent = component.constructor.name;
+    const name = component.constructor["componentName"] || "unknown";
+    console.log("------------component name", name);
+    this.routerOutletComponent = name;
 
     component.newMeta.subscribe((value: Meta) => {
       this.meta = value;

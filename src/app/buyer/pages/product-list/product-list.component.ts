@@ -21,6 +21,7 @@ interface params {
   styleUrls: ["./product-list.component.scss"],
 })
 export class ProductListComponent implements OnInit {
+  static componentName = "ProductListComponent";
   products: object[] = [];
   productListOnLoad: boolean = true;
   queryParams: params = { skip: 0, limit: 4 };
