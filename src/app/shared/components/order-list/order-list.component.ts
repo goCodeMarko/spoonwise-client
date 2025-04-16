@@ -188,6 +188,14 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.onBottomSheetClosed();
   }
 
+  trackByOrderId(index: number, order: any): string {
+    return order.orderId;
+  }
+
+  trackByLineItemId(index: number, item: any): string {
+    return item.productId;
+  }
+
   findDriver() {
     console.log("--------------this.orderId2", this.orderId);
     this.isLalamoveLoad = true;

@@ -1,7 +1,7 @@
 <div style="height: 60vh; overflow-y: scroll">
   <div style="display: flex; flex-direction: column; gap: 7px">
     <div
-      *ngFor="let order of orderItems; let i = index"
+      *ngFor="let order of orderItems; let i = index; trackBy: trackByOrderId"
       style="
         background-color: white;
         color: black;
@@ -58,7 +58,11 @@
         />
 
         <div
-          *ngFor="let lineItem of order.cart; let i = index"
+          *ngFor="
+            let lineItem of order.cart;
+            let i = index;
+            trackBy: trackByLineItemId
+          "
           style="
             display: grid;
             grid-template-columns: 1fr 2fr;
