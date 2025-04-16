@@ -3,7 +3,7 @@
     style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px"
   >
     <div
-      *ngFor="let cart of cartItems; let i = index"
+      *ngFor="let cart of cartItems; let i = index; trackBy: trackByShopId"
       style="
         background-color: white;
         color: black;
@@ -35,7 +35,11 @@
         </div>
 
         <div
-          *ngFor="let lineItem of cart.lineItems; let i = index"
+          *ngFor="
+            let lineItem of cart.lineItems;
+            let i = index;
+            trackBy: trackByLineItemId
+          "
           style="
             display: grid;
             grid-template-columns: 12px 1fr 2fr;
@@ -58,7 +62,7 @@
           </div>
           <div (click)="viewProduct(lineItem.productId)">
             <img
-              [src]="lineItem.images[0] | imageCache"
+              [src]="lineItem.images[0]"
               alt=""
               style="
                 width: 110px;

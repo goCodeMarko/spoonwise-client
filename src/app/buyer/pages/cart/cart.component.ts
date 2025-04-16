@@ -246,6 +246,14 @@ export class CartComponent implements OnInit {
     return cart.lineItems.every((item: any) => item.checked);
   }
 
+  trackByShopId(index: number, cart: any): string {
+    return cart.shop.shopId; // or use cart.id if available
+  }
+
+  trackByLineItemId(index: number, lineItem: any): string {
+    return lineItem.productId; // use a unique value per product
+  }
+
   // Toggle shop-level checkbox (Check/Uncheck all products)
   toggleShopCheckbox(event: any, cart: any) {
     this.cartItems = this.cartItems.map((cart2) => {

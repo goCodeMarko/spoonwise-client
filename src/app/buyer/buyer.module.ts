@@ -29,7 +29,6 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { OrderListComponent } from "../shared/components/order-list/order-list.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatRippleModule } from "@angular/material/core";
-import { ImageCachePipe } from "../shared/pipes/image-cache.pipe";
 
 @NgModule({
   declarations: [
@@ -42,7 +41,6 @@ import { ImageCachePipe } from "../shared/pipes/image-cache.pipe";
     CheckoutComponent,
     ProfileComponent,
     OrderListComponent,
-    ImageCachePipe,
   ],
   imports: [
     SharedModule,
