@@ -3,6 +3,7 @@
   grid-template-columns: repeat(2, 1fr); /* Two equal columns */
   gap: 7px; /* Space between cards */
   padding: 7px 0px 7px 0px;
+  padding-bottom: 108px;
 }
 
 /* Each card stretches based on screen size */
@@ -20,7 +21,7 @@
 }
 
 /* Image takes full width */
-.card img {
+.card .prod-img {
   width: 100%;
   height: auto;
   object-fit: cover;
@@ -40,6 +41,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+  height: 35px;
 }
 
 .price-color {
@@ -56,3 +58,14 @@ mat-button-toggle {
 //     grid-template-columns: 1fr; /* Single column on small screens */
 //   }
 // }
+
+.loader {
+  position: relative;
+  border: 10px solid linear-gradient(90deg, #f0f0f0, #d8d6d6, #f0f0f0) 0 0/ 80vh
+    100% fixed;
+
+  background: linear-gradient(90deg, #f0f0f0, #d8d6d6, #f0f0f0) 0 0/ 80vh 100% fixed;
+  background-color: linear-gradient(90deg, #f0f0f0, #d8d6d6, #f0f0f0) 0 0/ 80vh 100%
+    fixed;
+  animation: ghost 750ms infinite linear;
+}

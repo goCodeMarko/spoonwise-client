@@ -1,39 +1,80 @@
-// :host {
-//   position: fixed;
+// .gs-main-button-group {
 //   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-//   padding: 50px 20px 8px 20px;
-//   display: grid;
-//   grid-template-columns: 1fr auto auto auto;
-//   gap: 10px;
-//   align-items: center;
+//   position: fixed !important;
+//   // bottom: 20px;
+//   // left: 50%;
+//   // transform: translateX(-50%);
+//   bottom: 25px;
+//   right: 5px;
+//   // width: 44% !important;
+//   width: 20% !important;
+//   border-radius: 15px;
+//   // background-color: #fb5630;
+//   background-color: #f9f9f9;
+//   padding: 20px 8px;
+//   display: flex;
 //   justify-content: center;
-//   z-index: 2;
+
+//   .gs-main-button-group-horizontal {
+//     display: flex !important;
+//     flex-wrap: wrap;
+//     gap: 2em !important;
+//     // flex-direction: row !important;
+//     flex-direction: column !important;
+//     justify-content: center;
+//   }
+// }
+
+// .ms-icon-container {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   cursor: pointer;
+//   text-align: center;
+//   min-height: 50px;
+//   justify-content: flex-start;
+//   line-height: 1em;
+//   position: relative;
+
+//   .mat-icon-button {
+//     width: 40px;
+//     height: 40px;
+//   }
+
+//   button {
+//     width: 100%;
+
+//     mat-icon {
+//       font-size: 40px !important;
+//       text-align: center !important;
+//       width: 100%;
+//       color: #00c6c8;
+//     }
+//   }
+
+//   .ms-icon-text {
+//     margin-top: 4px;
+//     color: #fb5630;
+//   }
 // }
 
 .gs-main-button-group {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: fixed !important;
-  // bottom: 20px;
-  // left: 50%;
-  // transform: translateX(-50%);
-  bottom: 25px;
-  right: 5px;
-  // width: 44% !important;
-  width: 20% !important;
-  border-radius: 15px;
-  // background-color: #fb5630;
-  background-color: #f9f9f9;
-  padding: 20px 8px;
-  display: flex;
-  justify-content: center;
+  bottom: 0px;
+  left: 0px;
+  width: 100vw !important;
+  background-color: #fb5630;
+  padding: 7px;
+  height: 100px;
 
   .gs-main-button-group-horizontal {
     display: flex !important;
     flex-wrap: wrap;
-    gap: 2em !important;
-    // flex-direction: row !important;
-    flex-direction: column !important;
-    justify-content: center;
+    gap: 0.5em !important;
+    flex-direction: row !important;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
   }
 }
 
@@ -60,12 +101,11 @@
       font-size: 40px !important;
       text-align: center !important;
       width: 100%;
-      color: #00c6c8;
+      color: white;
     }
   }
+}
 
-  .ms-icon-text {
-    margin-top: 4px;
-    color: #fb5630;
-  }
+.ms-icon-text {
+  color: white;
 }

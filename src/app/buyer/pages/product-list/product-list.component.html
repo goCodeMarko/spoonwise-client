@@ -1,39 +1,111 @@
 <div class="container">
-  <ng-container *ngFor="let prod of products; let i = index">
-    <div class="card" (click)="viewProduct(prod._id)">
-      <img [src]="prod.images[0]" alt="Product Image" />
-      <div class="card-content">
-        <h5 class="line-clamp">
-          {{ prod.name }}
-        </h5>
-        <div style="display: flex; justify-content: space-between">
-          <p class="price-color">
-            {{ prod.price | currency : "PHP" : "symbol" }}
-          </p>
-          <p>~{{ prod.distance }}km</p>
-        </div>
+  <ng-container *ngIf="!productListOnLoad; else productListLoader">
+    <ng-container *ngFor="let prod of products; let i = index">
+      <div class="card" (click)="viewProduct(prod._id)">
+        <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
+        <div class="card-content">
+          <h5 class="line-clamp">
+            {{ prod.name }}
+          </h5>
+          <div style="display: flex; gap: 7px; height: 20px">
+            <ng-container *ngFor="let b of prod.specialOffers">
+              <small
+                *ngIf="b.name === 'Free'"
+                style="background-color: greenyellow; padding: 0px 7px"
+                >{{ b.name }}</small
+              >
+              <small
+                *ngIf="b.name === 'Buy 1 Get 1'"
+                style="background-color: pink; padding: 0px 7px"
+                >{{ b.name }}</small
+              >
+            </ng-container>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; height: 20px"
+          >
+            <p class="price-color">
+              {{ prod.price | currency : "PHP" : "symbol" }}
+            </p>
 
-        <div
-          style="
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-          "
-        >
-          <ng-container *ngFor="let b of prod.specialOffers">
-            <small style="background-color: greenyellow; padding: 10px">{{
-              b.name
-            }}</small>
-          </ng-container>
-        </div>
+            <p>
+              ~{{ prod.distance }}km
+              <img
+                src="assets/icons/location.png"
+                width="20"
+                style="vertical-align: sub"
+              />
+            </p>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              height: 20px;
+              margin-top: 7px;
+            "
+          >
+            <p>
+              <img
+                src="assets/icons/expired.png"
+                width="20"
+                style="vertical-align: sub"
+              />
 
-        <div style="position: absolute; top: 0px; right: 7px">
-          {{ prod.rating | number : "1.1-1" }}
+              {{ prod.expiryDate | date : "MM-dd-yy" }}
+            </p>
+            <p>
+              {{ prod.rating | number : "1.1-1" }}
+              <img
+                src="assets/icons/star.png"
+                width="20"
+                style="vertical-align: sub"
+              />
+            </p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #productListLoader>
+    <div *ngFor="let prod of [1, 2, 3, 4]; let i = index">
+      <div class="card">
+        <div class="loader" style="width: 100%; height: 188.5px"></div>
+        <div class="card-content">
+          <h5 class="line-clamp">
+            <div class="loader" style="width: 100%; height: 35px"></div>
+          </h5>
+          <div style="display: flex; gap: 7px; height: 20px">
+            <div class="loader" style="width: 88px; height: 24px"></div>
+            <div class="loader" style="width: 43px; height: 24px"></div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              height: 20px;
+              margin-top: 7px;
+            "
+          >
+            <div class="loader" style="width: 60px; height: 24px"></div>
+
+            <div class="loader" style="width: 53px; height: 24px"></div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              height: 20px;
+              margin-top: 7px;
+            "
+          >
+            <div class="loader" style="width: 88px; height: 24px"></div>
+
+            <div class="loader" style="width: 47px; height: 24px"></div>
+          </div>
         </div>
       </div>
     </div>
-  </ng-container>
+  </ng-template>
 </div>

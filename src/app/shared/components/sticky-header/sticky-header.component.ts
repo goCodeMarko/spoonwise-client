@@ -25,8 +25,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 export class StickyHeaderComponent implements OnInit, OnChanges {
   searchInput: string | null = null;
-  lineItemCount$: Observable<number>;
-  lineItemCount: number = 0;
+
   orderQtyCount$: Observable<number>;
   orderQtyCount: number = 0;
   @Input() routerOutletComponent = "";
@@ -39,11 +38,6 @@ export class StickyHeaderComponent implements OnInit, OnChanges {
     private router: ActivatedRoute,
     private bottomSheet: MatBottomSheet
   ) {
-    this.lineItemCount$ = this.store.select(selectLineItemCount);
-    this.lineItemCount$.subscribe((data) => {
-      this.lineItemCount = data;
-    });
-
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
     this.orderQtyCount$.subscribe((data) => {
       this.orderQtyCount = data;
