@@ -13,11 +13,13 @@
     ></app-map>
   </div>
 </div>
-
 <ng-template #loading>
   <p>Loading data...</p>
 </ng-template>
-<section *ngIf="routerOutletComponent == 'ProductListComponent'">
+<section
+  *ngIf="routerOutletComponent == 'ProductListComponent'"
+  style="background-color: white; color: black"
+>
   <div
     style="
       display: flex;
