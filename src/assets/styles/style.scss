@@ -315,3 +315,14 @@ label.star {
   scroll-behavior: auto;
   -webkit-tap-highlight-color: transparent;
 }
+
+.loader {
+  position: relative;
+  border: 10px solid linear-gradient(90deg, #f0f0f0, #d8d6d6, #f0f0f0) 0 0/ 80vh
+    100% fixed;
+
+  background: linear-gradient(90deg, #f0f0f0, #d8d6d6, #f0f0f0) 0 0/ 80vh 100% fixed;
+  background-color: linear-gradient(90deg, #f0f0f0, #d8d6d6, #f0f0f0) 0 0/ 80vh 100%
+    fixed;
+  animation: ghost 750ms infinite linear;
+}
