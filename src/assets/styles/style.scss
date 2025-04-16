@@ -310,4 +310,8 @@ label.star {
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  scroll-margin: 0;
+  scroll-behavior: auto;
+  -webkit-tap-highlight-color: transparent;
 }
