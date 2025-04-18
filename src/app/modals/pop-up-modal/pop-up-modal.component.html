@@ -1,6 +1,20 @@
 <div class="gs-modal-content">
-  <h3>{{ this.data.title }}</h3>
-  <p [innerHtml]="this.data.message"></p>
+  <div
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding-bottom: 7px;
+    "
+  >
+    <img [src]="data.file" alt="Photo of a Shiba Inu" width="128" />
+  </div>
+
+  <h3 style="text-align: center">{{ this.data.title }}</h3>
+  <div>
+    <p style="text-align: center" [innerHtml]="this.data.message"></p>
+  </div>
 
   <div class="buttons">
     <button mat-button (click)="delete()" *ngIf="this.data.deletebutton">

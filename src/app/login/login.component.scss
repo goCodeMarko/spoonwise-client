@@ -31,18 +31,6 @@ $max-mobile: 590px;
           text-align: center;
           // font-family: "Anton-Regular", sans-serif;
         }
-
-        & .logo-container {
-          display: flex;
-          align-items: center;
-
-          & .company-logo {
-            // filter: drop-shadow(5px 1px 7px black);
-            margin: auto auto 10px auto;
-            width: 300px;
-            height: 200px;
-          }
-        }
       }
 
       & .warning-message {
@@ -62,6 +50,29 @@ $max-mobile: 590px;
     & button {
       width: 100%;
     }
+  }
+
+  .curved-box {
+    height: 200px;
+    background-color: #f8da50;
+    border-bottom-left-radius: 100% 100%;
+    border-bottom-right-radius: 100% 100%;
+    overflow: hidden;
+  }
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  & .company-logo {
+    // filter: drop-shadow(5px 1px 7px black);
+    margin: auto auto 10px auto;
+    width: 300px;
   }
 }
 

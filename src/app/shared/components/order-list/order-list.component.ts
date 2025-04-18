@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { Order } from "./../../../shared/store/order/order.state";
-import { takeUntil } from "rxjs/operators";
+import { take, takeUntil } from "rxjs/operators";
 import { Store } from "@ngrx/store";
 import {
   selectToPay,
@@ -19,6 +19,7 @@ import {
   selectToReceive,
   selectCancelled,
 } from "../../store/order/order.selectors";
+import { Actions, ofType } from "@ngrx/effects";
 import { AuthService } from "src/app/authorization/auth.service";
 import {
   BottomSheetContent,
@@ -28,10 +29,22 @@ import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import {
   setLineItemOrderReceived,
+  setLineItemOrderReceivedSuccess,
   setReviews,
+  setToReceiveSuccess,
 } from "../../store/order/order.actions";
 import { dispatch } from "rxjs/internal/observable/pairs";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { PopUpModalComponent } from "../../../modals/pop-up-modal/pop-up-modal.component";
+import { MatDialog } from "@angular/material/dialog";
+import {
+  OrderStatusValue,
+  OrderStatusLabels,
+  PaymentLabels,
+  PaymentValue,
+  ShippingOptionLabels,
+  ShippingOptionValue,
+} from "./../../../shared/enums/index";
 
 @Component({
   selector: "app-order-list",
@@ -49,6 +62,12 @@ export class OrderListComponent implements OnInit, OnDestroy {
   storeRating = 5;
   storeComment = "";
   ratingForm: FormGroup;
+  orderValue = Object.values(OrderStatusValue);
+  orderLabels = OrderStatusLabels;
+  paymentValue = Object.values(PaymentValue);
+  paymentLabels = PaymentLabels;
+  shippingOptionValue = Object.values(ShippingOptionValue);
+  shippingOptionLabels = ShippingOptionLabels;
 
   constructor(
     private store: Store,
@@ -57,7 +76,9 @@ export class OrderListComponent implements OnInit, OnDestroy {
     private vcRef: ViewContainerRef,
     private hrs: HttpRequestService,
     private sanitizer: DomSanitizer,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private actions$: Actions
   ) {
     this.account = JSON.parse(this.auth.getUserData());
     sheet.rootVcRef = vcRef;
@@ -71,6 +92,40 @@ export class OrderListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.orderItems$.subscribe((data) => {
       this.orderItems = data;
+    });
+
+    this.actions$
+      .pipe(ofType(setLineItemOrderReceivedSuccess), takeUntil(this.destroy$))
+      .subscribe((action) => {
+        this.dialog.open(PopUpModalComponent, {
+          width: "500px",
+          data: {
+            deletebutton: false,
+            okaybutton: false,
+            title: "Order Received",
+            message:
+              "<b >" +
+              this.earnedPoints +
+              " points</b> has been added in your account",
+            file: "assets/icons/badge.png",
+          },
+        });
+      });
+  }
+
+  x() {
+    this.dialog.open(PopUpModalComponent, {
+      width: "500px",
+      data: {
+        deletebutton: false,
+        okaybutton: false,
+        title: "Order Received",
+        message:
+          "<b >" +
+          this.earnedPoints +
+          " points</b> has been added in your account",
+        file: "assets/icons/badge.png",
+      },
     });
   }
 
@@ -269,7 +324,15 @@ export class OrderListComponent implements OnInit, OnDestroy {
     );
   }
 
-  orderReceived(orderId: string, shopId: string, lineItemId: string) {
+  earnedPoints = 0;
+  orderReceived(
+    orderId: string,
+    shopId: string,
+    lineItemId: string,
+    points: number
+  ) {
+    this.earnedPoints = points;
+
     this.store.dispatch(
       setLineItemOrderReceived({ orderId, shopId, lineItemId })
     );

@@ -98,6 +98,7 @@ export class OrderEffects {
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
+
               return OrderActions.setToReceiveSuccess({ order });
             }),
             catchError((error: any) =>
@@ -127,8 +128,9 @@ export class OrderEffects {
     )
   );
 
-  setLineItemOrderReceived$ = createEffect(() =>
-    this.actions$.pipe(
+  setLineItemOrderReceived$ = createEffect(() => {
+    console.log("setLineItemOrderReceived");
+    return this.actions$.pipe(
       ofType(OrderActions.setLineItemOrderReceived),
       mergeMap(({ orderId, shopId, lineItemId }) =>
         this.http
@@ -144,6 +146,8 @@ export class OrderEffects {
           .pipe(
             map((data: any) => {
               let order: Order = data.data;
+              console.log("---------data", data);
+              console.log("---------order", order);
               return OrderActions.setLineItemOrderReceivedSuccess({
                 order,
                 orderId,
@@ -160,8 +164,8 @@ export class OrderEffects {
             )
           )
       )
-    )
-  );
+    );
+  });
 
   setReviews$ = createEffect(() =>
     this.actions$.pipe(

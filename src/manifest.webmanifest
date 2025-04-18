@@ -1,7 +1,7 @@
 {
   "name": "Spoonwise",
   "short_name": "Spoonwise",
-  "theme_color": "#fb5630",
+  "theme_color": "#f8da50",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
