@@ -4,6 +4,12 @@ import * as _ from "lodash";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
+import {
+  ProductCategory,
+  ProductCategoryLabels,
+  SpecialOffer,
+  SpecialOfferLabels,
+} from "./../../../shared/enums/index";
 
 interface params {
   skip: number;
@@ -26,6 +32,9 @@ export class ProductListComponent implements OnInit {
   productListOnLoad: boolean = true;
   queryParams: params = { skip: 0, limit: 4 };
   @Output() newMeta = new EventEmitter<object>();
+
+  specialOfferIds = Object.values(SpecialOffer);
+  specialOfferLabels = SpecialOfferLabels;
 
   constructor(
     private hrs: HttpRequestService,

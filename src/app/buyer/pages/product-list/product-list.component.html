@@ -10,14 +10,14 @@
           <div style="display: flex; gap: 7px; height: 20px">
             <ng-container *ngFor="let b of prod.specialOffers">
               <small
-                *ngIf="b.name === 'Free'"
+                *ngIf="b == '10000'"
                 style="background-color: greenyellow; padding: 0px 7px"
-                >{{ b.name }}</small
+                >{{ specialOfferLabels[b] }}</small
               >
               <small
-                *ngIf="b.name === 'Buy 1 Get 1'"
+                *ngIf="b == '10001'"
                 style="background-color: pink; padding: 0px 7px"
-                >{{ b.name }}</small
+                >{{ specialOfferLabels[b] }}</small
               >
             </ng-container>
           </div>
