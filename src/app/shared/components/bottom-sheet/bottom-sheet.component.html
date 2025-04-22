@@ -36,11 +36,11 @@
     <mat-nav-list>
       <mat-radio-button
         class="example-radio-button"
-        *ngFor="let specialOffer of this.specialOffersFromLS"
+        *ngFor="let specialOffer of this.specialOfferList"
         [value]="specialOffer.id"
         style="display: block; margin-top: 3px"
       >
-        {{ specialOffer.name }}
+        {{ specialOffer.label }}
       </mat-radio-button>
       <mat-radio-button
         class="example-radio-button"

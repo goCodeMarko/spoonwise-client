@@ -44,7 +44,7 @@ export class BottomSheetComponent implements OnInit {
     this.specialOfferList = Object.keys(this.specialOfferLabels).map(
       (key: any) => ({
         id: key,
-        label: this.categoryLabels[key],
+        label: this.specialOfferLabels[key],
       })
     );
 
