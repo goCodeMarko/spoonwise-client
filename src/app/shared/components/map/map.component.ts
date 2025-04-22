@@ -49,7 +49,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     return new Observable((observer: Subscriber<any>) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position: any) => {
-          console.log(position);
+          
           observer.next({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -131,7 +131,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       popupAnchor: [0, -40], // Position relative to the marker
     });
     coordinates.forEach((SHOP) => {
-      console.log("SHOP", SHOP);
       L.marker([SHOP.lat, SHOP.lon], {
         icon: SHOPIcon,
       })
@@ -145,7 +144,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       const position = event.target.getLatLng();
       // Move the radius circle along with the marker
       this.circle.setLatLng([position.lat, position.lng]);
-      console.log(`New Coordinates:${position.lat}, ${position.lng}`);
     });
     // });
   }
@@ -262,7 +260,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
         const radius = (Number(slider.value) / 1000).toFixed(0);
 
         // Perform actions AFTER the user stops sliding
-        console.log("Final radius after sliding:", radius);
 
         this.router.navigate([], {
           relativeTo: this.route,

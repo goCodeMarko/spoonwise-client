@@ -91,6 +91,25 @@ export const orderReducer = createReducer(
   })),
 
   on(
+    OrderActions.setOrderStatusCancelSuccess,
+    (state, { order, orderId, shopId }) => ({
+      ...state,
+      order: {
+        ...state.order,
+        toPay: state.order.toPay.filter(
+          (order) => order.orderId != orderId && order.shop._id != shopId
+        ),
+        cancelled: [...order],
+      },
+      error: null,
+    })
+  ),
+  on(OrderActions.setOrderStatusCancelFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
+
+  on(
     OrderActions.setLineItemOrderReceivedSuccess,
     (state, { order, orderId, shopId, lineItemId }) => ({
       ...state,

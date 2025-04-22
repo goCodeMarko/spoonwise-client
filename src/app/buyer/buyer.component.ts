@@ -79,8 +79,6 @@ export class BuyerComponent implements OnInit {
     this.hrs.request("get", "shop/getShops", {}, async (res: any) => {
       if (res.success && _.has(res, "data")) {
         this.shops = res.data;
-
-        console.log("BuyerComponent:this.shops", this.shops);
       }
 
       this.isMapLoading = false;
@@ -133,7 +131,7 @@ export class BuyerComponent implements OnInit {
 
   fromRouterOutlet(component: any) {
     const name = component.constructor["componentName"] || "unknown";
-    console.log("------------component name", name);
+
     this.routerOutletComponent = name;
 
     component.newMeta.subscribe((value: Meta) => {

@@ -20,6 +20,14 @@ export class PopUpModalComponent implements OnInit {
     this.close();
   }
 
+  yes() {
+    this.dialog.close(true);
+  }
+
+  no() {
+    this.dialog.close(false);
+  }
+
   close() {
     this.dialog.close();
   }

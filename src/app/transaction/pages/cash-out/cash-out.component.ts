@@ -187,9 +187,7 @@ export class CashOutComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
-    console.log("ngAfterViewInit");
-  }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.socketSubscription.unsubscribe();
@@ -270,7 +268,7 @@ export class CashOutComponent implements OnInit, OnDestroy, AfterViewInit {
   //       data: {},
   //     })
   //     .componentInstance.result.subscribe((data) => {
-  //       console.log("CASHOUT COMPONENT: ", data);
+  //
   //       this.webcamImage = data;
   //       this.cashoutForm.patchValue({
   //         snapshot: data?._imageAsDataUrl,
@@ -321,7 +319,7 @@ export class CashOutComponent implements OnInit, OnDestroy, AfterViewInit {
           status,
           snapshot,
         } = event.data;
-        console.log("--------------------2", event.data);
+
         this.cashoutForm.patchValue({
           phone_number: phone_number,
           cid: _id,
@@ -339,7 +337,7 @@ export class CashOutComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.viewType = "editCashout";
         this.snapshotView = snapshot;
-        // console.log("-----", this.imageContainer);
+        //
         // const img = document.createElement("img");
         // img.src = snapshot;
         // img.style.maxWidth = "100%"; // Optional: Style the image
@@ -613,8 +611,6 @@ export class CashOutComponent implements OnInit, OnDestroy, AfterViewInit {
     formData.append("fee", this.cashoutForm.controls["fee"].value);
     formData.append("note", this.cashoutForm.controls["note"].value);
 
-    console.log("---2", formData);
-    console.log("---3", this.cashoutForm.value);
     this.hrs.request(
       "post",
       `transaction/addTransaction?trans_id=${this.transactionDetails?._id}`,
@@ -678,7 +674,7 @@ export class CashOutComponent implements OnInit, OnDestroy, AfterViewInit {
     formData.append("amount", this.cashoutForm.controls["amount"].value);
     formData.append("fee", this.cashoutForm.controls["fee"].value);
     formData.append("note", this.cashoutForm.controls["note"].value);
-    console.log("-----snapshot", this.snapshotFile);
+
     this.hrs.request(
       "put",
       `transaction/updateCICO?trans_id=${this.transactionDetails?._id}&cid=${
@@ -802,7 +798,7 @@ export class CashOutComponent implements OnInit, OnDestroy, AfterViewInit {
               });
             }
           }
-          console.log("---------data", data);
+
           this.socket.sendMessage({
             type: "updateCashout",
             data: {

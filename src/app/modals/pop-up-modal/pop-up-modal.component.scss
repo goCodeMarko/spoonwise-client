@@ -1,9 +1,7 @@
-.button {
-  display: inline-flex;
-}
-
-*,
-body {
-  padding: 0;
-  margin: 0;
+.buttons {
+  display: flex;
+  margin-top: 14px;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
 }

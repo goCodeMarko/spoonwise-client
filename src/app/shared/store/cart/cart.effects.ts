@@ -50,7 +50,6 @@ export class CartEffects {
       mergeMap(() =>
         this.http.get(`${environment.SERVER_URL_CLUSTERS}user/getCart`).pipe(
           map((data: any) => {
-            console.log("===============", data);
             let cart: CartItem[] = data.data;
             return CartActions.setCartSuccess({ cart });
           }),
@@ -74,7 +73,6 @@ export class CartEffects {
           .pipe(
             map(() => CartActions.addToCartSuccess({ shop, lineItem })),
             catchError((error) => {
-              console.log("Effect Triggered");
               return of(CartActions.addToCartFailure({ error }));
             })
           )

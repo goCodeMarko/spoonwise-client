@@ -105,8 +105,6 @@ export class ViewBooksComponent implements OnInit {
       this.renderer.setAttribute(el, "status", "0");
       this.renderer.setStyle(el, "fill", "black");
     }
-
-    console.log(this.selected);
   }
 
   public getBooks(filters = {}) {
@@ -193,7 +191,6 @@ export class ViewBooksComponent implements OnInit {
 
     // this.idCardBtn = true;
     this.hrs.request("put", "user/generateIdCard", {}, async (res: any) => {
-      console.log(2342342342, res);
       if (res.success) {
         this.idCard.front = res.data.front_card;
         this.idCard.back = res.data.back_card;

@@ -8,11 +8,9 @@ export class PushNotificationService {
   constructor(private hrs: HttpRequestService) {}
 
   notifyMe() {
-    this.hrs.request("get", "company/notify", {}, async (data: any) => {
-      console.log("-----------------sent", data);
-    });
+    this.hrs.request("get", "company/notify", {}, async (data: any) => {});
 
-    // console.log("window ", window);
+    //
     // if (!("Notification" in window)) {
     //   // Check if the browser supports notifications
     //   alert("This browser does not support desktop notification");

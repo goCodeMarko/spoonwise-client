@@ -69,7 +69,6 @@ export class LoginComponent implements OnInit {
         "transaction/getTransaction",
         { startDate, endDate },
         async (res: any) => {
-          console.log("--------------------login", res);
           if (res.success && _.has(res, "data")) {
             this.transactionId = res.data?._id;
           }
@@ -89,19 +88,14 @@ export class LoginComponent implements OnInit {
         if (data.success) {
           try {
             const user = await this.auth.setToken(data.data);
-            console.log("token has been set!");
-            console.log("-------------------", data);
+
             if (data.data.account.role == "buyer") {
               this.store.dispatch(setCart());
               this.store.dispatch(setToPay());
               this.auth.navigate("/", "");
             } else if (data.data.account.role == "seller") {
-              console.log("yoww");
-
               this.auth.navigate("/shop/add-product", "");
             }
-
-            console.log("User has been navigated!");
           } catch (error) {
             this.message = "Client Error, Please contact your administrator";
             console.error("there's a problem in setting up token!");

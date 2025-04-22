@@ -31,6 +31,7 @@ import {
   setLineItemOrderReceived,
   setLineItemOrderReceivedSuccess,
   setReviews,
+  setOrderStatusCancel,
   setToReceiveSuccess,
 } from "../../store/order/order.actions";
 import { dispatch } from "rxjs/internal/observable/pairs";
@@ -113,24 +114,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
       });
   }
 
-  x() {
-    this.dialog.open(PopUpModalComponent, {
-      width: "500px",
-      data: {
-        deletebutton: false,
-        okaybutton: false,
-        title: "Order Received",
-        message:
-          "<b >" +
-          this.earnedPoints +
-          " points</b> has been added in your account",
-        file: "assets/icons/badge.png",
-      },
-    });
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    console.log('changes["data"]', changes.type.currentValue);
     switch (changes.type.currentValue) {
       case "to_pay":
         this.orderItems$ = this.store
@@ -204,14 +188,11 @@ export class OrderListComponent implements OnInit, OnDestroy {
       "order/lalamove/getQuotation",
       { shopId: shopId, orderId: orderId },
       async (data: any) => {
-        console.log("---------data", data);
         if (data.success) {
           this.lalamoveQoutationData = data.data.quotation;
           this.lalamoveStatus = data.data.lalamoveStatus;
           this.isLalamoveLoad = false;
         }
-
-        console.log("-----------xxxxxxxx", data.data.lalamoveStatus);
 
         if (
           ["ASSIGNING_DRIVER", "PICKED_UP", "ON_GOING", "COMPLETED"].includes(
@@ -225,10 +206,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
             ),
           };
           this.lalamoveDriver = data.data.latestLalamoveDriver;
-
-          console.log("-------this.lalamoveOrder", this.lalamoveOrder);
-          console.log("------- this.lalamoveDriver", this.lalamoveDriver);
-          console.log("------- this.lalamoveDriver", this.lalamoveDriver);
         }
       }
     );
@@ -252,7 +229,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   findDriver() {
-    console.log("--------------this.orderId2", this.orderId);
     this.isLalamoveLoad = true;
     this.hrs.request(
       "post",
@@ -263,7 +239,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
         orderId: this.orderId,
       },
       async (data: any) => {
-        console.log("---------------x", data);
         if (data.success) {
           this.lalamoveStatus = data.data.status;
 
@@ -298,7 +273,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   onBottomSheetClosed() {
-    console.log("close");
     this.isLalamoveLoad = true;
     this.shopId = "";
     this.orderId = "";
@@ -339,23 +313,27 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   isCancelBtnLoad = false;
-  cancel(orderId: string, shopId: string) {
-    console.log("------orderId", orderId);
-    this.isCancelBtnLoad = true;
-    this.hrs.request(
-      "put",
-      "order/updateOrderStatus",
-      {
-        orderId,
-        shopId,
-        status: "BUYER_CANCELED",
+  cancel(order: any, orderId: string, shopId: string) {
+    const confirmation = this.dialog.open(PopUpModalComponent, {
+      width: "500px",
+      data: {
+        deletebutton: false,
+        okaybutton: false,
+        yesBtn: true,
+        noBtn: true,
+        title: "Cancel Order",
+        message: `Are you sure you want to cancel <strong>Order #${orderId}</strong>?`,
+        file: "assets/icons/exclamation.png",
       },
-      async (data: any) => {
-        this.isCancelBtnLoad = false;
-        if (data.success) {
-        }
+    });
+
+    confirmation.afterClosed().subscribe((result) => {
+      this.isCancelBtnLoad = true;
+      if (result) {
+        this.store.dispatch(setOrderStatusCancel({ orderId, shopId }));
       }
-    );
+      this.isCancelBtnLoad = false;
+    });
   }
 
   storeRateBtnOnLoad = false;
@@ -397,7 +375,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   storeRatingSheetClosed() {
-    console.log("close");
     this.storeRateBtnOnLoad = false;
   }
 }

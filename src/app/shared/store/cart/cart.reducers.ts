@@ -63,16 +63,12 @@ export const cartReducer = createReducer(
     );
 
     if (shopRes) {
-      console.log("Shop Exists");
-
       // 2. Check if the product already exists within the shop's line items
       const product = shopRes.lineItems.find(
         (prod) => prod.productId === lineItem.productId
       );
 
       if (product) {
-        console.log("Product Exists");
-
         // 3. If the product exists, update it by:
         //    -  Copying all the lineitems of the shop except for the lineitem that need to be updated
         //    -  Adding the updated lineitem
@@ -119,7 +115,6 @@ export const cartReducer = createReducer(
         };
       }
     } else {
-      console.log("No Shop Found");
       // 5. If the shop does not exist, create a new shop entry with the product
       return {
         ...state,

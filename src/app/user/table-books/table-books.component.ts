@@ -64,7 +64,7 @@ export class TableBooksComponent implements OnInit, OnChanges {
   constructor(private dialog: MatDialog, private hrs: HttpRequestService) {}
 
   ngOnInit(): void {
-    console.log(34545, this.books);
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -90,7 +90,7 @@ export class TableBooksComponent implements OnInit, OnChanges {
   }
 
   setFilter() {
-    console.log(222222, this.value1);
+    
   }
 
   openDeleteModal(id: string) {
@@ -198,10 +198,10 @@ export class TableBooksComponent implements OnInit, OnChanges {
 
   public downloadPDF() {
     this.pdfbtn = true;
-    console.log(123123213, "downloadPDF()");
+    ");
     this.hrs.request("download", "user/downloadPDF", {}, async (res: any) => {
       const filename = `PDF_123`;
-      console.log(123123213, res);
+      
       if (res.body) {
         saveAs(res.body, filename);
       }
@@ -212,7 +212,7 @@ export class TableBooksComponent implements OnInit, OnChanges {
 
   public downloadExcel() {
     this.excelbtn = true;
-    console.log(143434, this.excelbtn);
+    
     this.hrs.request("download", "user/downloadExcel", {}, async (res: any) => {
       const filename = `EXCEL_123`;
       if (res.body) {

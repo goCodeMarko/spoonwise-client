@@ -74,7 +74,7 @@ export class AuthService {
   navigate(path: string, transactionId: string) {
     let params = {};
     if (transactionId) params = { tid: transactionId };
-    console.log("-----------------auth", transactionId);
+
     this.router.navigate([path], {
       queryParams: params,
       queryParamsHandling: "merge",

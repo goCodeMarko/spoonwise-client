@@ -113,7 +113,6 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.cartItems$.subscribe((data) => {
-      console.log("//////////////////cartItems$ cartcompomemt", data);
       // if (!this.isFilled) {
       const sortedData = JSON.parse(JSON.stringify(data));
       const response = sortedData
@@ -133,7 +132,7 @@ export class CartComponent implements OnInit {
           //       const existingItem = existingShop.lineItems.find(
           //         (cartItem: any) => cartItem.productId === item.productId
           //       );
-          //       console.log("------item.orderQty", item.orderQty);
+          //
           //       console.log(
           //         "------existingItem.orderQty",
           //         existingItem!.orderQty
@@ -154,7 +153,7 @@ export class CartComponent implements OnInit {
       // if (_.size(this.cartItems) > 0) {
       //   this.isFilled = true;
       // }
-      console.log("----------this.cartItems", this.cartItems);
+
       // }
 
       this.cartItems = response;
@@ -171,7 +170,7 @@ export class CartComponent implements OnInit {
     });
 
     // this.selectCommissionPoints$.subscribe((data) => {
-    //   console.log("----------commsionCheckout", data);
+    //
     //   this.commission = data;
     // });
 
@@ -183,7 +182,7 @@ export class CartComponent implements OnInit {
         ) {
           // this.product.qty = error.data.currentProductStock;
           // this.orderQty = error.data.currentProductStock;
-          console.log("-----------------yow", error);
+
           this._snackBar.open(error.message, "", {
             duration: 3000,
             verticalPosition: "top",
@@ -202,15 +201,12 @@ export class CartComponent implements OnInit {
   }
 
   onQtyChange(orderQty: any, lineItem: any, shop: any) {
-    console.log("----------onQtyChange", orderQty);
-
     // Initialize debounce Subject if it doesn't exist
     if (!this.debounceMap[lineItem.productId]) {
       this.debounceMap[lineItem.productId] = new Subject();
       this.debounceMap[lineItem.productId]
         .pipe(debounceTime(300))
         .subscribe((data) => {
-          console.log("-------------onQtyChange data", data);
           this.dispatchAddToCart(
             data.lineItem.orderQty,
             data.lineItem,
@@ -321,7 +317,6 @@ export class CartComponent implements OnInit {
   }
 
   dispatchAddToCart(orderQty: any, lineItem: any, shop: any) {
-    console.log("----------dispatchAddToCart", lineItem.checked);
     this.store.dispatch(
       addToCart({
         shop: { shopId: shop._id, ...shop },
@@ -343,7 +338,6 @@ export class CartComponent implements OnInit {
   }
 
   viewProduct(productId: string) {
-    console.log("---------------viewprod", productId);
     this.router.navigate(["/product", productId], { queryParams: {} });
   }
 }

@@ -95,7 +95,6 @@ export class TableComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {}
 
   onLongPress(data: any) {
-    console.log("Longpress Event", data);
     this.selectedDataInLongPress = data;
     this.bottomSheet.open(this.bottomSheetTemplate);
   }
@@ -134,7 +133,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   setFilter() {
-    // console.log(222222, this.value1);
+    //
   }
 
   // openDeleteModal(id: string) {
@@ -240,10 +239,10 @@ export class TableComponent implements OnInit, OnChanges {
 
   // public downloadPDF() {
   //   this.pdfbtn = true;
-  //   console.log(123123213, "downloadPDF()");
+  //   ");
   //   this.hrs.request("download", "user/downloadPDF", {}, async (res: any) => {
   //     const filename = `PDF_123`;
-  //     console.log(123123213, res);
+  //
   //     if (res.body) {
   //       saveAs(res.body, filename);
   //     }
@@ -254,7 +253,7 @@ export class TableComponent implements OnInit, OnChanges {
 
   // public downloadExcel() {
   //   this.excelbtn = true;
-  //   console.log(143434, this.excelbtn);
+  //
   //   this.hrs.request("download", "user/downloadExcel", {}, async (res: any) => {
   //     const filename = `EXCEL_123`;
   //     if (res.body) {

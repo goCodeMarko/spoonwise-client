@@ -2,6 +2,12 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
+import {
+  ProductCategory,
+  ProductCategoryLabels,
+  SpecialOffer,
+  SpecialOfferLabels,
+} from "./../../../shared/enums/index";
 
 @Component({
   selector: "app-bottom-sheet",
@@ -18,19 +24,36 @@ export class BottomSheetComponent implements OnInit {
   ratingForm: FormGroup;
   selectedOffer: string = "";
 
+  categoryIds = Object.values(ProductCategory);
+  categoryLabels = ProductCategoryLabels;
+  categoryList: { id: string; label: string }[] = [];
+
+  specialOfferIds = Object.values(SpecialOffer);
+  specialOfferLabels = SpecialOfferLabels;
+  specialOfferList: { id: string; label: string }[] = [];
+
   constructor(
     fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.categoryList = Object.keys(this.categoryLabels).map((key: any) => ({
+      id: key,
+      label: this.categoryLabels[key],
+    }));
+    this.specialOfferList = Object.keys(this.specialOfferLabels).map(
+      (key: any) => ({
+        id: key,
+        label: this.categoryLabels[key],
+      })
+    );
+
     this.extractQueryParam();
 
     this.categoriesFromLS = JSON.parse(
       localStorage.getItem("categories") ?? "[]"
     );
-    this.categoriesFG = fb.group(
-      this.createFormControls(this.categoriesFromLS)
-    );
+    this.categoriesFG = fb.group(this.createFormControls(this.categoryLabels));
 
     this.categoryKeys = Object.keys(this.categoriesFG.controls);
 
@@ -45,14 +68,14 @@ export class BottomSheetComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  private createFormControls(data: any) {
+  private createFormControls(data: { [key: string]: string }) {
     const controls: { [key: string]: any } = {};
 
-    data.forEach((element: any) => {
+    Object.keys(data).forEach((key) => {
       let val = false;
-      if (this.selectedCategories.includes(element.id)) val = true;
-      console.log("element.id", element.id);
-      controls[element.id] = val;
+      if (this.selectedCategories.includes(key)) val = true;
+
+      controls[key] = val;
     });
 
     return controls;
@@ -66,9 +89,8 @@ export class BottomSheetComponent implements OnInit {
         selectedCategories.push(key);
       }
     });
-
     const categoryQueryValue = selectedCategories.join(" ");
-    console.log("selectedCategories", selectedCategories);
+
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {

@@ -127,7 +127,6 @@ export class AddProductComponent implements OnInit {
         "product/createProduct",
         formData,
         (res: any) => {
-          console.log("-------data", res);
           if (res.success) {
           }
 
@@ -159,7 +158,7 @@ export class AddProductComponent implements OnInit {
       "1------updateCopiesValidity",
       this.copiesForm.get("copies")?.value
     );
-    console.log("2------updateCopiesValidity", this.copies);
+
     console.log(
       "3------updateCopiesValidity",
       this.copiesForm.get("copies")?.hasError("required")
@@ -210,13 +209,10 @@ export class AddProductComponent implements OnInit {
   }
 
   goToPrev(stepper: MatStepper) {
-    console.log("-------stepper", stepper);
-
     stepper.previous();
   }
 
   arrayNotEmptyValidator(control: AbstractControl) {
-    console.log("====", _.size(this.copies));
     return _.size(this.copies) > 0 ? null : { arrayEmpty: true };
   }
 
@@ -249,7 +245,7 @@ export class AddProductComponent implements OnInit {
         const reader = new FileReader(); // Create a FileReader to read the file
 
         reader.readAsDataURL(file); // Read the file as a Base64 data URL
-        console.log(_.size(input.files));
+
         if (_.size(this.copies) < this.maxFile) {
           reader.onload = (e: ProgressEvent<FileReader>) => {
             // Define what to do when file reading is complete
@@ -267,7 +263,6 @@ export class AddProductComponent implements OnInit {
                 base64: imgSrc,
                 id, // Simple unique ID
               });
-              console.log(this.originals);
 
               // Push the image and a generated ID into the copies array
 
@@ -338,8 +333,6 @@ export class AddProductComponent implements OnInit {
   }
 
   autoCropSquare(img: HTMLImageElement, id: string) {
-    console.log("----------------autoCropSquare");
-
     const size = Math.min(img.width, img.height); // square size
     const startX = (img.width - size) / 2;
     const startY = (img.height - size) / 2;
@@ -402,7 +395,6 @@ export class AddProductComponent implements OnInit {
     // cropper ready
   }
   loadImageFailed() {
-    console.log("-----------x");
     // show message
   }
 

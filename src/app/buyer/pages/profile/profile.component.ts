@@ -36,7 +36,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.points$.subscribe((data) => {
-      console.log("------------x", data);
       this.points = data;
     });
 
@@ -58,7 +57,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onTabChange(event: any) {
-    console.log("0-------------event.index", event.index);
     switch (event.index) {
       case 0:
         this.selectedTab = "to_pay";
@@ -79,7 +77,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.selectedTab = "cancelled";
         break;
     }
-
-    console.log("0-------------this.selectedTab", this.selectedTab);
   }
 }

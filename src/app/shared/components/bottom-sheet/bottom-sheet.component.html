@@ -18,13 +18,10 @@
   <b>Category</b>
   <form [formGroup]="categoriesFG">
     <mat-nav-list>
-      <div
-        *ngFor="let category of this.categoriesFromLS"
-        style="margin-top: 3px"
-      >
+      <div *ngFor="let category of this.categoryList" style="margin-top: 3px">
         <label>
           <input type="checkbox" [formControlName]="category.id" />
-          {{ category.name }}
+          {{ category.label }}
         </label>
       </div>
     </mat-nav-list>

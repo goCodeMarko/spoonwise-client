@@ -83,7 +83,6 @@ export class TransactionComponent implements OnInit {
       .subscribe(
         (message) => {
           //it will update the transaction details
-          console.log(11111, message);
 
           if (message.runbal_gcash.operation === "sum") {
             this.transactionDetails.runbal_gcash += message.runbal_gcash.data;
@@ -100,12 +99,8 @@ export class TransactionComponent implements OnInit {
           }
           //end
         },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          console.log("complete");
-        }
+        (error) => {},
+        () => {}
       );
 
     //Checks if route has tid param
@@ -128,13 +123,11 @@ export class TransactionComponent implements OnInit {
         );
 
       this.notificationSubscription = this.swPush.messages.subscribe(
-        (message) => {
-          console.log("Received a push message", message);
-        }
+        (message) => {}
       );
 
       // this.swPush.notificationClicks.subscribe((click) => {
-      //   console.log("Notification clicked", click);
+      //
       // });
     }
 
@@ -159,7 +152,6 @@ export class TransactionComponent implements OnInit {
   }
 
   sendToServer(subscription: PushSubscription) {
-    console.log("---------subscription", subscription);
     // Send subscription to the server
     this.hrs.request(
       "post",
@@ -169,7 +161,6 @@ export class TransactionComponent implements OnInit {
         console.log(
           "-----------------i am subscribed to PWA push notification"
         );
-        console.log("-----------------data", data);
       }
     );
   }

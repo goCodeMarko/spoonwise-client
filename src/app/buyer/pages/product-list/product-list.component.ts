@@ -51,15 +51,12 @@ export class ProductListComponent implements OnInit {
       this.getProducts();
     });
 
-    this.store.subscribe((state) => {
-      console.log("///////////////////////////// Full State:", state);
-    });
+    this.store.subscribe((state) => {});
   }
 
   getProducts() {
     this.productListOnLoad = true;
 
-    console.log("this.queryParams", this.queryParams);
     this.hrs.request(
       "get",
       "product/getProducts",
@@ -78,7 +75,6 @@ export class ProductListComponent implements OnInit {
   }
 
   viewProduct(prodId: string) {
-    console.log("---------------viewprod", prodId);
     this.router.navigate(["/product", prodId], { queryParams: {} });
   }
 }

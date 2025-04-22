@@ -15,9 +15,7 @@ export class ImagePreloadService {
     const loadPromises = images.map((image) => this.loadImage(image));
 
     // Return a promise that resolves when all images are loaded
-    return Promise.all(loadPromises).then(() => {
-      console.log("All images have been preloaded.");
-    });
+    return Promise.all(loadPromises).then(() => {});
   }
 
   // Helper method to load a single image and return a promise

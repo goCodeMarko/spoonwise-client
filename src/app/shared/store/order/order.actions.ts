@@ -71,6 +71,21 @@ export const setCancelledFailure = createAction(
   props<{ error: string }>()
 );
 
+export const setOrderStatusCancel = createAction(
+  "[Order] Set Order Status Canceled",
+  props<{ orderId: string; shopId: string }>()
+);
+
+export const setOrderStatusCancelSuccess = createAction(
+  "[Order] Set Order Status Cancel Success",
+  props<{ order: Order[]; orderId: string; shopId: string }>()
+);
+
+export const setOrderStatusCancelFailure = createAction(
+  "[Order] Set Order Status Cancel Failure",
+  props<{ error: string }>()
+);
+
 export const setLineItemOrderReceived = createAction(
   "[Order] Set LineItem Order Received",
   props<{ orderId: string; shopId: string; lineItemId: string }>()

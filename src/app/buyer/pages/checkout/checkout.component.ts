@@ -98,7 +98,7 @@ export class CheckoutComponent implements OnInit {
           shop.lineItems.sort((a: any, b: any) => a.name.localeCompare(b.name));
           return shop;
         });
-      console.log(response);
+
       this.checkedLineItems = response;
     });
     this.selectLineItemTotal$.subscribe((data) => {
@@ -106,7 +106,7 @@ export class CheckoutComponent implements OnInit {
     });
 
     // this.selectCommission$.subscribe((data) => {
-    //   console.log("----------commsionCheckout", data);
+    //
     //   this.commission = data;
     // });
   }

@@ -38,7 +38,6 @@ export class OrderEffects {
           .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/for_review`)
           .pipe(
             map((data: any) => {
-              console.log("----------for_review", data);
               let order: Order[] = data.data;
               return OrderActions.setForReviewSuccess({ order });
             }),
@@ -58,7 +57,6 @@ export class OrderEffects {
           .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_pack`)
           .pipe(
             map((data: any) => {
-              console.log("----------to_pack", data);
               let order: Order[] = data.data;
               return OrderActions.setToPackSuccess({ order });
             }),
@@ -129,7 +127,6 @@ export class OrderEffects {
   );
 
   setLineItemOrderReceived$ = createEffect(() => {
-    console.log("setLineItemOrderReceived");
     return this.actions$.pipe(
       ofType(OrderActions.setLineItemOrderReceived),
       mergeMap(({ orderId, shopId, lineItemId }) =>
@@ -146,8 +143,7 @@ export class OrderEffects {
           .pipe(
             map((data: any) => {
               let order: Order = data.data;
-              console.log("---------data", data);
-              console.log("---------order", order);
+
               return OrderActions.setLineItemOrderReceivedSuccess({
                 order,
                 orderId,
@@ -158,6 +154,38 @@ export class OrderEffects {
             catchError((error: any) =>
               of(
                 OrderActions.setLineItemOrderReceivedFailure({
+                  error: error.message,
+                })
+              )
+            )
+          )
+      )
+    );
+  });
+
+  setOrderStatusCancel$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(OrderActions.setOrderStatusCancel),
+      mergeMap(({ orderId, shopId }) =>
+        this.http
+          .put(`${environment.SERVER_URL_CLUSTERS}order/updateOrderStatus`, {
+            orderId,
+            shopId,
+            status: "BUYER_CANCELED",
+          })
+          .pipe(
+            map((data: any) => {
+              let order: Order[] = data.data;
+
+              return OrderActions.setOrderStatusCancelSuccess({
+                order,
+                orderId,
+                shopId,
+              });
+            }),
+            catchError((error: any) =>
+              of(
+                OrderActions.setOrderStatusCancelFailure({
                   error: error.message,
                 })
               )

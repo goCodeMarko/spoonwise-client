@@ -18,7 +18,6 @@ export class TokenInterceptorServiceService implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log("Token has been intercepted!");
     const header = req.clone({
       setHeaders: {
         Accept: "application/json",

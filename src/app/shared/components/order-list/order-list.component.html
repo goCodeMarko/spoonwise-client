@@ -1,5 +1,4 @@
-<div style="height: 80vh; overflow-y: scroll">
-  <button (click)="x()">x</button>
+<div style="height: 80vh; overflow-y: scroll; z-index: -1; position: fixed">
   <div style="display: flex; flex-direction: column; gap: 7px">
     <div
       *ngFor="let order of orderItems; let i = index; trackBy: trackByOrderId"
@@ -224,7 +223,7 @@
               <button
                 mat-stroked-button
                 [disabled]="isCancelBtnLoad"
-                (click)="cancel(order.orderId, order.shop._id)"
+                (click)="cancel(order, order.orderId, order.shop._id)"
                 style="min-width: 150px"
               >
                 <ng-container *ngIf="!isCancelBtnLoad; else cancelBtnLoad">

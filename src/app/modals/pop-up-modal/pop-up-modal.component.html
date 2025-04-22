@@ -37,5 +37,16 @@
     >
       Okay
     </button>
+    <button *ngIf="this.data.yesBtn" mat-stroked-button (click)="yes()">
+      Yes, Cancel
+    </button>
+    <button
+      color="main-green"
+      *ngIf="this.data.noBtn"
+      mat-stroked-button
+      (click)="no()"
+    >
+      No
+    </button>
   </div>
 </div>

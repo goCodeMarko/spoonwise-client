@@ -55,7 +55,7 @@ export class CameraModalComponent implements OnInit, OnDestroy {
   //   //   if (element) {
   //   //     clearInterval(this.elementChecker);
   //   //     this.onLoad = false;
-  //   //     console.log("Element exists in the DOM");
+  //   //
   //   //   }
   //   // }, 1000);
   // }
@@ -69,7 +69,7 @@ export class CameraModalComponent implements OnInit, OnDestroy {
   // }
   // // Method to handle the captured image
   // public handleImage(webcamImage: any): void {
-  //   console.log("--------------", webcamImage);
+  //
   //   this.result.emit(webcamImage);
   //   this.dialog.close();
   // }
@@ -86,7 +86,7 @@ export class CameraModalComponent implements OnInit, OnDestroy {
   // public get videoOptions(): MediaTrackConstraints {
   //   const result: MediaTrackConstraints = {};
   //   result.facingMode = { ideal: "environment" };
-  //   console.log(9);
+  //
   //   return result;
   // }
   // public cameraWasSwitched(deviceId: string): void {

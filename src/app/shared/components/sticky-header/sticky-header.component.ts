@@ -52,7 +52,6 @@ export class StickyHeaderComponent implements OnInit, OnChanges {
 
     if (changes.showCart) this.showCart = !!changes.showCart.currentValue;
     0;
-    console.log("xxxxxxxx", this.showCart);
   }
 
   emitSearch() {

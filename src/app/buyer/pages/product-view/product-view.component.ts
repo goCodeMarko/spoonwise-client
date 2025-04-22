@@ -165,9 +165,7 @@ export class ProductViewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getProduct();
 
-    this.store.subscribe((state) => {
-      console.log("///////////////////////////// Full State:", state);
-    });
+    this.store.subscribe((state) => {});
 
     this.cartItems$.subscribe((data) => {
       this.cartItems = data;
@@ -181,7 +179,6 @@ export class ProductViewComponent implements OnInit, OnDestroy {
           error.message ==
           "Invalid order quantity. Ensure quantity is between 1 and 1."
         ) {
-          console.log("---------------error", error.message);
           this.product.qty = error.data.currentProductStock;
           this.orderQty = error.data.currentProductStock;
           this._snackBar.open(error.message, "", {
@@ -294,7 +291,6 @@ export class ProductViewComponent implements OnInit, OnDestroy {
       async (res: { data: object[]; success: boolean }) => {
         if (res.success && _.has(res, "data")) {
           this.reviews = res.data;
-          console.log("----------this.reviews ", this.reviews);
         }
         this.reviewSheetLoad = false;
       }
