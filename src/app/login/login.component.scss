@@ -7,20 +7,19 @@ $max-mobile: 590px;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-
+  height: 100.037vh !important;
   & .container {
-    height: 100vh;
+    // height: 100vh;
     display: flex;
     justify-content: center;
 
     & mat-card {
-      height: 680px;
+      // height: 680px;
+
       width: 550px;
-      margin-top: 0px !important;
+      margin-top: 20px !important;
       padding: 2em;
       border-radius: 15px;
-      background-color: #f7f4e611;
-      color: black;
 
       & .login-card-header {
         & h2,
@@ -79,7 +78,7 @@ $max-mobile: 590px;
 @media (max-width: $max-mobile) {
   mat-card {
     width: 100vw !important;
-    height: 100vh !important;
+
     margin-top: 2em !important;
     box-shadow: none !important;
     border: none !important;
