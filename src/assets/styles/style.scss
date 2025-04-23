@@ -278,13 +278,13 @@ mat-card {
   background: #f6f6f6;
 }
 
-.sheet-content {
-  z-index: 99;
+.sheet {
+  z-index: 99 !important;
 }
 
-.sheet-backdrop {
-  z-index: 98;
-}
+// .sheet-backdrop {
+//   z-index: 98 !important;
+// }
 
 /* styles.scss */
 input.star-5:checked ~ label.star:before {
