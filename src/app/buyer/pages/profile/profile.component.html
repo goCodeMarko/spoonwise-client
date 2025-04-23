@@ -21,10 +21,11 @@
         {{ authUser.fullname }}
       </div>
       <div>{{ points }} points</div>
+      <div (click)="logout()">Logout</div>
     </div>
   </div>
 </div>
-<section style="max-height: 100vh; padding-bottom: 75vh">
+<section>
   <mat-tab-group
     mat-align-tabs="start"
     animationDuration="0ms"
@@ -62,18 +63,3 @@
     </mat-tab>
   </mat-tab-group>
 </section>
-
-<div class="gs-main-button-group">
-  <div class="gs-main-button-group-horizontal">
-    <ng-container>
-      <button
-        mat-flat-button
-        color="main-green"
-        (click)="logout()"
-        class="btn-block fw-bold"
-      >
-        Log Out
-      </button>
-    </ng-container>
-  </div>
-</div>
