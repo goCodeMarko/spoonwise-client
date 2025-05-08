@@ -1,5 +1,6 @@
 import {
   Component,
+  Input,
   OnDestroy,
   OnInit,
   ViewContainerRef,
@@ -19,12 +20,12 @@ import {
   removeFromCart,
   updateCart,
   clearCartError,
-} from "../../../shared/store/cart/cart.actions";
+} from "../../store/cart/cart.actions";
 import {
   selectCartItems,
   selectLineItemCount,
   selectCartError,
-} from "../../../shared/store/cart/cart.selectors";
+} from "../../store/cart/cart.selectors";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 export interface LineItem {
@@ -139,6 +140,7 @@ export class ProductViewComponent implements OnInit, OnDestroy {
   reviewSheetLoad = true;
   reviews: any[] = [];
   private destroy$ = new Subject<void>();
+  @Input() isShop = false;
 
   constructor(
     private hrs: HttpRequestService,
@@ -224,10 +226,6 @@ export class ProductViewComponent implements OnInit, OnDestroy {
   updateCart(productId: string, orderQty: number) {
     this.store.dispatch(updateCart({ productId, orderQty }));
   }
-
-  // clearCart() {
-  //   this.store.dispatch(clearCart());
-  // }
 
   getProduct() {
     this.productOnLoad = true;

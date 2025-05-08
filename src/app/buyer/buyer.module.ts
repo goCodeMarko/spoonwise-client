@@ -2,8 +2,6 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BuyerRoutingModule } from "./buyer-routing.module";
 import { BuyerComponent } from "./buyer.component";
-import { ProductListComponent } from "./pages/product-list/product-list.component";
-import { ProductViewComponent } from "./pages/product-view/product-view.component";
 import { MapComponent } from "../shared/components/map/map.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -24,23 +22,24 @@ import { SharedModule } from "../shared/shared.module";
 import { CartComponent } from "./pages/cart/cart.component";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
-import { ProfileComponent } from "./pages/profile/profile.component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { OrderListComponent } from "../shared/components/order-list/order-list.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatRippleModule } from "@angular/material/core";
+import { ProductListPageComponent } from "./pages/product-list-page/product-list-page.component";
+import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
+import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
 
 @NgModule({
   declarations: [
     BuyerComponent,
-    ProductListComponent,
-    ProductViewComponent,
     MapComponent,
     BottomSheetComponent,
     CartComponent,
     CheckoutComponent,
-    ProfileComponent,
-    OrderListComponent,
+    ProductListPageComponent,
+    ProfilePageComponent,
+    ProductViewPageComponent,
   ],
   imports: [
     SharedModule,
@@ -56,9 +55,7 @@ import { MatRippleModule } from "@angular/material/core";
     FormsModule,
     ReactiveFormsModule,
     MatCheckboxModule,
-    NgxStarRatingModule,
     MatRadioModule,
-    SwiperModule,
     BottomSheetModule,
     MatSnackBarModule,
     MatTabsModule,

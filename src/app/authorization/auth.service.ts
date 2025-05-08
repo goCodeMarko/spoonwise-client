@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpRequestService } from "../http-request/http-request.service";
+import { BehaviorSubject } from "rxjs";
 
 interface IResponse {
   success: string;
@@ -23,7 +24,19 @@ interface IResponse {
   providedIn: "root",
 })
 export class AuthService {
-  constructor(private router: Router, private hrs: HttpRequestService) {}
+  public user$ = new BehaviorSubject(null);
+
+  constructor(private router: Router, private hrs: HttpRequestService) {
+    console.log("AuthService instantiated");
+    const accountData = localStorage.getItem("account");
+    const data = accountData ? JSON.parse(accountData) : null;
+
+    if (data) this.user$.next(data);
+  }
+
+  getUserData$() {
+    return this.user$.asObservable();
+  }
 
   setToken(data: { account: object[]; token: any }) {
     return new Promise((resolve, reject) => {
@@ -33,6 +46,9 @@ export class AuthService {
 
         localStorage.setItem("account", account);
         localStorage.setItem("token", token);
+
+        if (data.account) this.user$.next(JSON.parse(account));
+        console.log("xx", this.user$.getValue());
       } catch (e) {
         console.info(e);
         reject(false);

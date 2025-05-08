@@ -49,6 +49,38 @@ export interface Invoice {
   payment_method_id: string;
 }
 
+export interface Lalamove {
+  quotationId: string;
+  priceBreakdown: {
+    base: string;
+    totalExcludePriorityFee: string;
+    total: string;
+    currency: string;
+  };
+  driver: [];
+  shareLink: string;
+  scheduleAt: string;
+  market: string;
+  driverId: string;
+  previousStatus: number;
+  status: number;
+  distance: {
+    value: string;
+    unit: string;
+  };
+  stops: [
+    {
+      coordinates: [{ lat: string; lng: string; _id: string }];
+      address: string;
+      name: string;
+      phone: string;
+      delivery_code: [{ value: string; status: string }];
+    }
+  ];
+  id: string;
+  _id: string;
+}
+
 export interface Order {
   orderId: string;
   buyer: string;
@@ -59,8 +91,10 @@ export interface Order {
   cart: LineItem[];
   latestStatus: Status;
   invoice: Invoice;
+  lalamove: [Lalamove];
   subtotal: number;
   totalItems: number;
+  status: [Status];
 }
 
 export interface OrderState {

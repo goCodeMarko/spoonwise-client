@@ -38,7 +38,9 @@
     </div>
   </ng-template>
 
-  <div *ngIf="routerOutletComponent != 'ProductListComponent'; else searchbar">
+  <div
+    *ngIf="routerOutletComponent != 'ProductListPageComponent'; else searchbar"
+  >
     <div
       class="filters"
       style="

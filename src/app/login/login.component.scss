@@ -8,38 +8,39 @@ $max-mobile: 590px;
   -o-background-size: cover;
   background-size: cover;
   height: 100.037vh !important;
+  background-color: #f6f6f6;
   & .container {
     // height: 100vh;
     display: flex;
     justify-content: center;
 
-    & mat-card {
-      // height: 680px;
+    // & mat-card {
+    //   // height: 680px;
 
-      width: 550px;
-      margin-top: 20px !important;
-      padding: 2em;
-      border-radius: 15px;
+    //   width: 550px;
+    //   margin-top: 20px !important;
+    //   padding: 2em;
+    //   border-radius: 15px;
 
-      & .login-card-header {
-        & h2,
-        h3,
-        p {
-          margin-top: 10px;
-          margin-bottom: 10px;
-          text-align: center;
-          // font-family: "Anton-Regular", sans-serif;
-        }
-      }
-
-      & .warning-message {
-        min-height: 20px;
-        width: 100%;
+    & .login-card-header {
+      & h2,
+      h3,
+      p {
+        margin-top: 10px;
+        margin-bottom: 10px;
         text-align: center;
-        color: rgb(199, 0, 0);
-        // font-family: "Russo One", sans-serif;
+        // font-family: "Anton-Regular", sans-serif;
       }
     }
+
+    & .warning-message {
+      min-height: 20px;
+      width: 100%;
+      text-align: center;
+      color: rgb(199, 0, 0);
+      // font-family: "Russo One", sans-serif;
+    }
+    // }
 
     & mat-form-field {
       display: block;
@@ -52,10 +53,10 @@ $max-mobile: 590px;
   }
 
   .curved-box {
-    height: 200px;
+    height: 160px;
     background-color: #f8da50;
-    border-bottom-left-radius: 100% 100%;
-    border-bottom-right-radius: 100% 100%;
+    // border-bottom-left-radius: 100% 100%;
+    // border-bottom-right-radius: 100% 100%;
     overflow: hidden;
   }
 }
@@ -67,20 +68,14 @@ $max-mobile: 590px;
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
-
-  & .company-logo {
-    // filter: drop-shadow(5px 1px 7px black);
-    margin: auto auto 10px auto;
-    width: 300px;
-  }
 }
 
 @media (max-width: $max-mobile) {
-  mat-card {
-    width: 100vw !important;
+  // mat-card {
+  //   width: 100vw !important;
 
-    margin-top: 2em !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
+  //   margin-top: 2em !important;
+  //   box-shadow: none !important;
+  //   border: none !important;
+  // }
 }

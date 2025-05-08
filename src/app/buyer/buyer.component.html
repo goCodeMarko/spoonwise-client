@@ -3,100 +3,26 @@
   (onSearch)="search($event)"
 ></app-sticky-header>
 
-<div *ngIf="routerOutletComponent == 'ProductListComponent'">
+<div *ngIf="routerOutletComponent == 'ProductListPageComponent'">
   <div *ngIf="!isMapLoading; else loading">
     <app-map
       class="buyer-component"
       [shops]="this.shops"
       [subject]="subject"
-      [radius]="radius"
     ></app-map>
   </div>
+  <ng-template #loading>
+    <div
+      class="loader"
+      style="width: 100vw; height: 200px; margin-top: 70px"
+    ></div>
+  </ng-template>
 </div>
-<ng-template #loading>
-  <div
-    class="loader"
-    style="width: 100vw; height: 200px; margin-top: 70px"
-  ></div>
-</ng-template>
-<section
-  *ngIf="routerOutletComponent == 'ProductListComponent'"
-  style="background-color: white; color: black"
->
-  <div
-    style="
-      display: flex;
-      justify-content: space-between;
-      margin-left: 7px;
-      margin-right: 7px;
-    "
-  >
-    <div>
-      <mat-form-field appearance="outline" style="color: white">
-        <mat-select [formControl]="selectControl">
-          <mat-option value="latest">Latest</mat-option>
-          <mat-option value="nearest">Nearest</mat-option>
-          <mat-option value="cheapest">Cheapest</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <!-- put here -->
-
-      <!-- <button
-        [disabled]="this.meta.page === 1"
-        (click)="prev()"
-        mat-flat-button
-        style="background-color: white; height: 100%"
-      >
-        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
-          >arrow_back_ios</mat-icon
-        >
-      </button> -->
-
-      <button
-        [disabled]="this.meta.page === 1"
-        (click)="prev()"
-        mat-icon-button
-        color="primary"
-        style="width: 70px; height: 70px; position: relative"
-      >
-        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
-          >arrow_back_ios</mat-icon
-        >
-      </button>
-      {{ this.meta.page }} of {{ this.meta.pages }}
-
-      <button
-        [disabled]="this.meta.page === this.meta.pages"
-        (click)="next()"
-        mat-icon-button
-        color="primary"
-        style="width: 70px; height: 70px; position: relative"
-      >
-        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
-          >arrow_forward_ios</mat-icon
-        >
-      </button>
-
-      <!-- <button
-        [disabled]="this.meta.page === this.meta.pages"
-        (click)="next()"
-        mat-flat-button
-        style="background-color: white; height: 100%"
-      >
-        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
-          >arrow_forward_ios</mat-icon
-        >
-      </button> -->
-    </div>
-  </div>
-</section>
 
 <section class="content">
   <router-outlet (activate)="fromRouterOutlet($event)"></router-outlet>
 </section>
 
 <app-sticky-footer
-  *ngIf="routerOutletComponent == 'ProductListComponent'"
+  *ngIf="routerOutletComponent == 'ProductListPageComponent'"
 ></app-sticky-footer>

@@ -17,9 +17,20 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSelectModule } from "@angular/material/select";
 import { MatIconModule } from "@angular/material/icon";
+import { ProductListPageComponent } from "./pages/product-list-page/product-list-page.component";
+import { MatTabsModule } from "@angular/material/tabs";
+import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
+import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
+import { AuthService } from "../authorization/auth.service";
 
 @NgModule({
-  declarations: [SellerComponent, AddProductComponent],
+  declarations: [
+    SellerComponent,
+    AddProductComponent,
+    ProductListPageComponent,
+    ProfilePageComponent,
+    ProductViewPageComponent,
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -38,6 +49,7 @@ import { MatIconModule } from "@angular/material/icon";
     MatFormFieldModule,
     MatSelectModule,
     MatIconModule,
+    MatTabsModule,
   ],
 })
 export class SellerModule {}

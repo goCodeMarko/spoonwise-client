@@ -13,7 +13,7 @@ import { ImageHandlerDirective } from "./directives/image-handler/image-handler.
 import { CounterComponent } from "./components/counter/counter.component";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatChipsModule } from "@angular/material/chips";
 import { StickyHeaderComponent } from "./components/sticky-header/sticky-header.component";
@@ -21,6 +21,17 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { MatButtonModule } from "@angular/material/button";
 import { RouterModule } from "@angular/router";
 import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ProductListComponent } from "./components/product-list/product-list.component";
+import { MatOptionModule } from "@angular/material/core";
+import { MatSelectModule } from "@angular/material/select";
+import { MatRadioButton } from "@angular/material/radio";
+import { ProfileComponent } from "./components/profile/profile.component";
+import { MatTabsModule } from "@angular/material/tabs";
+import { ProductViewComponent } from "./components/product-view/product-view.component";
+import { SwiperModule } from "swiper/angular";
+import { NgxStarRatingModule } from "ngx-star-rating";
+import { OrderListComponent } from "./components/order-list/order-list.component";
 
 @NgModule({
   declarations: [
@@ -32,6 +43,10 @@ import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer.
     CounterComponent,
     StickyHeaderComponent,
     StickyFooterComponent,
+    ProductListComponent,
+    ProfileComponent,
+    ProductViewComponent,
+    OrderListComponent,
   ],
   imports: [
     MatCardModule,
@@ -45,6 +60,11 @@ import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer.
     MatBadgeModule,
     MatButtonModule,
     RouterModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
+    SwiperModule,
+    NgxStarRatingModule,
   ],
   exports: [
     AccordionAnchorDirective,
@@ -55,6 +75,11 @@ import { StickyFooterComponent } from "./components/sticky-footer/sticky-footer.
     CounterComponent,
     StickyHeaderComponent,
     StickyFooterComponent,
+    ProductListComponent,
+    ProfileComponent,
+    ProductViewComponent,
+    NgxStarRatingModule,
+    OrderListComponent,
   ],
   providers: [MenuItems],
 })

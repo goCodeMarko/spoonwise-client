@@ -94,7 +94,7 @@ export class LoginComponent implements OnInit {
               this.store.dispatch(setToPay());
               this.auth.navigate("/", "");
             } else if (data.data.account.role == "seller") {
-              this.auth.navigate("/shop/add-product", "");
+              this.auth.navigate("/shop/", "");
             }
           } catch (error) {
             this.message = "Client Error, Please contact your administrator";

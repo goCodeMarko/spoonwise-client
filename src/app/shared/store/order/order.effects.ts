@@ -165,27 +165,28 @@ export class OrderEffects {
 
   setOrderStatusCancel$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(OrderActions.setOrderStatusCancel),
-      mergeMap(({ orderId, shopId }) =>
+      ofType(OrderActions.setOrderStatus),
+      mergeMap(({ orderId, shopId, status }) =>
         this.http
           .put(`${environment.SERVER_URL_CLUSTERS}order/updateOrderStatus`, {
             orderId,
             shopId,
-            status: "BUYER_CANCELED",
+            status,
           })
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
 
-              return OrderActions.setOrderStatusCancelSuccess({
+              return OrderActions.setOrderStatusSuccess({
                 order,
                 orderId,
                 shopId,
+                status,
               });
             }),
             catchError((error: any) =>
               of(
-                OrderActions.setOrderStatusCancelFailure({
+                OrderActions.setOrderStatusFailure({
                   error: error.message,
                 })
               )

@@ -14,7 +14,10 @@
     </ng-container>
 
     <ng-container>
-      <div class="ms-icon-container" [routerLink]="'/profile'">
+      <div
+        class="ms-icon-container"
+        [routerLink]="isShop ? '/shop/profile' : '/profile'"
+      >
         <button
           mat-icon-button
           color="primary"
@@ -26,7 +29,7 @@
       </div>
     </ng-container>
 
-    <ng-container>
+    <ng-container *ngIf="showCart">
       <div class="ms-icon-container" [routerLink]="'/cart'">
         <div
           *ngIf="lineItemCount"

@@ -90,21 +90,89 @@ export const orderReducer = createReducer(
     error,
   })),
 
+  on(OrderActions.setNewOrder, (state, { order }) => ({
+    ...state,
+    order: {
+      ...state.order,
+      toPay: [...state.order.toPay, order],
+    },
+    error: null,
+  })),
+
   on(
-    OrderActions.setOrderStatusCancelSuccess,
-    (state, { order, orderId, shopId }) => ({
-      ...state,
-      order: {
-        ...state.order,
-        toPay: state.order.toPay.filter(
-          (order) => order.orderId != orderId && order.shop._id != shopId
-        ),
-        cancelled: [...order],
-      },
-      error: null,
-    })
+    OrderActions.setOrderStatusSuccess,
+    (state, { order, orderId, shopId, status }) => {
+      console.log("-----------x", order);
+      const statusBefore = order[0].status[order[0].status.length - 2];
+      console.log("----------statusBefore", statusBefore);
+      console.log("----------status", status);
+      if (
+        ["TO_PAY", "FOR_REVIEW"].includes(statusBefore.status) &&
+        ["CANCELED", "SELLER_CANCELED", "BUYER_CANCELED"].includes(status)
+      ) {
+        return {
+          ...state,
+          order: {
+            ...state.order,
+            toPay: state.order.toPay.filter(
+              (order) => order.orderId != orderId && order.shop._id != shopId
+            ),
+            forReview: state.order.toPay.filter(
+              (order) => order.orderId != orderId && order.shop._id != shopId
+            ),
+
+            cancelled: [...order],
+          },
+          error: null,
+        };
+      } else if (statusBefore.status == "TO_PAY" && status == "FOR_REVIEW") {
+        return {
+          ...state,
+          order: {
+            ...state.order,
+            toPay: state.order.toPay.filter(
+              (order) => order.orderId != orderId && order.shop._id != shopId
+            ),
+            forReview: [...order],
+          },
+          error: null,
+        };
+      } else if (statusBefore.status == "FOR_REVIEW" && status == "TO_PACK") {
+        return {
+          ...state,
+          order: {
+            ...state.order,
+            forReview: state.order.forReview.filter(
+              (order) => order.orderId != orderId && order.shop._id != shopId
+            ),
+            toPack: [...order],
+          },
+          error: null,
+        };
+      } else if (statusBefore.status == "TO_PACK" && status == "FOR_PICKUP") {
+        return {
+          ...state,
+          order: {
+            ...state.order,
+            toPack: state.order.forReview.filter(
+              (order) => order.orderId != orderId && order.shop._id != shopId
+            ),
+            forPickup: [...order],
+          },
+          error: null,
+        };
+      } else {
+        return {
+          ...state,
+          order: {
+            ...state.order,
+          },
+          error: null,
+        };
+      }
+    }
   ),
-  on(OrderActions.setOrderStatusCancelFailure, (state, { error }) => ({
+  on(OrderActions.setOrderStatusFailure, (state, { error }) => ({
     ...state,
     error,
   })),

@@ -27,22 +27,32 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      console.log("params=-------", params);
+      if (params.radius) this.radius = params.radius * 1000;
+    });
+  }
 
   ngAfterViewInit(): void {
+    console.log("ngAfterViewInit");
     this.loadMap();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["radius"] && this.map) {
-      L.circle([this.subject.coordinates.lat, this.subject.coordinates.lon], {
-        color: "transparent",
-        fillColor: "#00c6c8",
-        fillOpacity: 0.3,
-        stroke: false,
-        radius: this.radius, // 1km in meters
-      }).addTo(this.map);
-    }
+    // console.log(changes["radius"]);
+    // const radius = changes["radius"].currentValue;
+    // console.log(radius);
+    // if (radius && this.map) {
+    //   console.log("---yehey!");
+    //   L.circle([this.subject.coordinates.lat, this.subject.coordinates.lon], {
+    //     color: "transparent",
+    //     fillColor: "#00c6c8",
+    //     fillOpacity: 0.3,
+    //     stroke: false,
+    //     radius: radius, // 1km in meters
+    //   }).addTo(this.map);
+    // }
   }
 
   /*private getCurrentPosition(): any {
@@ -107,7 +117,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     )
       .bindPopup("Angular Leaflet")
       .addTo(this.map);
-
+    console.log("--------- this.radius", this.radius);
     this.circle = L.circle(
       [this.subject.coordinates.lat, this.subject.coordinates.lon],
       {
@@ -222,7 +232,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     }
   </style>
 
-  <input id="radius-slider" type="range" min="3000" max="20000" value="3000" step="1000">
+  <input id="radius-slider" type="range" min="3000" max="20000" value="" step="1000">
   <label id="radius-value">3 KM</label>
 `;
 
@@ -243,13 +253,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       L.DomEvent.disableClickPropagation(container);
 
       // Handle slider input
-      const slider = container.querySelector(
+      let slider = container.querySelector(
         "#radius-slider"
       ) as HTMLInputElement;
       const label = container.querySelector(
         "#radius-value"
       ) as HTMLLabelElement;
+      slider.value = this.radius.toString();
 
+      label.textContent = `${(this.radius / 1000).toFixed(0)} KM`;
       slider.addEventListener("input", (event) => {
         const newRadius = Number(slider.value);
         this.circle.setRadius(newRadius);

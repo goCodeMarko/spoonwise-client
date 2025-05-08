@@ -1,4 +1,10 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from "@angular/core";
 import { Observable } from "rxjs";
 import { Store } from "@ngrx/store";
 import {
@@ -16,6 +22,8 @@ import { Location } from "@angular/common";
 export class StickyFooterComponent implements OnInit {
   lineItemCount$: Observable<number>;
   lineItemCount: number = 0;
+  @Input() showCart = true;
+  @Input() isShop = false;
 
   constructor(
     private location: Location,

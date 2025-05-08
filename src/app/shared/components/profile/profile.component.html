@@ -1,0 +1,30 @@
+<div
+  style="
+    background-color: white;
+
+    border-radius: 15px 15px 0px 0px;
+    margin-top: 90px;
+    padding: 7px;
+  "
+>
+  <div style="display: flex; align-items: center; gap: 7px">
+    <div>
+      <img
+        [src]="authUser.profile_picture.url"
+        alt=""
+        width="65"
+        style="border-radius: 50%"
+      />
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <div style="font-size: 20px">
+        {{ authUser.fullname }}
+      </div>
+      <div>{{ points }} points</div>
+      <div (click)="logout()">Logout</div>
+    </div>
+  </div>
+</div>
+<section>
+  <ng-content></ng-content>
+</section>

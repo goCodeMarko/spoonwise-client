@@ -1,4 +1,13 @@
-<app-sticky-header [showCart]="false"></app-sticky-header>
+<app-sticky-header
+  [routerOutletComponent]="routerOutletComponent"
+></app-sticky-header>
 
-<router-outlet></router-outlet>
-<app-sticky-footer></app-sticky-footer>
+<div style="margin-top: 6em">
+  <router-outlet (activate)="fromRouterOutlet($event)"></router-outlet>
+</div>
+
+<app-sticky-footer
+  *ngIf="routerOutletComponent == 'ProductListPageComponent'"
+  [showCart]="false"
+  [isShop]="true"
+></app-sticky-footer>

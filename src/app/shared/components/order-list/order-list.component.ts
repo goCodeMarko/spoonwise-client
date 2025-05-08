@@ -7,7 +7,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
 import { Order } from "./../../../shared/store/order/order.state";
 import { take, takeUntil } from "rxjs/operators";
 import { Store } from "@ngrx/store";
@@ -31,8 +31,10 @@ import {
   setLineItemOrderReceived,
   setLineItemOrderReceivedSuccess,
   setReviews,
-  setOrderStatusCancel,
+  setOrderStatus,
   setToReceiveSuccess,
+  setForPickup,
+  setToReceive,
 } from "../../store/order/order.actions";
 import { dispatch } from "rxjs/internal/observable/pairs";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -46,6 +48,7 @@ import {
   ShippingOptionLabels,
   ShippingOptionValue,
 } from "./../../../shared/enums/index";
+import { SocketService } from "../../socket/socket.service";
 
 @Component({
   selector: "app-order-list",
@@ -57,6 +60,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
   orderItems!: Order[];
   orderItems$!: Observable<Order[]>;
   @Input() type!: string;
+  @Input() isShop = false;
   private destroy$ = new Subject<void>();
   account = {};
   output = "";
@@ -69,7 +73,8 @@ export class OrderListComponent implements OnInit, OnDestroy {
   paymentLabels = PaymentLabels;
   shippingOptionValue = Object.values(ShippingOptionValue);
   shippingOptionLabels = ShippingOptionLabels;
-
+  onLalamoveStatusChangeSubscriber: Subscription;
+  lalamoveShareLink: SafeResourceUrl = "";
   constructor(
     private store: Store,
     private auth: AuthService,
@@ -79,7 +84,8 @@ export class OrderListComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private actions$: Actions
+    private actions$: Actions,
+    private socket: SocketService
   ) {
     this.account = JSON.parse(this.auth.getUserData());
     sheet.rootVcRef = vcRef;
@@ -88,6 +94,25 @@ export class OrderListComponent implements OnInit, OnDestroy {
       rating: [this.storeRating, Validators.required],
       comment: [this.storeComment],
     });
+
+    this.onLalamoveStatusChangeSubscriber = this.socket
+      .onLalamoveStatusChange()
+      .subscribe((lalamove: any) => {
+        console.log("&&&&&&& onLalamoveStatusChange", lalamove);
+        if (lalamove.role === "seller") {
+          this.store.dispatch(setForPickup());
+        } else if (lalamove.role === "buyer") {
+          this.lalamoveOrder = {
+            ...lalamove.orderFullDetails,
+          };
+          this.lalamoveDriver = { phone: lalamove.driverPhone };
+        }
+
+        if (lalamove.orderFullDetails.status === "PICKED_UP") {
+          this.store.dispatch(setForPickup());
+          this.store.dispatch(setToReceive());
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -153,6 +178,8 @@ export class OrderListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
+    this.onLalamoveStatusChangeSubscriber.unsubscribe();
   }
 
   payNow(url: string) {
@@ -201,11 +228,15 @@ export class OrderListComponent implements OnInit, OnDestroy {
         ) {
           this.lalamoveOrder = {
             ...data.data.latestLalamoveOrder,
-            shareLink: this.sanitizer.bypassSecurityTrustResourceUrl(
-              data.data.latestLalamoveOrder.shareLink
-            ),
           };
-          this.lalamoveDriver = data.data.latestLalamoveDriver;
+          (this.lalamoveShareLink =
+            this.sanitizer.bypassSecurityTrustResourceUrl(
+              data.data.latestLalamoveOrder.shareLink
+            )),
+            (this.lalamoveDriver = data.data.latestLalamoveDriver);
+
+          console.log("==", this.lalamoveOrder);
+          console.log("==", this.lalamoveDriver);
         }
       }
     );
@@ -244,10 +275,10 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
           this.lalamoveOrder = {
             ...data.data,
-            shareLink: this.sanitizer.bypassSecurityTrustResourceUrl(
-              data.data.shareLink
-            ),
           };
+
+          this.lalamoveShareLink =
+            this.sanitizer.bypassSecurityTrustResourceUrl(data.data.shareLink);
         }
 
         this.isLalamoveLoad = false;
@@ -312,8 +343,33 @@ export class OrderListComponent implements OnInit, OnDestroy {
     );
   }
 
-  isCancelBtnLoad = false;
-  cancel(order: any, orderId: string, shopId: string) {
+  updateOrderStatus(
+    order: any,
+    orderId: string,
+    shopId: string,
+    status: string
+  ) {
+    let message,
+      title = "";
+    switch (status) {
+      case "CANCELED":
+        title = "Cancel Order";
+        message = `Are you sure you want to cancel <strong>#${orderId}</strong>?`;
+        break;
+      case "FOR_REVIEW":
+        title = "For Review";
+        message = `Are you sure you want to move <strong>#${orderId}</strong> to <strong>For Review</strong>?`;
+        break;
+      case "TO_PACK":
+        title = "To Pack";
+        message = `Are you sure you want to move <strong>#${orderId}</strong> to <strong>To Pack</strong>?`;
+        break;
+
+      case "FOR_PICKUP":
+        title = "For Pickup";
+        message = `Are you sure you want to move <strong>#${orderId}</strong> to <strong>For Pickup</strong>?`;
+        break;
+    }
     const confirmation = this.dialog.open(PopUpModalComponent, {
       width: "500px",
       data: {
@@ -321,18 +377,16 @@ export class OrderListComponent implements OnInit, OnDestroy {
         okaybutton: false,
         yesBtn: true,
         noBtn: true,
-        title: "Cancel Order",
-        message: `Are you sure you want to cancel <strong>Order #${orderId}</strong>?`,
+        title,
+        message,
         file: "assets/icons/exclamation.png",
       },
     });
 
     confirmation.afterClosed().subscribe((result) => {
-      this.isCancelBtnLoad = true;
       if (result) {
-        this.store.dispatch(setOrderStatusCancel({ orderId, shopId }));
+        this.store.dispatch(setOrderStatus({ orderId, shopId, status }));
       }
-      this.isCancelBtnLoad = false;
     });
   }
 

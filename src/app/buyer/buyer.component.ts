@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Route, Router } from "@angular/router";
 import { FormControl } from "@angular/forms";
 import { HttpRequestService } from "../http-request/http-request.service";
@@ -12,21 +12,15 @@ import {
   selectLineItemCount,
   selectOrderQtyCount,
 } from "./../shared/store/cart/cart.selectors";
+import { SocketService } from "../shared/socket/socket.service";
 
-interface Meta {
-  limit: number;
-  page: number;
-  pages: number;
-  total: number;
-}
 @Component({
   selector: "app-buyer",
   templateUrl: "./buyer.component.html",
   styleUrls: ["./buyer.component.scss"],
 })
-export class BuyerComponent implements OnInit {
+export class BuyerComponent implements OnInit, OnDestroy {
   selectControl = new FormControl("latest"); // Default value
-  meta: Meta = { limit: 0, page: 0, pages: 0, total: 0 };
   routerOutletComponent: any;
   shops: any[] = [];
   subject: object = {};
@@ -34,14 +28,16 @@ export class BuyerComponent implements OnInit {
   isMapLoading: boolean = true;
   orderQtyCount$: Observable<number>;
   orderQtyCount: number = 0;
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private hrs: HttpRequestService,
     private auth: AuthService,
-    private store: Store
+    private store: Store,
+    private socket: SocketService
   ) {
+    this.socket.connect();
+
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
 
     this.orderQtyCount$.subscribe((data) => {
@@ -50,21 +46,19 @@ export class BuyerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.selectControl.valueChanges.subscribe((value) => {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { sort: value },
-        queryParamsHandling: "merge",
-      });
-    });
     this.subject = JSON.parse(this.auth.getUserData());
     this.getShops();
     this.getCategories();
     this.getSpecialOffers();
 
     this.route.queryParams.subscribe((params) => {
+      console.log("params", params);
       if (params.radius) this.radius = params.radius;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.socket.disconnect();
   }
 
   getCategories() {
@@ -85,17 +79,6 @@ export class BuyerComponent implements OnInit {
     });
   }
 
-  search(searchInput?: string) {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        search: searchInput ? searchInput : null,
-        page: 1,
-      },
-      queryParamsHandling: "merge",
-    });
-  }
-
   getSpecialOffers() {
     this.hrs.request(
       "get",
@@ -109,33 +92,20 @@ export class BuyerComponent implements OnInit {
     );
   }
 
-  next() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        page: this.meta.page == 1 ? 2 : this.meta.page + 1,
-      },
-      queryParamsHandling: "merge",
-    });
-  }
-
-  prev() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        page: this.meta.page - 1,
-      },
-      queryParamsHandling: "merge",
-    });
-  }
-
   fromRouterOutlet(component: any) {
     const name = component.constructor["componentName"] || "unknown";
 
     this.routerOutletComponent = name;
+  }
 
-    component.newMeta.subscribe((value: Meta) => {
-      this.meta = value;
+  search(searchInput?: string) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: searchInput ? searchInput : null,
+        page: 1,
+      },
+      queryParamsHandling: "merge",
     });
   }
 }

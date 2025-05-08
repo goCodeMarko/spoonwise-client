@@ -47,6 +47,7 @@ import { EffectsModule } from "@ngrx/effects";
 import { CartEffects } from "./shared/store/cart/cart.effects";
 import { OrderEffects } from "./shared/store/order/order.effects";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { SellerModule } from "./seller/seller.module";
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     MatFormFieldModule,
     MatInputModule,
     BuyerModule,
+    SellerModule,
     // WebcamModule,
     RouterModule.forRoot(AppRoutes),
     ServiceWorkerModule.register("ngsw-worker.js", {

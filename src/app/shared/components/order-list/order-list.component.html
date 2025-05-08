@@ -17,15 +17,22 @@
                 <b style="font-weight: 700">{{ "#" + order.orderId }}</b>
               </div>
               <div style="color: #fb5630">
-                {{
-                  order.latestStatus.status == orderValue.TO_PAY
-                    ? order.paymentMethod == "CASH"
-                      ? orderValue.TO_PAY
-                      : order?.invoice?.status == "PAID"
-                      ? order?.invoice?.status
+                <ng-container
+                  *ngIf="
+                    orderLabels[order.latestStatus.status] === 'To Pay';
+                    else otherStatus
+                  "
+                >
+                  {{
+                    order.paymentMethod === "ONLINE" &&
+                    order?.invoice?.status == "PAID"
+                      ? "Paid"
                       : orderLabels[order.latestStatus.status]
-                    : orderLabels[order.latestStatus.status]
-                }}
+                  }}
+                </ng-container>
+                <ng-template #otherStatus>
+                  {{ orderLabels[order.latestStatus.status] }}
+                </ng-template>
               </div>
             </div>
             <div
@@ -36,7 +43,9 @@
               "
             >
               <div>
-                <b style="font-weight: 700">{{ order.shop.businessName }}</b>
+                <b style="font-weight: 700">{{
+                  isShop ? order.buyer.name : order.shop.businessName
+                }}</b>
               </div>
               <div>
                 <ngx-star-rating
@@ -117,29 +126,31 @@
                   </mat-chip-list>
                 </ng-container>
                 <ng-template #orderReceiveBtn>
-                  <button
-                    mat-button
-                    color="main-green"
-                    (click)="
-                      orderReceived(
-                        order.orderId,
-                        order.shop._id,
-                        lineItem._id,
-                        lineItem.points
-                      )
-                    "
-                  >
-                    Order Receive
-                  </button>
-                  <small
-                    style="
-                      display: block;
-                      background-color: #f6f6f6;
-                      /* border-radius: 0px 0px 15px 15px; */
-                      text-align: center;
-                    "
-                    >Earn {{ lineItem.points }} points</small
-                  >
+                  <ng-container *ngIf="!isShop">
+                    <button
+                      mat-button
+                      color="main-green"
+                      (click)="
+                        orderReceived(
+                          order.orderId,
+                          order.shop._id,
+                          lineItem._id,
+                          lineItem.points
+                        )
+                      "
+                    >
+                      Order Receive
+                    </button>
+                    <small
+                      style="
+                        display: block;
+                        background-color: #f6f6f6;
+                        /* border-radius: 0px 0px 15px 15px; */
+                        text-align: center;
+                      "
+                      >Earn {{ lineItem.points }} points</small
+                    >
+                  </ng-container>
                 </ng-template>
               </div>
             </div>
@@ -184,7 +195,7 @@
           <div>{{ shippingOptionLabels[order.shippingOption] }}</div>
         </div>
         <div>
-          <div *ngIf="order.latestStatus.status == 'TO_RECEIVE'">
+          <div *ngIf="order.latestStatus.status == 'TO_RECEIVE' && !isShop">
             <button
               mat-stroked-button
               *ngIf="order.reviews.rate == 0"
@@ -200,63 +211,150 @@
             </button>
           </div>
         </div>
+
         <div style="display: flex; flex-direction: row-reverse; gap: 7px">
-          <div
-            *ngIf="
-              order.buyer == account._id &&
-              order.latestStatus.status == 'TO_PAY' &&
-              order.paymentMethod == 'ONLINE' &&
-              order?.invoice?.url
-            "
-          >
-            <button (click)="payNow(order?.invoice?.url)">Pay Now</button>
-          </div>
-          <div>
+          <div style="display: flex; gap: 7px">
             <div
               *ngIf="
-                (order.shop._id == account.shopId &&
-                  order.latestStatus.status == 'FOR_REVIEW') ||
-                (order.latestStatus.status == 'TO_PAY' &&
-                  order.buyer == account._id)
+                order.latestStatus.status == 'TO_PAY' ||
+                (order.latestStatus.status == 'FOR_REVIEW' && isShop)
               "
             >
               <button
                 mat-stroked-button
                 [disabled]="isCancelBtnLoad"
-                (click)="cancel(order, order.orderId, order.shop._id)"
-                style="min-width: 150px"
+                (click)="
+                  updateOrderStatus(
+                    order,
+                    order.orderId,
+                    order.shop._id,
+                    'CANCELED'
+                  )
+                "
               >
-                <ng-container *ngIf="!isCancelBtnLoad; else cancelBtnLoad">
-                  Cancel
-                </ng-container>
-                <ng-template #cancelBtnLoad>
-                  <i class="fas fa-circle-notch fa-spin"></i>
-                </ng-template>
+                Cancel
               </button>
+            </div>
+
+            <div>
+              <div
+                *ngIf="
+                  ((order.paymentMethod == 'ONLINE' &&
+                    order?.invoice?.status == 'PAID') ||
+                    order.paymentMethod == 'CASH') &&
+                  order.latestStatus.status == 'TO_PAY' &&
+                  isShop
+                "
+              >
+                <button
+                  color="main-green"
+                  mat-stroked-button
+                  (click)="
+                    updateOrderStatus(
+                      order,
+                      order.orderId,
+                      order.shop._id,
+                      'FOR_REVIEW'
+                    )
+                  "
+                >
+                  For Review
+                </button>
+              </div>
             </div>
 
             <div
               *ngIf="
-                ['FOR_PICKUP', 'TO_RECEIVE'].includes(
-                  order.latestStatus.status
-                ) &&
-                order.shippingOption == 'LALAMOVE' &&
-                order.buyer == account._id &&
+                order.latestStatus.status == 'TO_PAY' &&
                 order.paymentMethod == 'ONLINE' &&
-                order?.invoice?.status == 'PAID'
+                order?.invoice?.url &&
+                !isShop
               "
             >
               <button
+                color="main-green"
                 mat-stroked-button
-                (click)="openSheet(mySheet, order.shop._id, order.orderId)"
+                (click)="payNow(order?.invoice?.url)"
               >
-                <img
-                  src="../../assets/images/logo/lalamove-icon.webp"
-                  width="30"
-                />
-                Lalamove
+                Pay Now
               </button>
             </div>
+
+            <div>
+              <div *ngIf="order.latestStatus.status == 'FOR_REVIEW' && isShop">
+                <button
+                  color="main-green"
+                  mat-stroked-button
+                  (click)="
+                    updateOrderStatus(
+                      order,
+                      order.orderId,
+                      order.shop._id,
+                      'TO_PACK'
+                    )
+                  "
+                >
+                  To Pack
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div *ngIf="order.latestStatus.status == 'TO_PACK' && isShop">
+                <button
+                  color="main-green"
+                  mat-stroked-button
+                  (click)="
+                    updateOrderStatus(
+                      order,
+                      order.orderId,
+                      order.shop._id,
+                      'FOR_PICKUP'
+                    )
+                  "
+                >
+                  FOR PICKUP
+                </button>
+              </div>
+            </div>
+
+            <ng-container *ngIf="order?.latestLalamove || !isShop">
+              <div
+                *ngIf="
+                  (['FOR_PICKUP', 'TO_RECEIVE'].includes(
+                    order.latestStatus.status
+                  ) &&
+                    order.shippingOption == 'LALAMOVE' &&
+                    order.paymentMethod == 'ONLINE' &&
+                    order?.invoice?.status == 'PAID' &&
+                    !isShop) ||
+                  (isShop &&
+                    ['FOR_PICKUP', 'TO_RECEIVE'].includes(
+                      order.latestStatus.status
+                    ) &&
+                    order.shippingOption == 'LALAMOVE' &&
+                    order.paymentMethod == 'ONLINE' &&
+                    order?.invoice?.status == 'PAID' &&
+                    [
+                      'ON_GOING',
+                      'TO_RECEIVE',
+                      'COMPLETED',
+                      'PICKED_UP'
+                    ].includes(order?.latestLalamove.status))
+                "
+              >
+                <button
+                  mat-stroked-button
+                  (click)="openSheet(mySheet, order.shop._id, order.orderId)"
+                >
+                  <img
+                    src="../../assets/images/logo/lalamove-icon.webp"
+                    width="30"
+                  />
+                  Lalamove
+                </button>
+              </div>
+            </ng-container>
 
             <div
               *ngIf="
@@ -307,7 +405,7 @@
 
     <!-- CONTENT -->
     <ng-template #contentLalamove>
-      <div style="margin: 0px 20px 20px 20px">
+      <div>
         <div
           *ngIf="
             lalamoveStatus == 'NONE' ||
@@ -324,13 +422,21 @@
               />
             </div>
           </div>
-          <div style="display: flex; gap: 3em">
+          <div
+            style="
+              display: flex;
+              gap: 3em;
+              margin: 0px 7px 20px 7px;
+              align-items: center;
+              justify-content: center;
+            "
+          >
             <div>
-              <div>Price</div>
-              <div>Service Type</div>
-              <div>Pick-up</div>
-              <div>Drop</div>
-              <div>Distance</div>
+              <div><b>Price</b></div>
+              <div><b>Service Type</b></div>
+              <div><b>Pick-up</b></div>
+              <div><b>Drop</b></div>
+              <div><b>Distance</b></div>
             </div>
             <div>
               <div>
@@ -359,7 +465,7 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              padding: 30px 5vw;
+              margin: 7px;
             "
           >
             <div style="width: 550px">
@@ -378,7 +484,6 @@
           </div>
         </div>
         <div
-          style="margin-bottom: 47px"
           *ngIf="
             ['ASSIGNING_DRIVER', 'PICKED_UP', 'ON_GOING', 'COMPLETED'].includes(
               lalamoveStatus
@@ -387,9 +492,9 @@
         >
           <div>
             <iframe
-              [src]="lalamoveOrder.shareLink"
+              [src]="lalamoveShareLink"
               width="100%"
-              height="600px"
+              height="650px"
               frameborder="0"
             ></iframe>
           </div>
@@ -397,27 +502,27 @@
           <div
             *ngIf="
               ['PICKED_UP', 'ON_GOING', 'COMPLETED', CANCELLED].includes(
-                lalamoveStatus
+                this.lalamoveOrder.status
               )
             "
             style="
               display: flex;
               gap: 3em;
               margin-top: 0px;
-              background: #f9f9f9;
               padding: 7px;
               border-radius: 0px 0px 10px 10px;
               display: flex;
-              gap: 3em;
+              align-items: center;
+              justify-content: center;
             "
           >
             <div>
-              <div>Price</div>
-              <div>Pick-up</div>
-              <div>Drop</div>
-              <div>Distance</div>
+              <div><b>Price</b></div>
+              <div><b>Pick-up</b></div>
+              <div><b>Drop</b></div>
+              <div><b>Distance</b></div>
 
-              <div>Driver Contact No.</div>
+              <div><b>Driver Contact No.</b></div>
             </div>
             <div>
               <div>
@@ -444,7 +549,7 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              padding: 30px 5vw;
+              margin: 7px;
             "
           >
             <div style="width: 550px">
