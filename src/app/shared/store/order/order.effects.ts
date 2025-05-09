@@ -168,7 +168,7 @@ export class OrderEffects {
       ofType(OrderActions.setOrderStatus),
       mergeMap(({ orderId, shopId, status }) =>
         this.http
-          .put(`${environment.SERVER_URL_CLUSTERS}order/updateOrderStatus`, {
+          .put(`${environment.SERVER_URL_MAIN}order/updateOrderStatus`, {
             orderId,
             shopId,
             status,

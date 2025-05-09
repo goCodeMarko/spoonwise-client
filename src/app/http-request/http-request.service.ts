@@ -29,10 +29,6 @@ export class HttpRequestService {
             }
           );
       case "get":
-        // const URL =
-        //   endpoint === "transaction/generateReport"
-        //     ? environment.SERVER_URL_81
-        //     : environment.SERVER_URL;
         return this.http
           .get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
             params: payload,
@@ -64,7 +60,6 @@ export class HttpRequestService {
         );
 
       case "put":
-        console.log("endpoint", endpoint);
         URL = ["order/updateOrderStatus"].includes(endpoint)
           ? environment.SERVER_URL_MAIN
           : environment.SERVER_URL_CLUSTERS;
