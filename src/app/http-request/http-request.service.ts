@@ -64,6 +64,7 @@ export class HttpRequestService {
         );
 
       case "put":
+        console.log("endpoint", endpoint);
         URL = ["order/updateOrderStatus"].includes(endpoint)
           ? environment.SERVER_URL_MAIN
           : environment.SERVER_URL_CLUSTERS;

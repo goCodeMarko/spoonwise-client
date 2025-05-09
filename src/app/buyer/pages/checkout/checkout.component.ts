@@ -145,7 +145,7 @@ export class CheckoutComponent implements OnInit {
           if (this.paymentMethod == "ONLINE") {
             window.location.href = res.data.invoice.url;
           } else {
-            window.location.href = window.location.origin;
+            this.router.navigate(["/"]);
           }
         } else {
         }
