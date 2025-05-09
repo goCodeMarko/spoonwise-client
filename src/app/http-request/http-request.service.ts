@@ -10,6 +10,7 @@ export class HttpRequestService {
   constructor(private http: HttpClient) {}
 
   request(method: string, endpoint: string, payload: any, callback: any) {
+    let URL;
     switch (method) {
       case "download":
         return this.http
@@ -46,10 +47,13 @@ export class HttpRequestService {
           );
 
       case "post":
-        const URL =
-          endpoint === "serviceWorker/subscribe"
-            ? environment.SERVER_URL_MAIN
-            : environment.SERVER_URL_CLUSTERS;
+        URL = [
+          "serviceWorker/subscribe",
+          "order/lalamove/createOrder",
+          "order/checkout",
+        ].includes(endpoint)
+          ? environment.SERVER_URL_MAIN
+          : environment.SERVER_URL_CLUSTERS;
         return this.http.post(`${URL}${endpoint}`, payload).subscribe(
           (response) => {
             return callback(response);
@@ -60,16 +64,17 @@ export class HttpRequestService {
         );
 
       case "put":
-        return this.http
-          .put(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, payload)
-          .subscribe(
-            (response) => {
-              return callback(response);
-            },
-            (error) => {
-              return callback(error.error);
-            }
-          );
+        URL = ["order/updateOrderStatus"].includes(endpoint)
+          ? environment.SERVER_URL_MAIN
+          : environment.SERVER_URL_CLUSTERS;
+        return this.http.put(`${URL}${endpoint}`, payload).subscribe(
+          (response) => {
+            return callback(response);
+          },
+          (error) => {
+            return callback(error.error);
+          }
+        );
     }
   }
 }
