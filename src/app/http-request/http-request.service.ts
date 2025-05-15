@@ -11,6 +11,15 @@ export class HttpRequestService {
 
   request(method: string, endpoint: string, payload: any, callback: any) {
     let URL;
+    const x =
+      [
+        "serviceWorker/subscribe",
+        "order/lalamove/createOrder",
+        "order/checkout",
+      ].includes(endpoint) ||
+      endpoint.startsWith("message/updateChatroomsMsgStatusToSeen/");
+    console.log("----endpoint", endpoint);
+    console.log("----x", x);
     switch (method) {
       case "download":
         return this.http
@@ -51,6 +60,7 @@ export class HttpRequestService {
           ].includes(endpoint) || endpoint.startsWith("message/sendMessage/")
             ? environment.SERVER_URL_MAIN
             : environment.SERVER_URL_CLUSTERS;
+        console.log("----URL", URL);
         return this.http.post(`${URL}${endpoint}`, payload).subscribe(
           (response) => {
             return callback(response);
@@ -64,7 +74,7 @@ export class HttpRequestService {
         URL =
           [
             "order/updateOrderStatus",
-            "message/updateChatroomsMsgStatusToReceived",
+            "message/updateChatroomsMsgStatusToDelivered",
           ].includes(endpoint) ||
           endpoint.startsWith("message/updateChatroomsMsgStatusToSeen/")
             ? environment.SERVER_URL_MAIN
