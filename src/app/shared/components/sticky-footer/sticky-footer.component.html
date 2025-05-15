@@ -1,7 +1,31 @@
 <div class="gs-main-button-group">
   <div class="gs-main-button-group-horizontal">
     <ng-container>
-      <div class="ms-icon-container">
+      <div
+        class="ms-icon-container"
+        [routerLink]="isShop ? '/shop/chats' : '/chats'"
+      >
+        <div
+          *ngIf="totalCountSentDeliveredMessages"
+          style="
+            position: absolute;
+            top: -4px;
+            right: 3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: white;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+          "
+        >
+          {{ totalCountSentDeliveredMessages }}
+        </div>
         <button
           mat-icon-button
           color="primary"

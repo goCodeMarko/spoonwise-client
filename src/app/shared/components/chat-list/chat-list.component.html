@@ -1,0 +1,94 @@
+<div
+  style="
+    height: 91.4vh;
+    overflow-y: scroll;
+    margin-top: 81.4px;
+    padding: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  "
+>
+  <div
+    *ngFor="
+      let chatroom of chatrooms;
+      let i = index;
+      trackBy: trackByChatroomId
+    "
+    style="
+      background-color: white;
+      color: black;
+      padding: 7px;
+      border-radius: 8px;
+    "
+    (click)="viewChatroom(chatroom._id)"
+  >
+    <div style="display: flex; justify-content: space-between">
+      <div>
+        <div style="display: flex; flex-direction: column">
+          <div style="display: flex; gap: 14px">
+            <div>
+              <div>
+                <img
+                  src="
+                        https://shiftart.com/wp-content/uploads/2017/04/RC-Profile-Square.jpg"
+                  alt=""
+                  width="65"
+                  style="border-radius: 50%"
+                />
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              "
+            >
+              <div>
+                <b>{{
+                  isShop ? chatroom.users.buyer.name : chatroom.users.shop.name
+                }}</b>
+              </div>
+
+              <div style="display: flex; gap: 7px">
+                <ng-container *ngIf="chatroom.latestMessages.length > 0">
+                  <div>
+                    <b>{{ chatroom.latestMessages[0].content.message }}</b>
+                  </div>
+                  <span><b>·</b></span>
+                  <div>
+                    <p>
+                      {{
+                        chatroom.latestMessages[0].createdAt
+                          | date : "MM/dd/yy hh:mm a"
+                      }}
+                    </p>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="display: flex; align-items: center"
+        *ngIf="chatroom.sentMessageCount"
+      >
+        <div
+          style="
+            background-color: #f8da50;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div>{{ chatroom.sentMessageCount }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ import { Store } from "@ngrx/store";
 import { CartItem } from "./shared/models/cart-item.model";
 import { setCart } from "./shared/store/cart/cart.actions";
 import { setToPay } from "./shared/store/order/order.actions";
+import { setChatrooms } from "./shared/store/chat/chat.actions";
 
 @Component({
   selector: "app-root",
@@ -51,8 +52,5 @@ export class AppComponent implements OnInit {
     imagePreloadService.preload(imagesToPreload);
   }
 
-  ngOnInit(): void {
-    this.store.dispatch(setCart());
-    this.store.dispatch(setToPay());
-  }
+  ngOnInit(): void {}
 }

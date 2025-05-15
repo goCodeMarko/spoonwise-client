@@ -109,7 +109,36 @@ export class SocketService implements OnDestroy {
     });
   }
 
-  public sendOrder(order: { data: any }): void {
-    this.socket.emit("onOrderListSocketUpdate", order);
+  public onNewChatMessage(): Observable<{ data: any }> {
+    console.log("listening On onNewChatMessage Socket");
+    return new Observable<{ data: any }>((observer) => {
+      this.socket.on("onNewChatMessage", (message: any) => {
+        observer.next(message);
+      });
+    });
+  }
+
+  public onUpdateChatroomsMsgStatusToDelivered(): Observable<{ data: any }> {
+    console.log("listening On onUpdateChatroomsMsgStatusToDelivered Socket");
+    return new Observable<{ data: any }>((observer) => {
+      this.socket.on(
+        "onUpdateChatroomsMsgStatusToDelivered",
+        (updatedChatrooms: any) => {
+          observer.next(updatedChatrooms);
+        }
+      );
+    });
+  }
+
+  public onUpdateChatroomsMsgStatusToSeen(): Observable<{ data: any }> {
+    console.log("listening On onUpdateChatroomsMsgStatusToSeen Socket");
+    return new Observable<{ data: any }>((observer) => {
+      this.socket.on(
+        "onUpdateChatroomsMsgStatusToSeen",
+        (updatedChatroom: any) => {
+          observer.next(updatedChatroom);
+        }
+      );
+    });
   }
 }

@@ -1,0 +1,55 @@
+<div style="max-height: 89.4dvh; min-height: 89.4dvh; margin-top: 81.7px">
+  <div
+    #chatContainer
+    (scroll)="onScroll(chatContainer)"
+    style="
+      max-height: 84.2dvh;
+      min-height: 84.2dvh;
+      overflow-y: scroll;
+
+      padding: 7px;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 7px;
+    "
+  >
+    <!--    height: 91.4vh; -->
+    <div
+      *ngFor="
+        let message of chatroomMessages;
+        let i = index;
+        trackBy: trackByMessageId
+      "
+    >
+      <ng-container
+        *ngIf="
+          [this.authUser._id, this.authUser.shop].includes(message.senderId);
+          else leftSide
+        "
+      >
+        <div style="display: flex; justify-content: end; align-items: center">
+          <div>
+            <small>{{ message.status }}</small>
+          </div>
+          <div>
+            <p class="message">
+              {{ message.content.message }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #leftSide>
+        <div style="display: flex; justify-content: start; align-items: center">
+          <div>
+            <p class="message">
+              {{ message.content.message }}
+            </p>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <input [(ngModel)]="text" type="text" />
+  <button (click)="sendMessage()">send</button>
+</div>

@@ -20,16 +20,47 @@ interface IResponse {
     error: { message: string };
   };
 }
+
+export interface IUserData {
+  address1: string;
+  address2: string;
+  branch: string;
+  cart: object[];
+  company: string;
+  coordinates: { lat: string; lon: string };
+  email: string;
+  fullname: string;
+  isblock: boolean;
+  phoneNumber: string;
+  profile_picture: { url: string; format: string };
+  role: string;
+  _id: string;
+  shop?: "";
+}
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  public user$ = new BehaviorSubject(null);
+  public user$ = new BehaviorSubject<IUserData>({
+    address1: "",
+    address2: "",
+    branch: "",
+    cart: [],
+    company: "",
+    coordinates: { lat: "", lon: "" },
+    email: "",
+    fullname: "",
+    isblock: true,
+    phoneNumber: "",
+    profile_picture: { url: "", format: "string" },
+    role: "",
+    _id: "",
+  });
 
   constructor(private router: Router, private hrs: HttpRequestService) {
     console.log("AuthService instantiated");
-    const accountData = localStorage.getItem("account");
-    const data = accountData ? JSON.parse(accountData) : null;
+    const accountData = localStorage.getItem("account")!;
+    const data = JSON.parse(accountData);
 
     if (data) this.user$.next(data);
   }

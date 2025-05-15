@@ -59,6 +59,7 @@ import { SocketService } from "../../socket/socket.service";
 export class OrderListComponent implements OnInit, OnDestroy {
   orderItems!: Order[];
   orderItems$!: Observable<Order[]>;
+
   @Input() type!: string;
   @Input() isShop = false;
   private destroy$ = new Subject<void>();

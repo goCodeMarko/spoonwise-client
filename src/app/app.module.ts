@@ -48,6 +48,8 @@ import { CartEffects } from "./shared/store/cart/cart.effects";
 import { OrderEffects } from "./shared/store/order/order.effects";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { SellerModule } from "./seller/seller.module";
+import { ChatroomEffects } from "./shared/store/chat/chat.effects";
+import { chatroomReducer } from "./shared/store/chat/chat.reducer";
 
 @NgModule({
   declarations: [
@@ -89,11 +91,15 @@ import { SellerModule } from "./seller/seller.module";
       // or after 30 seconds (whichever comes first).
       registrationStrategy: "registerWhenStable:30000",
     }),
-    StoreModule.forRoot({ cart: cartReducer, order: orderReducer }),
+    StoreModule.forRoot({
+      cart: cartReducer,
+      order: orderReducer,
+      chat: chatroomReducer,
+    }),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Keeps the last 25 states
     }),
-    EffectsModule.forRoot([CartEffects, OrderEffects]),
+    EffectsModule.forRoot([CartEffects, OrderEffects, ChatroomEffects]),
   ],
   providers: [
     HttpRequestService,

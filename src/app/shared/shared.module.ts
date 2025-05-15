@@ -32,6 +32,8 @@ import { ProductViewComponent } from "./components/product-view/product-view.com
 import { SwiperModule } from "swiper/angular";
 import { NgxStarRatingModule } from "ngx-star-rating";
 import { OrderListComponent } from "./components/order-list/order-list.component";
+import { ChatListComponent } from "./components/chat-list/chat-list.component";
+import { ChatComponent } from "./components/chat/chat.component";
 
 @NgModule({
   declarations: [
@@ -47,6 +49,8 @@ import { OrderListComponent } from "./components/order-list/order-list.component
     ProfileComponent,
     ProductViewComponent,
     OrderListComponent,
+    ChatListComponent,
+    ChatComponent,
   ],
   imports: [
     MatCardModule,
@@ -80,6 +84,8 @@ import { OrderListComponent } from "./components/order-list/order-list.component
     ProductViewComponent,
     NgxStarRatingModule,
     OrderListComponent,
+    ChatListComponent,
+    ChatComponent,
   ],
   providers: [MenuItems],
 })

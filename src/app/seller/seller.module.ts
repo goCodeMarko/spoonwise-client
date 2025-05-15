@@ -22,6 +22,8 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
 import { AuthService } from "../authorization/auth.service";
+import { ChatListPageComponent } from './pages/chat-list-page/chat-list-page.component';
+import { ChatPageComponent } from './pages/chat-page/chat-page.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { AuthService } from "../authorization/auth.service";
     ProductListPageComponent,
     ProfilePageComponent,
     ProductViewPageComponent,
+    ChatListPageComponent,
+    ChatPageComponent,
   ],
   imports: [
     CommonModule,

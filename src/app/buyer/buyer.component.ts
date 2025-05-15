@@ -6,13 +6,23 @@ import * as _ from "lodash";
 import { AuthService } from "../authorization/auth.service";
 import { Location } from "@angular/common";
 import { Store } from "@ngrx/store";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import {
   selectLineItemCount,
   selectOrderQtyCount,
 } from "./../shared/store/cart/cart.selectors";
 import { SocketService } from "../shared/socket/socket.service";
+import { setCart } from "../shared/store/cart/cart.actions";
+import { setToPay } from "../shared/store/order/order.actions";
+import {
+  plusOneToSentDeliveredCounter,
+  setChatrooms,
+  setSendingMessage,
+  setTotalCountSentDeliveredMessages,
+  updateChatroomsMsgStatusToDelivered,
+  updateChatroomsMsgStatusToSeen,
+} from "../shared/store/chat/chat.actions";
 
 @Component({
   selector: "app-buyer",
@@ -28,6 +38,10 @@ export class BuyerComponent implements OnInit, OnDestroy {
   isMapLoading: boolean = true;
   orderQtyCount$: Observable<number>;
   orderQtyCount: number = 0;
+  onNewChatMessage: Subscription;
+  onUpdateChatroomsMsgStatusToDelivered: Subscription;
+  onUpdateChatroomsMsgStatusToSeen: Subscription;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -38,14 +52,47 @@ export class BuyerComponent implements OnInit, OnDestroy {
   ) {
     this.socket.connect();
 
+    this.onNewChatMessage = this.socket
+      .onNewChatMessage()
+      .subscribe((message: any) => {
+        console.log("Buyer Delivered a message");
+        this.markSenderMessagesAsDelivered();
+        this.store.dispatch(setSendingMessage({ message }));
+        this.store.dispatch(plusOneToSentDeliveredCounter({ message }));
+      });
+
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
 
     this.orderQtyCount$.subscribe((data) => {
       this.orderQtyCount = data;
     });
+
+    this.onUpdateChatroomsMsgStatusToDelivered = this.socket
+      .onUpdateChatroomsMsgStatusToDelivered()
+      .subscribe((updatedChatrooms: any) => {
+        console.log("Buyer onUpdateChatroomsMsgStatusToDelivered");
+        this.store.dispatch(
+          updateChatroomsMsgStatusToDelivered({
+            updatedchatroomsMsg: updatedChatrooms,
+          })
+        );
+      });
+
+    this.onUpdateChatroomsMsgStatusToSeen = this.socket
+      .onUpdateChatroomsMsgStatusToSeen()
+      .subscribe((updatedChatroom: any) => {
+        console.log(" Buyer onUpdateChatroomsMsgStatusToSeen", updatedChatroom);
+        this.store.dispatch(
+          updateChatroomsMsgStatusToSeen({
+            updatedChatroom,
+          })
+        );
+      });
   }
 
   ngOnInit(): void {
+    this.markSenderMessagesAsDelivered();
+
     this.subject = JSON.parse(this.auth.getUserData());
     this.getShops();
     this.getCategories();
@@ -55,10 +102,18 @@ export class BuyerComponent implements OnInit, OnDestroy {
       console.log("params", params);
       if (params.radius) this.radius = params.radius;
     });
+
+    this.store.dispatch(setCart());
+    this.store.dispatch(setToPay());
+    this.store.dispatch(setTotalCountSentDeliveredMessages());
+    this.store.dispatch(setChatrooms());
   }
 
   ngOnDestroy(): void {
     this.socket.disconnect();
+    this.onUpdateChatroomsMsgStatusToDelivered.unsubscribe();
+    this.onNewChatMessage.unsubscribe();
+    this.onUpdateChatroomsMsgStatusToSeen.unsubscribe();
   }
 
   getCategories() {
@@ -107,5 +162,16 @@ export class BuyerComponent implements OnInit, OnDestroy {
       },
       queryParamsHandling: "merge",
     });
+  }
+
+  markSenderMessagesAsDelivered() {
+    this.hrs.request(
+      "put",
+      `message/updateChatroomsMsgStatusToDelivered`,
+      {},
+      (response: any) => {
+        console.log("======updateChatroomsMsgStatusToDelivered", response);
+      }
+    );
   }
 }

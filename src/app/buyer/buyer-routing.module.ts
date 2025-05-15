@@ -10,6 +10,8 @@ import { ProfileComponent } from "../shared/components/profile/profile.component
 import { ProductListPageComponent } from "./pages/product-list-page/product-list-page.component";
 import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
+import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
+import { ChatComponent } from "../shared/components/chat/chat.component";
 
 const BuyerRoutes: Routes = [
   {
@@ -33,6 +35,14 @@ const BuyerRoutes: Routes = [
       {
         path: "profile",
         component: ProfilePageComponent,
+      },
+      {
+        path: "chats",
+        component: ChatListPageComponent,
+      },
+      {
+        path: "chats/:id",
+        component: ChatComponent,
       },
     ],
   },
