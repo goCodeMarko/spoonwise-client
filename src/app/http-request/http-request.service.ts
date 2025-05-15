@@ -43,13 +43,14 @@ export class HttpRequestService {
           );
 
       case "post":
-        URL = [
-          "serviceWorker/subscribe",
-          "order/lalamove/createOrder",
-          "order/checkout",
-        ].includes(endpoint)
-          ? environment.SERVER_URL_MAIN
-          : environment.SERVER_URL_CLUSTERS;
+        URL =
+          [
+            "serviceWorker/subscribe",
+            "order/lalamove/createOrder",
+            "order/checkout",
+          ].includes(endpoint) || endpoint.startsWith("message/sendMessage/")
+            ? environment.SERVER_URL_MAIN
+            : environment.SERVER_URL_CLUSTERS;
         return this.http.post(`${URL}${endpoint}`, payload).subscribe(
           (response) => {
             return callback(response);
@@ -60,9 +61,14 @@ export class HttpRequestService {
         );
 
       case "put":
-        URL = ["order/updateOrderStatus"].includes(endpoint)
-          ? environment.SERVER_URL_MAIN
-          : environment.SERVER_URL_CLUSTERS;
+        URL =
+          [
+            "order/updateOrderStatus",
+            "message/updateChatroomsMsgStatusToReceived",
+          ].includes(endpoint) ||
+          endpoint.startsWith("message/updateChatroomsMsgStatusToSeen/")
+            ? environment.SERVER_URL_MAIN
+            : environment.SERVER_URL_CLUSTERS;
         return this.http.put(`${URL}${endpoint}`, payload).subscribe(
           (response) => {
             return callback(response);
