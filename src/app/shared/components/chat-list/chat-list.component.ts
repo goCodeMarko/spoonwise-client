@@ -11,6 +11,7 @@ import {
 } from "../../store/chat/chat.actions";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Actions, ofType } from "@ngrx/effects";
+import { AuthService, IUserData } from "src/app/authorization/auth.service";
 
 @Component({
   selector: "app-chat-list",
@@ -23,12 +24,14 @@ export class ChatListComponent implements OnInit, OnDestroy {
   @Input()
   isShop = false;
   private destroy$ = new Subject<void>();
+  authUser!: IUserData;
 
   constructor(
     private store: Store,
     private route: ActivatedRoute,
     private router: Router,
-    private actions$: Actions
+    private actions$: Actions,
+    private auth: AuthService
   ) {
     this.chatrooms$ = this.store
       .select(selectChatrooms)
@@ -48,6 +51,11 @@ export class ChatListComponent implements OnInit, OnDestroy {
       .subscribe(({ message }) => {
         console.log("**********", message);
       });
+
+    this.auth.getUserData$().subscribe((user) => {
+      this.authUser = user;
+      console.log(this.authUser);
+    });
   }
 
   ngOnDestroy(): void {

@@ -54,15 +54,20 @@
               <div style="display: flex; gap: 7px">
                 <ng-container *ngIf="chatroom.latestMessages.length > 0">
                   <div>
+                    <b
+                      *ngIf="
+                        [this.authUser._id, this.authUser.shop].includes(
+                          chatroom.latestMessages[0].senderId
+                        )
+                      "
+                      >You:
+                    </b>
                     <b>{{ chatroom.latestMessages[0].content.message }}</b>
                   </div>
                   <span><b>·</b></span>
                   <div>
                     <p>
-                      {{
-                        chatroom.latestMessages[0].createdAt
-                          | date : "MM/dd/yy hh:mm a"
-                      }}
+                      {{ chatroom.latestMessages[0].createdAt | timeAgo }}
                     </p>
                   </div>
                 </ng-container>

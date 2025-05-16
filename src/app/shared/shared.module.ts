@@ -34,6 +34,7 @@ import { NgxStarRatingModule } from "ngx-star-rating";
 import { OrderListComponent } from "./components/order-list/order-list.component";
 import { ChatListComponent } from "./components/chat-list/chat-list.component";
 import { ChatComponent } from "./components/chat/chat.component";
+import { TimeAgoPipe } from "./pipes/time-ago.pipe";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ChatComponent } from "./components/chat/chat.component";
     OrderListComponent,
     ChatListComponent,
     ChatComponent,
+    TimeAgoPipe,
   ],
   imports: [
     MatCardModule,
@@ -86,6 +88,7 @@ import { ChatComponent } from "./components/chat/chat.component";
     OrderListComponent,
     ChatListComponent,
     ChatComponent,
+    TimeAgoPipe,
   ],
   providers: [MenuItems],
 })

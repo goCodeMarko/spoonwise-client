@@ -98,7 +98,11 @@ export const chatroomReducer = createReducer(
             ...chatroom,
             latestMessages: chatroom.latestMessages.map((latestMessage) => {
               if (latestMessage.status === "SENT") {
-                return { ...latestMessage, status: "DELIVERED" };
+                return {
+                  ...latestMessage,
+                  status: "DELIVERED",
+                  updatedAt: new Date().toISOString(),
+                };
               }
 
               return latestMessage;
@@ -123,7 +127,11 @@ export const chatroomReducer = createReducer(
             ...chatroom,
             latestMessages: chatroom.latestMessages.map((latestMessage) => {
               if (["SENT", "DELIVERED"].includes(latestMessage.status)) {
-                return { ...latestMessage, status: "SEEN" };
+                return {
+                  ...latestMessage,
+                  status: "SEEN",
+                  updatedAt: new Date().toISOString(),
+                };
               }
 
               return latestMessage;

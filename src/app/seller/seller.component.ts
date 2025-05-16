@@ -56,7 +56,7 @@ export class SellerComponent implements OnInit, OnDestroy {
     this.onUpdateChatroomsMsgStatusToSeen = this.socket
       .onUpdateChatroomsMsgStatusToSeen()
       .subscribe((updatedChatroom: any) => {
-        console.log("Seller onUpdateChatroomsMsgStatusToSeen");
+        console.log("Seller onUpdateChatroomsMsgStatusToSeen", updatedChatroom);
         this.store.dispatch(
           updateChatroomsMsgStatusToSeen({
             updatedChatroom,

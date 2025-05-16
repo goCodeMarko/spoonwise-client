@@ -13,6 +13,7 @@ export interface IUpdateChatroomsMsgStatusToSeen {
   senderId: string;
   receiverId: string;
   modifiedCount: number;
+  updatedAt: string;
 }
 
 export interface User {
@@ -139,6 +140,7 @@ export interface Message {
   status: string;
   elementId: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Chatroom {

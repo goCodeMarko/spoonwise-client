@@ -6,7 +6,6 @@
       max-height: 84.2dvh;
       min-height: 84.2dvh;
       overflow-y: scroll;
-
       padding: 7px;
       display: flex;
       flex-direction: column-reverse;
@@ -14,6 +13,17 @@
     "
   >
     <!--    height: 91.4vh; -->
+    <div
+      style="display: flex; justify-content: end; align-items: center"
+      *ngIf="
+        [this.authUser._id, this.authUser.shop].includes(
+          chatroomMessages[0].senderId
+        )
+      "
+    >
+      {{ chatroomMessages[0].status | titlecase }} ·
+      {{ chatroomMessages[0].updatedAt | timeAgo }}
+    </div>
     <div
       *ngFor="
         let message of chatroomMessages;
@@ -28,9 +38,6 @@
         "
       >
         <div style="display: flex; justify-content: end; align-items: center">
-          <div>
-            <small>{{ message.status }}</small>
-          </div>
           <div>
             <p class="message">
               {{ message.content.message }}

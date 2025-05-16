@@ -46,6 +46,7 @@ export const setSendingMessage = createAction(
       };
       status: string;
       createdAt: string;
+      updatedAt: string;
     };
   }>()
 );

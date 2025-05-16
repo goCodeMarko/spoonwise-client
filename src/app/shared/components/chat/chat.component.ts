@@ -122,6 +122,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       status: "SENDING",
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     this.store.dispatch(setSendingMessage({ message }));
