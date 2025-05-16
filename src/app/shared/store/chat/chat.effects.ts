@@ -72,7 +72,7 @@ export class ChatroomEffects {
       mergeMap(({ message }) =>
         this.http
           .post(
-            `${environment.SERVER_URL_CLUSTERS}message/sendMessage/${message.chatroomId}`,
+            `${environment.SERVER_URL_MAIN}message/sendMessage/${message.chatroomId}`,
             { content: message.content, elementId: message.elementId }
           )
           .pipe(
