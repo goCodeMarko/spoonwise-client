@@ -132,6 +132,7 @@ export const chatroomReducer = createReducer(
   ),
 
   on(ChatroomAction.checkChatroomExistsInStore, (state, { chatroom }) => {
+    console.log("----chatrooms", chatroom);
     const exists = state.chatrooms.some((cr) => cr._id === chatroom._id);
     console.log("-------exists", exists);
     return {
