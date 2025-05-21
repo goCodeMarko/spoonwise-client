@@ -151,6 +151,8 @@ export interface Chatroom {
   };
   latestMessages: Message[];
   sentMessageCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ChatState {

@@ -5,6 +5,8 @@ import { SocketService } from "../shared/socket/socket.service";
 import { Store } from "@ngrx/store";
 import { setToPay } from "../shared/store/order/order.actions";
 import {
+  chatroomSort,
+  checkChatroomExistsInStore,
   plusOneToSentDeliveredCounter,
   setChatrooms,
   setSendingMessage,
@@ -35,11 +37,17 @@ export class SellerComponent implements OnInit, OnDestroy {
 
     this.onNewChatMessage = this.socket
       .onNewChatMessage()
-      .subscribe((message: any) => {
-        console.log("Seller Delivered a message");
+      .subscribe((data: any) => {
+        console.log("Seller Delivered a message", data);
         this.markSenderMessagesAsDelivered();
-        this.store.dispatch(setSendingMessage({ message }));
-        this.store.dispatch(plusOneToSentDeliveredCounter({ message }));
+        this.store.dispatch(
+          checkChatroomExistsInStore({ chatroom: data.chatroom })
+        );
+        this.store.dispatch(chatroomSort({ message: data.message }));
+        this.store.dispatch(setSendingMessage({ message: data.message }));
+        this.store.dispatch(
+          plusOneToSentDeliveredCounter({ message: data.message })
+        );
       });
 
     this.onUpdateChatroomsMsgStatusToDelivered = this.socket

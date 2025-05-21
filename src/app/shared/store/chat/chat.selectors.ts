@@ -4,15 +4,20 @@ import * as _ from "lodash";
 export const selectChatState = createFeatureSelector<ChatState>("chat");
 
 export const selectChatrooms = createSelector(selectChatState, (state) => {
-  const chatroomsWithSortedLatestMessages = state.chatrooms.map((chatroom) => {
-    return {
-      ...chatroom,
-      latestMessages: [...chatroom.latestMessages].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      ),
-    };
-  });
+  const chatroomsWithSortedLatestMessages = state.chatrooms
+    .map((chatroom) => {
+      return {
+        ...chatroom,
+        latestMessages: [...chatroom.latestMessages].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ),
+      };
+    })
+    .sort(
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
 
   return chatroomsWithSortedLatestMessages;
 });

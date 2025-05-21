@@ -6,6 +6,41 @@ import {
   Message,
 } from "./chat.state";
 
+export const setPastMessages = createAction(
+  "[Chatroom] Set Past Messages",
+  props<{
+    chatroomId: string;
+    lastMessageDate: string;
+  }>()
+);
+
+export const setPastMessagesSuccess = createAction(
+  "[Chatroom] Set Past Messages Success",
+  props<{ chatroomId: string; messages: Message[] }>()
+);
+
+export const setPastMessagesFailure = createAction(
+  "[Chatroom] Set Past Messages Failure",
+  props<{ error: string }>()
+);
+
+export const setPastChatrooms = createAction(
+  "[Chatroom] Set Past Chatrooms",
+  props<{
+    lastChatroomDate: string;
+  }>()
+);
+
+export const setPastChatroomsSuccess = createAction(
+  "[Chatroom] Set Past Chatrooms Success",
+  props<{ chatrooms: Chatroom[] }>()
+);
+
+export const setPastChatroomsFailure = createAction(
+  "[Chatroom] Set Past Chatrooms Failure",
+  props<{ error: string }>()
+);
+
 export const setChatrooms = createAction("[Chatroom] Set Chatroom");
 
 export const setChatroomsSuccess = createAction(
@@ -69,6 +104,11 @@ export const updateChatroomsMsgStatusToDelivered = createAction(
   props<{ updatedchatroomsMsg: IUpdateChatroomsMsgStatusToDelivered }>()
 );
 
+export const checkChatroomExistsInStore = createAction(
+  "[checkChatroomExistsInStore] Check Chatroom Exists in Store",
+  props<{ chatroom: Chatroom }>()
+);
+
 export const updateChatroomsMsgStatusToSeen = createAction(
   "[onUpdateChatroomsMsgStatusToSeen] Update Chatrooms Message Status",
   props<{ updatedChatroom: IUpdateChatroomsMsgStatusToSeen }>()
@@ -91,6 +131,11 @@ export const sendMessage = createAction(
 );
 
 export const sendMessageSuccess = createAction(
+  "[sendMessage] Send Message Success",
+  props<{ message: Message }>()
+);
+
+export const chatroomSort = createAction(
   "[sendMessage] Send Message Success",
   props<{ message: Message }>()
 );

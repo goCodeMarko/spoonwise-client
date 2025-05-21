@@ -1,13 +1,6 @@
-<section style="background-color: white; color: black">
-  <div
-    style="
-      display: flex;
-      justify-content: space-between;
-      margin-left: 7px;
-      margin-right: 7px;
-    "
-  >
-    <div>
+<section style="background-color: white; color: black; border-radius: 7px">
+  <div style="display: flex; justify-content: space-between">
+    <div style="width: 43dvw; margin-left: 7px">
       <mat-form-field appearance="outline" style="color: white">
         <mat-select [formControl]="selectControl">
           <mat-option value="latest">Latest</mat-option>
@@ -44,17 +37,43 @@
     </div>
   </div>
 </section>
-<div class="container">
+
+<ng-container *ngIf="!isShop; else shopContainer">
+  <div class="container">
+    <ng-container *ngTemplateOutlet="productList"></ng-container>
+  </div>
+</ng-container>
+<ng-template #shopContainer>
+  <div class="container-seller">
+    <ng-container *ngTemplateOutlet="productList"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #productList>
   <ng-container *ngIf="!productListOnLoad; else productListLoader">
     <ng-container *ngFor="let prod of products; let i = index">
       <div class="card">
-        <div *ngIf="showPublishSlider">
-          <mat-slide-toggle
-            [checked]="prod.isPublish"
-            (change)="updatePublish(prod._id, $event)"
-            >Publish</mat-slide-toggle
-          >
+        <div style="display: flex; justify-content: space-between">
+          <div>
+            <mat-slide-toggle
+              *ngIf="showPublishSlider"
+              [checked]="prod.isPublish"
+              (change)="updatePublish(prod._id, $event)"
+            ></mat-slide-toggle>
+          </div>
+          <div>
+            <p>
+              <img
+                src="assets/icons/expired.png"
+                width="20"
+                style="vertical-align: sub"
+              />
+
+              {{ prod.expiryDate | date : "MM-dd-yy" }}
+            </p>
+          </div>
         </div>
+
         <div (click)="viewProduct(prod._id)">
           <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
           <div class="card-content">
@@ -104,13 +123,7 @@
               "
             >
               <p>
-                <img
-                  src="assets/icons/expired.png"
-                  width="20"
-                  style="vertical-align: sub"
-                />
-
-                {{ prod.expiryDate | date : "MM-dd-yy" }}
+                {{ prod.shop.businessName }}
               </p>
               <p>
                 {{ prod.rating | number : "1.1-1" }}
@@ -167,4 +180,4 @@
       </div>
     </div>
   </ng-template>
-</div>
+</ng-template>

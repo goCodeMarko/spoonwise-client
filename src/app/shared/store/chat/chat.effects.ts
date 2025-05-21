@@ -11,6 +11,66 @@ import { environment } from "../../../../environments/environment";
 export class ChatroomEffects {
   constructor(private actions$: Actions, private http: HttpClient) {}
 
+  setPastChatrooms$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ChatroomAction.setPastChatrooms),
+      mergeMap(({ lastChatroomDate }) =>
+        this.http
+          .get(
+            `${environment.SERVER_URL_CLUSTERS}chatroom/getPastChatrooms?lastChatroomDate=${lastChatroomDate}`,
+            {}
+          )
+          .pipe(
+            map((data: any) => {
+              console.log("===========getPastChatrooms", data);
+              let chatrooms: Chatroom[] = data.data;
+              return ChatroomAction.setPastChatroomsSuccess({
+                chatrooms,
+              });
+            }),
+            catchError((error: any) =>
+              of(
+                ChatroomAction.setPastChatroomsFailure({
+                  error: error.message,
+                })
+              )
+            )
+          )
+      )
+    )
+  );
+
+  setPastMessages$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ChatroomAction.setPastMessages),
+      mergeMap(({ chatroomId, lastMessageDate }) =>
+        this.http
+          .get(
+            `${environment.SERVER_URL_CLUSTERS}message/getPastMessages/${chatroomId}?lastMessageDate=${lastMessageDate}`
+          )
+          .pipe(
+            map((data: any) => {
+              console.log("======", data);
+
+              let pastMessages: Message[] = data.data;
+
+              return ChatroomAction.setPastMessagesSuccess({
+                chatroomId,
+                messages: pastMessages,
+              });
+            }),
+            catchError((error: any) =>
+              of(
+                ChatroomAction.setPastMessagesFailure({
+                  error: error.message,
+                })
+              )
+            )
+          )
+      )
+    )
+  );
+
   setChatrooms$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ChatroomAction.setChatrooms),
@@ -80,7 +140,10 @@ export class ChatroomEffects {
               console.log("======", data);
               //   if (data.data.success) {
               let datax: Message = data.data;
-
+              console.log("datax", datax);
+              ChatroomAction.chatroomSort({
+                message: datax,
+              });
               return ChatroomAction.sendMessageSuccess({
                 message: datax,
               });

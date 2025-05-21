@@ -37,10 +37,11 @@ html .page-wrapper {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  overflow: hidden;
   .page-content {
     // padding: 15px;
     // margin: 2% 2%;
-    padding-bottom: 160px;
+    // padding-bottom: 160px;
   }
 }
 

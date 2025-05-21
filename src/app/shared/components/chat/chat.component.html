@@ -1,7 +1,7 @@
 <div style="max-height: 89.4dvh; min-height: 89.4dvh; margin-top: 81.7px">
   <div
     #chatContainer
-    (scroll)="onScroll(chatContainer)"
+    (scroll)="onScroll()"
     style="
       max-height: 84.2dvh;
       min-height: 84.2dvh;
@@ -12,10 +12,10 @@
       gap: 7px;
     "
   >
-    <!--    height: 91.4vh; -->
     <div
       style="display: flex; justify-content: end; align-items: center"
       *ngIf="
+        chatroomMessages[0] &&
         [this.authUser._id, this.authUser.shop].includes(
           chatroomMessages[0].senderId
         )
@@ -24,6 +24,7 @@
       {{ chatroomMessages[0].status | titlecase }} ·
       {{ chatroomMessages[0].updatedAt | timeAgo }}
     </div>
+
     <div
       *ngFor="
         let message of chatroomMessages;
@@ -31,9 +32,16 @@
         trackBy: trackByMessageId
       "
     >
+      <div
+        *ngIf="i === chatroomMessages.length - 1 && onLoad"
+        style="text-align: center; margin-top: 10px"
+        style="margin-top: 10px"
+      >
+        Loading...
+      </div>
       <ng-container
         *ngIf="
-          [this.authUser._id, this.authUser.shop].includes(message.senderId);
+          [this.authUser._id, this.authUser.shop].includes(message?.senderId);
           else leftSide
         "
       >

@@ -35,7 +35,7 @@ import { OrderListComponent } from "./components/order-list/order-list.component
 import { ChatListComponent } from "./components/chat-list/chat-list.component";
 import { ChatComponent } from "./components/chat/chat.component";
 import { TimeAgoPipe } from "./pipes/time-ago.pipe";
-
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 @NgModule({
   declarations: [
     AccordionAnchorDirective,
@@ -71,6 +71,7 @@ import { TimeAgoPipe } from "./pipes/time-ago.pipe";
     MatSlideToggleModule,
     SwiperModule,
     NgxStarRatingModule,
+    InfiniteScrollModule,
   ],
   exports: [
     AccordionAnchorDirective,

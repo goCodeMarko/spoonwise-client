@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  NgZone,
+  ElementRef,
+  ViewChild,
+} from "@angular/core";
 import { Store } from "@ngrx/store";
 import { selectSortedChatroomMessages } from "../../store/chat/chat.selectors";
 import { Message } from "../../store/chat/chat.state";
@@ -10,16 +17,19 @@ import {
   sendingToSentMessage,
   sendMessage,
   sendMessageFailure,
+  setPastMessages,
+  setPastMessagesSuccess,
   setSendingMessage,
   setTotalCountSentDeliveredMessages,
   updateChatroomsMsgStatusToSeen,
 } from "../../store/chat/chat.actions";
-import { random } from "lodash";
+import { random, size } from "lodash";
 import { ObjectId } from "bson";
 import { Actions, ofType } from "@ngrx/effects";
 import { sendMessageSuccess } from "../../../shared/store/chat/chat.actions";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { SocketService } from "../../socket/socket.service";
+import { take } from "rxjs/operators";
 
 @Component({
   selector: "app-chat",
@@ -34,6 +44,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   text = "";
   onNewChatMessage: Subscription;
+  @ViewChild("chatContainer", { static: false }) chatContainer!: ElementRef;
 
   constructor(
     private store: Store,
@@ -41,7 +52,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private actions$: Actions,
     private hrs: HttpRequestService,
-    private socket: SocketService
+    private socket: SocketService,
+    private ngZone: NgZone
   ) {
     this.chatroomId = this.route.snapshot.paramMap.get("id")!;
     this.auth.getUserData$().subscribe((user) => {
@@ -75,6 +87,13 @@ export class ChatComponent implements OnInit, OnDestroy {
         );
       });
 
+    this.actions$
+      .pipe(ofType(setPastMessagesSuccess), takeUntil(this.destroy$))
+      .subscribe(({ chatroomId, messages }) => {
+        if (size(messages) === 0) this.allMessageHasBeenDisplayed = true;
+        this.onLoad = false;
+      });
+
     this.markSenderMessagesAsSeen();
   }
 
@@ -88,18 +107,25 @@ export class ChatComponent implements OnInit, OnDestroy {
     return message._id;
   }
 
-  private onLoad = false;
-  onScroll(container: HTMLElement): void {
-    const currentPosition = container.scrollHeight + container.scrollTop - 33; // 0 - most top
-    const threshold = 20; // when user is in scroll position
+  allMessageHasBeenDisplayed = false;
+  onLoad = false;
+  onScroll(): void {
+    const container = this.chatContainer.nativeElement as HTMLElement;
+    const isAtTop =
+      Math.abs(container.scrollTop) + container.clientHeight ===
+      container.scrollHeight;
 
-    console.log("scrollHeight", container.scrollHeight);
-    console.log("scrollTop", container.scrollTop);
-    console.log("x", container.scrollHeight + container.scrollTop);
-    console.log("currentPosition", currentPosition);
-    if (currentPosition <= threshold && !this.onLoad) {
+    if (isAtTop && !this.onLoad && !this.allMessageHasBeenDisplayed) {
+      console.log("chatroomMessages", this.chatroomMessages);
       this.onLoad = true;
-      console.log("User reached the top (visually, for column-reverse)");
+
+      this.store.dispatch(
+        setPastMessages({
+          chatroomId: this.chatroomId,
+          lastMessageDate:
+            this.chatroomMessages[this.chatroomMessages.length - 1].createdAt,
+        })
+      );
     }
   }
 

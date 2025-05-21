@@ -16,6 +16,8 @@ import { SocketService } from "../shared/socket/socket.service";
 import { setCart } from "../shared/store/cart/cart.actions";
 import { setToPay } from "../shared/store/order/order.actions";
 import {
+  chatroomSort,
+  checkChatroomExistsInStore,
   plusOneToSentDeliveredCounter,
   setChatrooms,
   setSendingMessage,
@@ -54,11 +56,17 @@ export class BuyerComponent implements OnInit, OnDestroy {
 
     this.onNewChatMessage = this.socket
       .onNewChatMessage()
-      .subscribe((message: any) => {
+      .subscribe((data: any) => {
         console.log("Buyer Delivered a message");
         this.markSenderMessagesAsDelivered();
-        this.store.dispatch(setSendingMessage({ message }));
-        this.store.dispatch(plusOneToSentDeliveredCounter({ message }));
+        this.store.dispatch(
+          checkChatroomExistsInStore({ chatroom: data.chatroom })
+        );
+        this.store.dispatch(chatroomSort({ message: data.message }));
+        this.store.dispatch(setSendingMessage({ message: data.message }));
+        this.store.dispatch(
+          plusOneToSentDeliveredCounter({ message: data.message })
+        );
       });
 
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
@@ -149,7 +157,7 @@ export class BuyerComponent implements OnInit, OnDestroy {
 
   fromRouterOutlet(component: any) {
     const name = component.constructor["componentName"] || "unknown";
-
+    console.log(name);
     this.routerOutletComponent = name;
   }
 

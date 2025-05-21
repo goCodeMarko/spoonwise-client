@@ -9,7 +9,7 @@ import { SocketService } from "src/app/shared/socket/socket.service";
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
   selectedTab = "to_pay";
-
+  static componentName = "ProfilePageComponent";
   constructor(private socket: SocketService) {}
 
   ngOnInit(): void {}

@@ -2,8 +2,20 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Two equal columns */
   gap: 7px; /* Space between cards */
-  padding: 7px 0px 7px 0px;
-  padding-bottom: 108px;
+  max-height: 53.5dvh;
+  overflow-y: scroll;
+  padding: 0px 0px 40px 0px;
+  margin-top: 7px;
+}
+
+.container-seller {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  gap: 7px; /* Space between cards */
+  max-height: 80.5dvh;
+  overflow-y: scroll;
+  padding: 0px 0px 40px 0px;
+  margin-top: 7px;
 }
 
 /* Each card stretches based on screen size */

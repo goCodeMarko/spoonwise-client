@@ -7,37 +7,31 @@
     <mat-tab label="To Pay">
       <ng-container *ngIf="selectedTab == 'to_pay'">
         <app-order-list [type]="selectedTab" [isShop]="true"></app-order-list>
-        <b>to_pay</b>
       </ng-container>
     </mat-tab>
     <mat-tab label="For Review">
       <ng-container *ngIf="selectedTab == 'for_review'">
         <app-order-list [type]="selectedTab" [isShop]="true"></app-order-list>
-        <b>for_review</b>
       </ng-container>
     </mat-tab>
     <mat-tab label="To Pack">
       <ng-container *ngIf="selectedTab == 'to_pack'">
         <app-order-list [type]="selectedTab" [isShop]="true"></app-order-list>
-        <b>to_pack</b>
       </ng-container>
     </mat-tab>
     <mat-tab label="Ready For Pick-up">
       <ng-container *ngIf="selectedTab == 'for_pickup'">
         <app-order-list [type]="selectedTab" [isShop]="true"></app-order-list>
-        <b>for_pickup</b>
       </ng-container>
     </mat-tab>
     <mat-tab label="To Receive">
       <ng-container *ngIf="selectedTab == 'to_receive'">
         <app-order-list [type]="selectedTab" [isShop]="true"></app-order-list>
-        <b>to_receive</b>
       </ng-container>
     </mat-tab>
     <mat-tab label="Cancelled">
       <ng-container *ngIf="selectedTab == 'cancelled'">
         <app-order-list [type]="selectedTab" [isShop]="true"></app-order-list>
-        <b>cancelled</b>
       </ng-container>
     </mat-tab>
   </mat-tab-group>

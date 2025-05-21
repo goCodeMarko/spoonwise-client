@@ -14,13 +14,26 @@
   <ng-template #loading>
     <div
       class="loader"
-      style="width: 100vw; height: 200px; margin-top: 70px"
+      style="
+        margin: 88px 7px 7px 7px;
+        height: 200px;
+        z-index: 0;
+        border-radius: 10px;
+      "
     ></div>
   </ng-template>
 </div>
-
-<section class="content">
-  <router-outlet (activate)="fromRouterOutlet($event)"></router-outlet>
+<section
+  [ngClass]="
+    routerOutletComponent == 'ProfilePageComponent' ||
+    routerOutletComponent == 'ChatListPageComponent' ||
+    routerOutletComponent == 'CartComponent' ||
+    routerOutletComponent == 'CheckoutComponent'
+      ? 'contentProfile'
+      : 'content'
+  "
+>
+  <router-outlet (activate)="fromRouterOutlet($event)"> </router-outlet>
 </section>
 
 <app-sticky-footer
