@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { HttpRequestService } from "../../http-request/http-request.service";
+import { HttpRequestService } from "../../../http-request/http-request.service";
 
 interface IUser {
   _id: string;

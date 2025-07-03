@@ -1,0 +1,37 @@
+<div>
+  <div class="input-group search">
+    <button mat-flat-button style="height: 70px; text-align: center" disabled>
+      <img src="assets/icons/password.png" width="50" />
+    </button>
+    <input
+      #otpInput
+      type="text"
+      class="form-control"
+      aria-label="OTP"
+      (input)="checkCharCount($event)"
+      [(ngModel)]="otp"
+      maxlength="4"
+      style="text-align: center; font-size: xxx-large"
+    />
+    <ng-container *ngIf="!isExpired; else expired">
+      <button mat-flat-button style="height: 70px; text-align: center" disabled>
+        <b style="color: black">{{
+          expiresAt | countDown : updateCountdown.bind(this)
+        }}</b>
+      </button>
+    </ng-container>
+    <ng-template #expired>
+      <button
+        mat-flat-button
+        style="height: 70px; text-align: center"
+        (click)="resendOTP()"
+      >
+        <b style="color: black">Resend OTP</b>
+      </button>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #snackBarTemplate>
+  <span style="text-align: center">{{ responseMsg }}</span>
+</ng-template>

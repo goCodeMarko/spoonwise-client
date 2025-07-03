@@ -7,7 +7,10 @@
 >
   <!-- User profile image -->
   <div class="profile-img">
-    <img [src]="this.account.profile_picture.url" alt="user" />
+    <img
+      [src]="account?.profile_picture?.url || 'assets/icons/user.png'"
+      alt="user"
+    />
   </div>
   <!-- User profile text-->
   <!-- ============================================================== -->
@@ -37,7 +40,7 @@
     <a
       class=""
       appAccordionToggle
-      [routerLink]="[menuitem.main + '/', menuitem.state]"
+      [routerLink]="['/' + menuitem.main + '/' + menuitem.state]"
       *ngIf="menuitem.type === 'link'"
     >
       <mat-icon>{{ menuitem.icon }}</mat-icon>

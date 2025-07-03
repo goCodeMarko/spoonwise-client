@@ -29,13 +29,12 @@ import { MatRippleModule } from "@angular/material/core";
 import { ProductListPageComponent } from "./pages/product-list-page/product-list-page.component";
 import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
-import { ChatListPageComponent } from './pages/chat-list-page/chat-list-page.component';
-import { ChatPageComponent } from './pages/chat-page/chat-page.component';
+import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
+import { ChatPageComponent } from "./pages/chat-page/chat-page.component";
 
 @NgModule({
   declarations: [
     BuyerComponent,
-    MapComponent,
     BottomSheetComponent,
     CartComponent,
     CheckoutComponent,

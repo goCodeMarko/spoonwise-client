@@ -70,6 +70,9 @@ File: scss
 .mat-flat-button {
   height: 60px; /* Set the desired height */
 }
+.mat-button {
+  height: 60px; /* Set the desired height */
+}
 
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
   border-color: $main-color;
@@ -331,4 +334,31 @@ label.star {
   // filter: drop-shadow(5px 1px 7px black);
   margin: auto auto 10px auto;
   width: 300px;
+}
+
+//Angular Material Style Adjustment Section
+.mat-form-field-prefix {
+  top: 0px !important;
+}
+
+.mat-form-field-flex .mat-form-field-outline {
+  background-color: white;
+}
+
+// .mat-step-header:hover:not([aria-disabled]) {
+//   background-color: $main-color;
+//   border-radius: 14px;
+//   height: 50px;
+// }
+// ::ng-deep .mat-step-header.mat-active {
+//   background-color: $main-color;
+// }
+
+//Custom Global Styles
+
+.gs-phone-field {
+  .gs-phone-text {
+    min-width: 40px;
+    font-weight: 500;
+  }
 }

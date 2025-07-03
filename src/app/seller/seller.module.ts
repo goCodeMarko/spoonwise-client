@@ -22,8 +22,10 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
 import { AuthService } from "../authorization/auth.service";
-import { ChatListPageComponent } from './pages/chat-list-page/chat-list-page.component';
-import { ChatPageComponent } from './pages/chat-page/chat-page.component';
+import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
+import { ChatPageComponent } from "./pages/chat-page/chat-page.component";
+import { VerifyBusinessPageComponent } from "./pages/verify-business-page/verify-business-page.component";
+import { MapComponent } from "../shared/components/map/map.component";
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { ChatPageComponent } from './pages/chat-page/chat-page.component';
     ProductViewPageComponent,
     ChatListPageComponent,
     ChatPageComponent,
+    VerifyBusinessPageComponent,
   ],
   imports: [
     CommonModule,

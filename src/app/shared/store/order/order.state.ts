@@ -20,7 +20,7 @@ export interface Shop {
   logo: string;
   coordinates: {
     lat: number;
-    lon: number;
+    lng: number;
   };
 }
 export interface Status {

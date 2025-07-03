@@ -26,8 +26,6 @@ $max-mobile: 590px;
       & h2,
       h3,
       p {
-        margin-top: 10px;
-        margin-bottom: 10px;
         text-align: center;
         // font-family: "Anton-Regular", sans-serif;
       }
@@ -41,15 +39,6 @@ $max-mobile: 590px;
       // font-family: "Russo One", sans-serif;
     }
     // }
-
-    & mat-form-field {
-      display: block;
-      margin-bottom: 1em;
-    }
-
-    & button {
-      width: 100%;
-    }
   }
 
   .curved-box {

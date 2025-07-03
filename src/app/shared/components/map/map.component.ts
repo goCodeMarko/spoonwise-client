@@ -2,15 +2,20 @@ import {
   AfterViewInit,
   Component,
   DoCheck,
+  EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { size } from "lodash";
 import { Observable, Subscriber } from "rxjs";
 import { AuthService } from "src/app/authorization/auth.service";
+import { GeolocationService } from "../../services/geolocation/geolocation.service";
 declare let L: any; // Declare Leaflet from the global scope
 
 @Component({
@@ -18,61 +23,106 @@ declare let L: any; // Declare Leaflet from the global scope
   templateUrl: "./map.component.html",
   styleUrls: ["./map.component.scss"],
 })
-export class MapComponent implements OnInit, AfterViewInit, OnChanges {
+export class MapComponent
+  implements OnInit, OnChanges, OnDestroy, AfterViewInit
+{
   map: any;
-  @Input() shops: any[] = [];
-  @Input() subject: any;
   circle: any;
-  @Input() radius: number = 3000;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  @Input() shops: any[] = [];
+  @Input() subject: any = {};
+  @Input() radius: number = 0;
+  @Input() detectCurrentLocation = false;
+
+  @Output() dragend = new EventEmitter<any>();
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private geolocationService: GeolocationService
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      console.log("params=-------", params);
       if (params.radius) this.radius = params.radius * 1000;
+      console.log("===========this.radius", this.radius);
     });
   }
 
   ngAfterViewInit(): void {
-    console.log("ngAfterViewInit");
-    this.loadMap();
+    // Use setTimeout to wait for DOM rendering
+    setTimeout(() => {
+      this.loadMap();
+
+      // Trigger map size recalculation (must be visible!)
+      setTimeout(() => {
+        if (this.map) {
+          this.map.invalidateSize();
+        }
+      }, 300); // small delay helps ensure it's visible
+    }, 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log(changes["radius"]);
-    // const radius = changes["radius"].currentValue;
-    // console.log(radius);
-    // if (radius && this.map) {
-    //   console.log("---yehey!");
-    //   L.circle([this.subject.coordinates.lat, this.subject.coordinates.lon], {
-    //     color: "transparent",
-    //     fillColor: "#00c6c8",
-    //     fillOpacity: 0.3,
-    //     stroke: false,
-    //     radius: radius, // 1km in meters
-    //   }).addTo(this.map);
-    // }
+    console.log("===========ngOnChanges", changes);
+    if (
+      changes["subject"] &&
+      this.subject?.coordinates?.lat &&
+      this.subject?.coordinates?.lng
+    ) {
+      console.log("Map initializing with subject:", this.subject);
+      this.loadMap();
+    }
   }
 
-  /*private getCurrentPosition(): any {
-    return new Observable((observer: Subscriber<any>) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position: any) => {
-          
-          observer.next({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-          observer.complete();
-        });
-      } else {
-        observer.error();
-      }
-    });
-  }*/
+  ngOnDestroy(): void {
+    console.log("ngOnDestroy");
+    if (this.map) {
+      this.map.off(); // Remove all event listeners
+      this.map.remove(); // Completely removes the map and its layers from the DOM
+      this.map = null;
+    }
 
-  private loadMap(): void {
+    if (this.circle) {
+      this.circle.remove(); // Optional: remove the circle layer if it exists
+      this.circle = null;
+    }
+  }
+
+  private getCurrentPosition() {
+    return new Promise((resolve, reject) => {
+      this.geolocationService
+        .getCurrentPosition()
+        .then((position) => {
+          this.subject = {
+            coordinates: {
+              lat: position.coords.latitude.toString(),
+              lng: position.coords.longitude.toString(),
+            },
+          };
+          this.dragend.emit(this.subject.coordinates);
+          resolve(this.subject);
+        })
+        .catch((err) => {
+          console.error(err);
+          resolve(null);
+        });
+    });
+  }
+
+  private async loadMap() {
+    console.log("loadMap");
+    // Destroy existing map if already initialized
+    if (this.map) {
+      this.map.off(); // Remove all event listeners
+      this.map.remove(); // Properly destroy the map
+      this.map = null; // Clear the reference
+    }
+    if (this.detectCurrentLocation) await this.getCurrentPosition();
+    console.log("map ------------- ", [
+      this.subject.coordinates.lat,
+      this.subject.coordinates.lng,
+    ]);
     this.map = L.map("map", {
       center: [12.8797, 121.774], // Center of the Philippines
       zoom: 6, // Adjust zoom level
@@ -93,67 +143,80 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       zoomOffset: -1,
     }).addTo(this.map);
 
+    const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
+
+    container.innerHTML = `
+  <style>`;
+
     this.addRadiusSlider();
+
+    if (this.radius > 0) {
+      this.circle = L.circle(
+        [this.subject.coordinates.lat, this.subject.coordinates.lng],
+        {
+          color: "transparent",
+          fillColor: "#00c6c8",
+          fillOpacity: 0.3,
+          stroke: false,
+          radius: this.radius, // 1km in meters
+        }
+      ).addTo(this.map);
+    }
+    //END
 
     // this.getCurrentPosition().subscribe((position: any) => {
     this.map.flyTo(
-      [this.subject.coordinates.lat, this.subject.coordinates.lon],
+      [this.subject.coordinates.lat, this.subject.coordinates.lng],
       13
     );
 
-    //BUYER MARKER
-    const buyerIcon = L.icon({
+    //USER LOC MARKER
+    const userLoc = L.icon({
       iconUrl: "https://cdn-icons-png.flaticon.com/128/8587/8587894.png",
       iconSize: [50, 50], // Width and height
       iconAnchor: [20, 40], // Pinpoint position (center-bottom)
       popupAnchor: [0, -40], // Position relative to the marker
     });
     let marker = L.marker(
-      [this.subject.coordinates.lat, this.subject.coordinates.lon],
+      [this.subject.coordinates.lat, this.subject.coordinates.lng],
       {
         draggable: true,
-        icon: buyerIcon,
+        icon: userLoc,
       }
     )
       .bindPopup("Angular Leaflet")
       .addTo(this.map);
-    console.log("--------- this.radius", this.radius);
-    this.circle = L.circle(
-      [this.subject.coordinates.lat, this.subject.coordinates.lon],
-      {
-        color: "transparent",
-        fillColor: "#00c6c8",
-        fillOpacity: 0.3,
-        stroke: false,
-        radius: this.radius, // 1km in meters
-      }
-    ).addTo(this.map);
-    //END
 
     //SHOPS MARKER
-    const coordinates = this.shops.map((shop) => {
-      return { lat: shop.coordinates.lat, lon: shop.coordinates.lon };
-    });
-    const SHOPIcon = L.icon({
-      iconUrl: "https://cdn-icons-png.flaticon.com/128/869/869432.png",
-      iconSize: [40, 40], // Width and height
-      iconAnchor: [20, 40], // Pinpoint position (center-bottom)
-      popupAnchor: [0, -40], // Position relative to the marker
-    });
-    coordinates.forEach((SHOP) => {
-      L.marker([SHOP.lat, SHOP.lon], {
-        icon: SHOPIcon,
-      })
-        .bindPopup("Angular Leaflet")
-        .addTo(this.map);
-    });
+    console.log("============shops", this.shops);
+    if (size(this.shops) > 0) {
+      const coordinates = this.shops.map((shop) => {
+        return { lat: shop.coordinates.lat, lng: shop.coordinates.lng };
+      });
+      const SHOPIcon = L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/128/869/869432.png",
+        iconSize: [40, 40], // Width and height
+        iconAnchor: [20, 40], // Pinpoint position (center-bottom)
+        popupAnchor: [0, -40], // Position relative to the marker
+      });
+      coordinates.forEach((SHOP) => {
+        L.marker([SHOP.lat, SHOP.lng], {
+          icon: SHOPIcon,
+        })
+          .bindPopup("Angular Leaflet")
+          .addTo(this.map);
+      });
+    }
     //END
 
     // Listen for drag events
     marker.on("dragend", (event: any) => {
+      console.log("Map::dragend");
       const position = event.target.getLatLng();
-      // Move the radius circle along with the marker
-      this.circle.setLatLng([position.lat, position.lng]);
+      // Move the radius circle alog with the marker
+      console.log("======,this.radius", this.radius);
+      if (this.radius > 0) this.circle.setLatLng([position.lat, position.lng]);
+      this.dragend.emit(position);
     });
     // });
   }
@@ -199,7 +262,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       cursor: pointer;
     }
 
-
      .leaflet-touch .leaflet-bar {
       background: white;
       border-radius: 10px;
@@ -231,56 +293,60 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       right: 7px;
     }
   </style>
-
-  <input id="radius-slider" type="range" min="3000" max="20000" value="" step="1000">
-  <label id="radius-value">3 KM</label>
 `;
 
-      // Set custom CSS
-      Object.assign(container.style, {
-        background: "white",
-        padding: "10px",
-        borderRadius: "8px",
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        font: "Poppins",
-        fontFamily: "Poppins, sans-serif",
-        border: "none",
-      });
+      if (this.radius > 0) {
+        container.innerHTML += `<input id="radius-slider" type="range" min="3000" max="20000" value="" step="1000">
+  <label id="radius-value">3 KM</label>`;
+      }
 
       // Prevent map drag while interacting with slider
       L.DomEvent.disableClickPropagation(container);
 
-      // Handle slider input
-      let slider = container.querySelector(
-        "#radius-slider"
-      ) as HTMLInputElement;
-      const label = container.querySelector(
-        "#radius-value"
-      ) as HTMLLabelElement;
-      slider.value = this.radius.toString();
-
-      label.textContent = `${(this.radius / 1000).toFixed(0)} KM`;
-      slider.addEventListener("input", (event) => {
-        const newRadius = Number(slider.value);
-        this.circle.setRadius(newRadius);
-        label.textContent = `${(newRadius / 1000).toFixed(0)} KM`;
-      });
-
-      slider.addEventListener("change", () => {
-        const radius = (Number(slider.value) / 1000).toFixed(0);
-
-        // Perform actions AFTER the user stops sliding
-
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {
-            radius: radius,
-          },
-          queryParamsHandling: "merge",
+      if (this.radius > 0) {
+        // Set custom CSS
+        Object.assign(container.style, {
+          background: "white",
+          padding: "10px",
+          borderRadius: "8px",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          font: "Poppins",
+          fontFamily: "Poppins, sans-serif",
+          border: "none",
         });
-      });
+
+        // Handle slider input
+        let slider = container.querySelector(
+          "#radius-slider"
+        ) as HTMLInputElement;
+        const label = container.querySelector(
+          "#radius-value"
+        ) as HTMLLabelElement;
+        slider.value = this.radius.toString();
+
+        label.textContent = `${(this.radius / 1000).toFixed(0)} KM`;
+        slider.addEventListener("input", (event) => {
+          const newRadius = Number(slider.value);
+          this.circle.setRadius(newRadius);
+          label.textContent = `${(newRadius / 1000).toFixed(0)} KM`;
+        });
+
+        slider.addEventListener("change", () => {
+          const radius = (Number(slider.value) / 1000).toFixed(0);
+
+          // Perform actions AFTER the user stops sliding
+
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+              radius: radius,
+            },
+            queryParamsHandling: "merge",
+          });
+        });
+      }
 
       return container;
     };

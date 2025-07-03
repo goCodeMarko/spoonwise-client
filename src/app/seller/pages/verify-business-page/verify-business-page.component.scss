@@ -1,0 +1,41 @@
+.custom-file-dropzone-default {
+  width: 100%;
+  background-color: #f0f0f0;
+  display: flex;
+  border-radius: 7px;
+  padding: 7px;
+  height: 85px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-file-dropzone-error {
+  width: 100%;
+  background-color: #f0f0f0;
+  display: flex;
+  border-radius: 7px;
+  padding: 7px;
+  height: 85px;
+  align-items: center;
+  justify-content: space-between;
+  border: red solid 2px;
+}
+
+.pdf-scroll-container {
+  margin-top: 1em;
+  height: 400px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+
+::ng-deep .mat-horizontal-content-container {
+  padding: 0px !important;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  padding: 0px 7px !important;
+}
+
+::ng-deep #map {
+  margin: 0px 7px 7px 7px;
+}

@@ -37,6 +37,19 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="isShop">
+      <div class="ms-icon-container" [routerLink]="'/shop/add-product'">
+        <button
+          mat-icon-button
+          color="primary"
+          style="width: 70px; height: 70px"
+        >
+          <img src="assets/icons/add.png" width="50" />
+        </button>
+        <div class="ms-icon-text">Add Product</div>
+      </div>
+    </ng-container>
+
     <ng-container>
       <div
         class="ms-icon-container"

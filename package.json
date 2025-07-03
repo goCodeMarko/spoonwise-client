@@ -47,6 +47,7 @@
     "ngx-image-cropper": "^7.0.3",
     "ngx-star-rating": "^2.1.0",
     "ngx-webcam": "^0.4.1",
+    "pdfjs-dist": "^3.1.81",
     "rxjs": "^6.6.0",
     "rxjs-compat": "^6.6.0",
     "sass": "^1.29.0",

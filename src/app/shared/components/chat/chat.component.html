@@ -16,7 +16,7 @@
       style="display: flex; justify-content: end; align-items: center"
       *ngIf="
         chatroomMessages[0] &&
-        [this.authUser._id, this.authUser.shop].includes(
+        [this.authUser._id, this.authUser.shop?._id].includes(
           chatroomMessages[0].senderId
         )
       "
@@ -41,7 +41,9 @@
       </div>
       <ng-container
         *ngIf="
-          [this.authUser._id, this.authUser.shop].includes(message?.senderId);
+          [this.authUser._id, this.authUser.shop?._id].includes(
+            message?.senderId
+          );
           else leftSide
         "
       >

@@ -56,7 +56,7 @@
                   <div>
                     <b
                       *ngIf="
-                        [this.authUser._id, this.authUser.shop].includes(
+                        [this.authUser._id, this.authUser.shop?._id].includes(
                           chatroom.latestMessages[0].senderId
                         )
                       "

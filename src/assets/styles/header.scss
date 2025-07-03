@@ -8,11 +8,12 @@ File: scss
 /*******************
  Topbar
 *******************/
+@use "./variable" as var;
 mat-toolbar {
   box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
   border: 0px;
   // background-color: #90ac8e !important;
-  background-color: white !important;
+  background: var.$main-color !important;
   height: 80px !important;
   &.topbar {
     padding: 15px 15px;

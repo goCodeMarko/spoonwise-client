@@ -9,6 +9,7 @@ import { CartItem } from "./shared/models/cart-item.model";
 import { setCart } from "./shared/store/cart/cart.actions";
 import { setToPay } from "./shared/store/order/order.actions";
 import { setChatrooms } from "./shared/store/chat/chat.actions";
+import { GeolocationService } from "./shared/services/geolocation/geolocation.service";
 
 @Component({
   selector: "app-root",
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit {
   constructor(
     internetConnection: InternetConnectionService,
     imagePreloadService: ImagePreloadService,
-    private store: Store
+    private store: Store,
+    private geolocationService: GeolocationService
   ) {
     // Subscribe to the internet connection status
     internetConnection.getConnectionStatus().subscribe((status) => {

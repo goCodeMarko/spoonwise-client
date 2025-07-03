@@ -8,6 +8,7 @@ import { ProductViewPageComponent } from "./pages/product-view-page/product-view
 import { SecurityGuard } from "../guards/security.guard";
 import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
 import { ChatComponent } from "../shared/components/chat/chat.component";
+import { VerifyBusinessPageComponent } from "./pages/verify-business-page/verify-business-page.component";
 
 const SellerRoutes: Routes = [
   {
@@ -26,6 +27,10 @@ const SellerRoutes: Routes = [
       {
         path: "profile",
         component: ProfilePageComponent,
+      },
+      {
+        path: "profile/verify-business",
+        component: VerifyBusinessPageComponent,
       },
       {
         path: "product/:id",

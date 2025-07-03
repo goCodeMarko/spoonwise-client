@@ -1,34 +1,87 @@
 <section class="login-background" @fade>
   <div class="curved-box"></div>
-  <div class="container">
-    <div style="width: 100%">
-      <!-- <mat-card> -->
-      <form [formGroup]="this.loginForm" style="padding: 30px">
-        <p class="warning-message">
-          {{ this.message }}
-        </p>
-        <mat-form-field appearance="outline">
-          <mat-label>Username</mat-label>
-          <input matInput type="text" matInput formControlName="email" />
-          <!-- <mat-hint>Hint</mat-hint> -->
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <input type="password" matInput formControlName="password" />
-          <!-- <mat-hint>Hint</mat-hint> -->
-        </mat-form-field>
+  <app-register
+    [currentDisplay]="currentDisplay"
+    [hidden]="currentDisplay === 'login-form'"
+    (onBack)="back()"
+  ></app-register>
+  <div *ngIf="currentDisplay == 'login-form'">
+    <div class="container">
+      <div style="width: 100%">
+        <form [formGroup]="this.loginForm" style="padding: 30px">
+          <div>
+            <p class="warning-message">
+              {{ this.message }}
+            </p>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <div>
+              <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput type="text" matInput formControlName="email" />
+                <!-- <mat-hint>Hint</mat-hint> -->
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input type="password" matInput formControlName="password" />
+                <!-- <mat-hint>Hint</mat-hint> -->
+              </mat-form-field>
+            </div>
 
-        <button
-          mat-flat-button
-          color="main-green"
-          class="btn-block fw-bold"
-          (click)="login()"
-        >
-          LOG IN
-        </button>
-        <div style="color: gray; font-size: 12px">Week 8</div>
-      </form>
-      <!-- </mat-card> -->
+            <div>
+              <button
+                mat-flat-button
+                color="main-green"
+                class="btn-block fw-bold"
+                (click)="login()"
+                style="margin-top: 4px"
+              >
+                LOG IN
+              </button>
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 7px;
+              padding-top: 21px;
+            "
+          >
+            <button
+              mat-flat-button
+              class="btn-block fw-bold"
+              (click)="updateCurrentDisplay('buyer-form')"
+            >
+              SIGNUP
+            </button>
+            <button
+              mat-flat-button
+              class="btn-block fw-bold"
+              (click)="updateCurrentDisplay('seller-form')"
+            >
+              SELL ON SPOONWISE
+            </button>
+          </div>
+
+          <div
+            style="
+              color: gray;
+              font-size: 12px;
+              position: absolute;
+              bottom: 14px;
+              left: 50%;
+              transform: translateX(-50%);
+            "
+          >
+            V8.0.0
+          </div>
+        </form>
+        <!-- </mat-card> -->
+      </div>
     </div>
   </div>
 </section>
@@ -42,3 +95,29 @@
   <!-- <h2>Login</h2> -->
   <!-- <p>Welcome to GC Portal</p> -->
 </div>
+
+<ng-template #OTPSheet let-context>
+  <ul class="sheet-list">
+    <div style="justify-items: center; margin-bottom: 7px">
+      <div
+        style="
+          margin-top: 7px;
+          width: 40px;
+          height: 5px;
+          background-color: #7f7f7f1a;
+          border-radius: 20px;
+        "
+      ></div>
+    </div>
+
+    <div style="margin: 7px">
+      <div *ngIf="reviewSheetLoad">
+        <div
+          style="display: flex; align-items: center; justify-content: center"
+        >
+          Loading...
+        </div>
+      </div>
+    </div>
+  </ul>
+</ng-template>

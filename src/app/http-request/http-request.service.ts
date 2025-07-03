@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 import "rxjs/add/operator/catch";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -9,10 +10,20 @@ import "rxjs/add/operator/catch";
 export class HttpRequestService {
   constructor(private http: HttpClient) {}
 
-  request(method: string, endpoint: string, payload: any, callback: any) {
+  request(
+    method: string,
+    endpoint: string,
+    payload: any,
+    callback?: any
+  ): Observable<any> | any {
     let URL;
 
     switch (method) {
+      case "getV2":
+        return this.http.get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
+          params: payload,
+        });
+
       case "download":
         return this.http
           .get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
@@ -78,6 +89,11 @@ export class HttpRequestService {
             return callback(error.error);
           }
         );
+
+      default:
+        return this.http.get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
+          params: payload,
+        });
     }
   }
 }

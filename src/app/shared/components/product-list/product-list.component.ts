@@ -62,6 +62,7 @@ export class ProductListComponent implements OnInit {
     });
     this.route.queryParams.subscribe((params) => {
       this.queryParams = { ...this.queryParams, ...params };
+      console.log("this.queryParams", this.queryParams);
       if (params.page) this.queryParams.skip = params.page - 1;
       if (params.sort) this.queryParams.sort = params.sort;
       if (params.search) this.queryParams.search = params.search;

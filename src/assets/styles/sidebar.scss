@@ -8,7 +8,7 @@ File: scss
 /*******************
 Main sidebar
 ******************/
-
+@use "./variable" as var;
 mat-sidenav {
   width: 240px;
   padding-top: 0px;
@@ -29,7 +29,10 @@ mat-sidenav {
       &:hover {
         background: none;
         > a {
-          color: $themecolor;
+          color: var.$main-color;
+        }
+        a > mat-icon {
+          color: var.$main-color;
         }
       }
     }
@@ -60,7 +63,7 @@ mat-sidenav {
       }
     }
     &.selected > .mat-list-item-content > a {
-      background: #90ac8e;
+      background: var.$main-color;
       border-radius: $radius;
       color: $white;
 

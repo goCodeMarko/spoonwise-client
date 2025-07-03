@@ -16,6 +16,7 @@ import { AuthService } from "src/app/authorization/auth.service";
 import { takeUntil } from "rxjs/operators";
 import { Observable, Subject, Subscriber, Subscription } from "rxjs";
 import { SocketService } from "../../socket/socket.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-profile",
@@ -37,10 +38,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private auth: AuthService,
-    private socket: SocketService
+    private socket: SocketService,
+    private router: Router
   ) {
     console.log("ProfileComponent Initiated!");
-    this.authUser = JSON.parse(this.auth.getUserData());
 
     this.points$ = this.store
       .select(selectPoints)
@@ -87,6 +88,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.userData();
     this.points$.subscribe((data) => {
       this.points = data;
     });
@@ -107,6 +109,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  load = true;
+  async userData() {
+    await this.auth.updateUserData();
+    this.load = false;
+    this.authUser = JSON.parse(this.auth.getUserData());
+    console.log("---xxxxxxxxx", this.authUser);
   }
 
   logout(): void {

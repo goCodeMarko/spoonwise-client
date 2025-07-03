@@ -8,7 +8,9 @@
     <app-map
       class="buyer-component"
       [shops]="this.shops"
-      [subject]="subject"
+      [detectCurrentLocation]="true"
+      [radius]="3000"
+      (dragend)="onMapDragend($event)"
     ></app-map>
   </div>
   <ng-template #loading>

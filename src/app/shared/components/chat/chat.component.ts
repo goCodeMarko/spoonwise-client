@@ -132,7 +132,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage() {
     const { role } = this.authUser;
     const elementId = new ObjectId().toHexString();
-    const senderId = role === "seller" ? this.authUser.shop : this.authUser._id;
+    const senderId =
+      role === "seller" ? this.authUser.shop?._id : this.authUser._id;
 
     if (!senderId) {
       console.error("Sender ID is undefined!");

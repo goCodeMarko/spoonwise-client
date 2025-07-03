@@ -28,7 +28,7 @@ export interface Shop {
   businessName: string;
   coordinates: {
     lat: number;
-    lon: number;
+    lng: number;
   };
   address1: string;
   address2: string;

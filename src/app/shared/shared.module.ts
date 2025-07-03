@@ -35,6 +35,14 @@ import { OrderListComponent } from "./components/order-list/order-list.component
 import { ChatListComponent } from "./components/chat-list/chat-list.component";
 import { ChatComponent } from "./components/chat/chat.component";
 import { TimeAgoPipe } from "./pipes/time-ago.pipe";
+import { MapComponent } from "./components/map/map.component";
+import { allowedEmailDomainsValidator } from "./form-validators/allowed-email-domains.validator";
+import { OtpBottomSheetComponent } from "./components/otp-bottom-sheet/otp-bottom-sheet.component";
+import { CountDownPipe } from "./pipes/count-down.pipe";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { ShopVerificationStatusPipe } from "./pipes/shop-verification-statuse.pipe";
+import { VerifyBusinessComponent } from "./components/verify-business/verify-business.component";
+import { MatStep, MatStepperModule } from "@angular/material/stepper";
 
 @NgModule({
   declarations: [
@@ -53,6 +61,11 @@ import { TimeAgoPipe } from "./pipes/time-ago.pipe";
     ChatListComponent,
     ChatComponent,
     TimeAgoPipe,
+    CountDownPipe,
+    ShopVerificationStatusPipe,
+    MapComponent,
+    OtpBottomSheetComponent,
+    VerifyBusinessComponent,
   ],
   imports: [
     MatCardModule,
@@ -71,6 +84,8 @@ import { TimeAgoPipe } from "./pipes/time-ago.pipe";
     MatSlideToggleModule,
     SwiperModule,
     NgxStarRatingModule,
+    MatSnackBarModule,
+    MatStepperModule,
   ],
   exports: [
     AccordionAnchorDirective,
@@ -89,6 +104,10 @@ import { TimeAgoPipe } from "./pipes/time-ago.pipe";
     ChatListComponent,
     ChatComponent,
     TimeAgoPipe,
+    CountDownPipe,
+    ShopVerificationStatusPipe,
+    MapComponent,
+    VerifyBusinessComponent,
   ],
   providers: [MenuItems],
 })

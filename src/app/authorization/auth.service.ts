@@ -27,7 +27,7 @@ export interface IUserData {
   branch: string;
   cart: object[];
   company: string;
-  coordinates: { lat: string; lon: string };
+  coordinates: { lat: string; lng: string };
   email: string;
   fullname: string;
   isblock: boolean;
@@ -35,7 +35,24 @@ export interface IUserData {
   profile_picture: { url: string; format: string };
   role: string;
   _id: string;
-  shop?: "";
+  shop?: {
+    _id: string;
+    businessName: string;
+    logo: string;
+    documents: {
+      bir: string;
+      businessPermit: string;
+    };
+    address1: string;
+    address2: string;
+    coordinates: {
+      lat: string;
+      lng: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    phoneNumber: string;
+  };
 }
 @Injectable({
   providedIn: "root",
@@ -47,7 +64,7 @@ export class AuthService {
     branch: "",
     cart: [],
     company: "",
-    coordinates: { lat: "", lon: "" },
+    coordinates: { lat: "", lng: "" },
     email: "",
     fullname: "",
     isblock: true,
@@ -101,11 +118,6 @@ export class AuthService {
         }
       });
     });
-
-    // let token = this.getToken();
-    // let account = JSON.parse(this.getUserData());
-
-    // if (token) return account.role;
   }
 
   getToken(): string {
@@ -116,6 +128,16 @@ export class AuthService {
   getUserData(): string {
     let account = localStorage.getItem("account");
     return account ? account : "";
+  }
+
+  updateUserData() {
+    return new Promise((resolve) => {
+      this.hrs.request("get", "user/getUserAuth", {}, (response: IResponse) => {
+        const stringified = JSON.stringify(response.data);
+        localStorage.setItem("account", stringified);
+        resolve(null);
+      });
+    });
   }
 
   navigate(path: string, transactionId: string) {

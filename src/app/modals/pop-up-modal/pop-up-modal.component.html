@@ -35,7 +35,7 @@
       *ngIf="this.data.okaybutton"
       (click)="close()"
     >
-      Okay
+      <div [innerHtml]="safeHtml"></div>
     </button>
     <button *ngIf="this.data.yesBtn" mat-stroked-button (click)="yes()">
       Yes

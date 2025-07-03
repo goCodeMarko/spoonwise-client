@@ -1,0 +1,194 @@
+<ng-template #productListLoader>
+  <div *ngFor="let prod of [1, 2, 3, 4]; let i = index">
+    <div class="card">
+      <div class="loader" style="width: 100%; height: 188.5px"></div>
+      <div class="card-content">
+        <h5 class="line-clamp">
+          <div class="loader" style="width: 100%; height: 35px"></div>
+        </h5>
+        <div style="display: flex; gap: 7px; height: 20px">
+          <div class="loader" style="width: 88px; height: 24px"></div>
+          <div class="loader" style="width: 43px; height: 24px"></div>
+        </div>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            height: 20px;
+            margin-top: 7px;
+          "
+        >
+          <div class="loader" style="width: 60px; height: 24px"></div>
+
+          <div class="loader" style="width: 53px; height: 24px"></div>
+        </div>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            height: 20px;
+            margin-top: 7px;
+          "
+        >
+          <div class="loader" style="width: 88px; height: 24px"></div>
+
+          <div class="loader" style="width: 47px; height: 24px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div
+  style="
+    margin: 50px;
+    padding: 14px;
+    border-radius: 7px;
+    background-color: white;
+  "
+>
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      background: #f3f3f3;
+      border-radius: 15px;
+      border: #f3f3f3 solid 10px;
+      color: black;
+      margin-bottom: 15px;
+    "
+  >
+    <div>
+      <mat-form-field appearance="outline" style="width: 300px">
+        <input #search type="text" matInput placeholder="Search"
+      /></mat-form-field>
+    </div>
+
+    <div></div>
+  </div>
+  <table class="table table-light table-hover bg-white table-responsive">
+    <thead>
+      <tr class="table-light">
+        <th>SHOP NAME</th>
+        <th>RATING</th>
+        <th>STATUS</th>
+        <th style="width: 10%"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="table-light"
+        *ngFor="let shop of shops; let i = index; trackBy: trackByShopId"
+      >
+        <td>{{ shop.businessName }}</td>
+        <td>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+            "
+          >
+            <ngx-star-rating
+              [(ngModel)]="shop.averageRating"
+              disabled="true"
+            ></ngx-star-rating>
+          </div>
+        </td>
+        <td>
+          {{ shop.verification_process?.status | shopVerificationStatus }}
+        </td>
+        <td style="text-align: end">
+          <button mat-icon-button (click)="viewShop(shop)">
+            <span
+              class="material-icons"
+              style="font-size: 30px; vertical-align: middle"
+            >
+              search
+            </span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      background: #f3f3f3;
+      border-radius: 15px;
+      border: #f3f3f3 solid 10px;
+      color: black;
+    "
+  >
+    <div>
+      <p>Items: {{ this.meta.total }}</p>
+    </div>
+
+    <div>
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+        "
+      >
+        <button
+          [disabled]="this.meta.page === 1"
+          (click)="prev()"
+          mat-icon-button
+          style="
+            background: #dddddd57;
+            border-radius: 50%;
+            padding: 2px 5px;
+            display: flex;
+            width: 35px;
+            height: 35px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          "
+        >
+          <span
+            class="material-icons"
+            style="font-size: 14px; vertical-align: middle"
+          >
+            arrow_back_ios
+          </span>
+        </button>
+
+        <div>
+          Page {{ this.meta.page || 1 }} of {{ this.meta.pages || 100 }}
+        </div>
+
+        <button
+          [disabled]="this.meta.page === this.meta.pages"
+          (click)="next()"
+          mat-icon-button
+          style="
+            background: #dddddd57;
+            border-radius: 50%;
+            padding: 2px 5px;
+            display: flex;
+            width: 35px;
+            height: 35px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          "
+        >
+          <span
+            class="material-icons"
+            style="font-size: 14px; vertical-align: middle"
+          >
+            arrow_forward_ios
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

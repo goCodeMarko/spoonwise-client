@@ -50,6 +50,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { SellerModule } from "./seller/seller.module";
 import { ChatroomEffects } from "./shared/store/chat/chat.effects";
 import { chatroomReducer } from "./shared/store/chat/chat.reducer";
+import { RegisterComponent } from "./register/register/register.component";
+import { MapComponent } from "./shared/components/map/map.component";
+import { ViewShopModalComponent } from "./modals/view-shop-modal/view-shop-modal.component";
 
 @NgModule({
   declarations: [
@@ -59,11 +62,12 @@ import { chatroomReducer } from "./shared/store/chat/chat.reducer";
     SpinnerComponent,
     AppSidebarComponent,
     PopUpModalComponent,
-    ViewNoteModalComponent,
     LoginComponent,
     ViewNoteModalComponent,
     ViewSnapshotModalComponent,
     CameraModalComponent,
+    RegisterComponent,
+    ViewShopModalComponent,
   ],
   imports: [
     BrowserModule,

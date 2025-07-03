@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { FullComponent } from "./layouts/full/full.component";
 import { SecurityGuard } from "./guards/security.guard";
 import { LoginComponent } from "./login/login.component";
+import { RegisterComponent } from "./register/register/register.component";
 
 export const AppRoutes: Routes = [
   // { path: "", redirectTo: "login", pathMatch: "full" }, // Redirect root URL to login
@@ -29,6 +30,18 @@ export const AppRoutes: Routes = [
         path: "",
         loadChildren: () =>
           import("./seller/seller.module").then((m) => m.SellerModule),
+        canActivate: [SecurityGuard],
+      },
+    ],
+  },
+  {
+    path: "admin",
+    component: FullComponent,
+    children: [
+      {
+        path: "",
+        loadChildren: () =>
+          import("./admin/admin.module").then((m) => m.AdminModule),
         canActivate: [SecurityGuard],
       },
     ],
