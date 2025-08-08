@@ -31,7 +31,6 @@ import { sendMessageSuccess } from "../../../shared/store/chat/chat.actions";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { SocketService } from "../../socket/socket.service";
 import { take } from "rxjs/operators";
-import imageCompression from "browser-image-compression";
 
 @Component({
   selector: "app-chat",
@@ -224,7 +223,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   removeForUpload() {
     this.forUploadImage = "";
   }
-  async onFileChange(event: Event): Promise<any> {
+  onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement; // Cast the event target to HTMLInputElement to access the files
     if (input.files && input.files[0]) {
       if (_.size(input.files) == 1) {
@@ -232,36 +231,33 @@ export class ChatComponent implements OnInit, OnDestroy {
         const file = input.files[0]; // Get the first selected file
         const reader = new FileReader(); // Create a FileReader to read the file
 
-        // Compression settings
-        const options = {
-          maxSizeMB: 0.6, // 0.6 MB = ~600KB
-          maxWidthOrHeight: 1920,
-          useWebWorker: true,
-        };
+        reader.readAsDataURL(file); // Read the file as a Base64 data URL
 
-        try {
-          console.log("-------------file", file);
-          const compressedFile = await imageCompression(file, options);
-          console.log("-------------compressedFile", compressedFile);
-          reader.readAsDataURL(compressedFile); // Read the file as a Base64 data URL
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          // Define what to do when file reading is complete
+          const imgSrc = e.target!.result as string; // Get the Base64 image string
+          const image = new Image();
 
-          reader.onload = (e: ProgressEvent<FileReader>) => {
-            const imgSrc = e.target!.result as string; // Get the Base64 image string
-            const image = new Image();
-            console.log("-----img0", imgSrc);
-            this.forUploadImage = imgSrc;
+          image.src = imgSrc;
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d")!;
 
-            image.src = imgSrc;
-            image.onload = () => {
-              const width = image.width; // Get image width
-              const height = image.height; // Get image height
+            // Example: force smaller size for extra compression
+            const targetWidth = 800;
+            const targetHeight = (image.height / image.width) * targetWidth;
 
-              const id = Math.random().toString(36).substring(2, 9);
-            };
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+
+            ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+
+            // Step 3: Get lower quality Base64
+            const finalBase64 = canvas.toDataURL("image/jpeg", 0.2); // 0.2 = 20% quality
+            console.log(finalBase64);
+            this.forUploadImage = finalBase64;
           };
-        } catch (error) {
-          console.error("Compression error:", error);
-        }
+        };
       }
     }
   }
