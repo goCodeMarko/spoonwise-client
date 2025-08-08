@@ -154,12 +154,12 @@ export class MapComponent
       fadeAnimation: false,
     }).setView([0, 0], 1);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://{s}tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
       id: "mapbox/streets-v11",
-      tileSize: 512,
+      detectRetina: true,
       zoomOffset: -1,
     }).addTo(this.map);
 
