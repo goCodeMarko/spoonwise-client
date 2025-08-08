@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { MenuItems } from "../shared/menu-items/menu-items";
+import { Store } from "@ngrx/store";
+import { getBlogs } from "../shared/store/blog/blog.actions";
 
 @Component({
   selector: "app-admin",
@@ -7,7 +9,9 @@ import { MenuItems } from "../shared/menu-items/menu-items";
   styleUrls: ["./admin.component.css"],
 })
 export class AdminComponent implements OnInit {
-  constructor(private menu: MenuItems) {}
+  constructor(private menu: MenuItems, private store: Store) {
+    this.store.dispatch(getBlogs());
+  }
 
   ngOnInit(): void {
     this.menu.setMenuItem([

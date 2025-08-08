@@ -2,26 +2,24 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
   background: #f8da50;
-  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 0px 7px;
-  height: 81px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+  padding: 7px 28px;
+  height: 64px;
+  width: 100%;
+  display: flex;
+  gap: 7px;
   align-items: center;
-  justify-content: center;
+
   z-index: 2;
 }
 
 .mat-icon-size {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 
 mat-icon {
-  font-size: 50px;
+  font-size: 40px;
   color: white;
 }
 
@@ -35,9 +33,22 @@ mat-icon {
 }
 
 .search-button {
-  height: 50px !important;
+  height: 40px !important;
 }
 
 .icon-size {
   font-size: 40px;
+}
+
+.radio-button-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+
+  &.selected {
+    background-color: #f6f6f6;
+
+    border-radius: 20px;
+  }
 }

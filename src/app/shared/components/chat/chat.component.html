@@ -1,72 +1,179 @@
-<div style="max-height: 89.4dvh; min-height: 89.4dvh; margin-top: 81.7px">
+<div
+  #chatContainer
+  (scroll)="onScroll()"
+  style="
+    height: 83.3vh;
+    overflow-y: scroll;
+    padding: 7px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 7px;
+    z-index: -2 !important;
+  "
+>
   <div
-    #chatContainer
-    (scroll)="onScroll()"
-    style="
-      max-height: 84.2dvh;
-      min-height: 84.2dvh;
-      overflow-y: scroll;
-      padding: 7px;
-      display: flex;
-      flex-direction: column-reverse;
-      gap: 7px;
+    style="display: flex; justify-content: end; align-items: center"
+    *ngIf="
+      (chatroomMessages[0] &&
+        [this.authUser._id, this.authUser.shop?._id].includes(
+          chatroomMessages[0].senderId
+        )) ||
+      !chatroomMessages[0].isAIAgent
+    "
+  >
+    {{ chatroomMessages[0].status | titlecase }} ·
+    {{ chatroomMessages[0].updatedAt | timeAgo }}
+  </div>
+
+  <div
+    *ngFor="
+      let message of chatroomMessages;
+      let i = index;
+      trackBy: trackByMessageId
     "
   >
     <div
-      style="display: flex; justify-content: end; align-items: center"
-      *ngIf="
-        chatroomMessages[0] &&
-        [this.authUser._id, this.authUser.shop?._id].includes(
-          chatroomMessages[0].senderId
-        )
-      "
+      *ngIf="i === chatroomMessages.length - 1 && onLoad"
+      style="text-align: center; margin-top: 10px"
+      style="margin-top: 10px"
     >
-      {{ chatroomMessages[0].status | titlecase }} ·
-      {{ chatroomMessages[0].updatedAt | timeAgo }}
+      Loading...
     </div>
-
-    <div
-      *ngFor="
-        let message of chatroomMessages;
-        let i = index;
-        trackBy: trackByMessageId
+    <ng-container
+      *ngIf="
+        [this.authUser._id, this.authUser.shop?._id].includes(
+          message?.senderId
+        ) || !message.isAIAgent;
+        else leftSide
       "
     >
       <div
-        *ngIf="i === chatroomMessages.length - 1 && onLoad"
-        style="text-align: center; margin-top: 10px"
-        style="margin-top: 10px"
-      >
-        Loading...
-      </div>
-      <ng-container
-        *ngIf="
-          [this.authUser._id, this.authUser.shop?._id].includes(
-            message?.senderId
-          );
-          else leftSide
+        style="
+          display: flex;
+          justify-content: end;
+          align-items: end;
+          flex-direction: column;
         "
       >
-        <div style="display: flex; justify-content: end; align-items: center">
+        <ng-container *ngIf="message?.content?.attachments?.length > 0">
           <div>
-            <p class="message">
-              {{ message.content.message }}
-            </p>
+            <img
+              [src]="message.content.attachments[0].url"
+              alt=""
+              style="width: 70vw"
+            />
           </div>
-        </div>
-      </ng-container>
+        </ng-container>
 
-      <ng-template #leftSide>
-        <div style="display: flex; justify-content: start; align-items: center">
+        <ng-container *ngIf="message?.content?.message">
           <div>
             <p class="message">
               {{ message.content.message }}
             </p>
           </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <ng-template #leftSide>
+      <div style="display: flex; justify-content: start; align-items: center">
+        <div>
+          <div class="message">
+            <p [innerHTML]="message.content.message"></p>
+
+            <!-- <ng-container *ngIf="message.content.buttons">
+              <div style="display: flex; flex-direction: column; gap: 7px">
+                <button mat-flat-button color="main-green">Button 1</button>
+                <button mat-flat-button color="main-green">Button 2</button>
+                <button mat-flat-button color="main-green">Button 3</button>
+              </div>
+            </ng-container> -->
+          </div>
         </div>
-      </ng-template>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div
+  style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #f6f6f6;
+    padding: 20px;
+    display: flex;
+    gap: 7px;
+    display: flex;
+    flex-direction: column;
+  "
+>
+  <div
+    style="display: flex; justify-content: center; position: relative"
+    *ngIf="forUploadImage"
+  >
+    <div>
+      <button
+        style="position: absolute; top: 1px; right: 1px"
+        mat-icon-button
+        (click)="removeForUpload()"
+      >
+        <mat-icon style="font-size: 25px; color: '#f8da50'">close</mat-icon>
+      </button>
+    </div>
+    <img [src]="forUploadImage" alt="" style="width: 70vw" />
+  </div>
+  <div style="display: flex; flex-direction: row; gap: 7px">
+    <div style="flex: 1; display: flex; gap: 7px">
+      <ng-template #noPictures> </ng-template>
+
+      <input
+        #openCameraInput
+        type="file"
+        id="picture"
+        name="picture"
+        accept="image/*"
+        capture="environment"
+        (change)="onFileChange($event)"
+        hidden
+      />
+
+      <input
+        #openGalleryInput
+        type="file"
+        id="picture"
+        name="picture"
+        accept="image/*"
+        (change)="onFileChange($event)"
+        hidden
+      />
+      <div>
+        <button mat-icon-button (click)="openCamera()">
+          <mat-icon style="font-size: 45px; color: '#f8da50'"
+            >camera_alt</mat-icon
+          >
+        </button>
+      </div>
+      <div>
+        <button mat-icon-button (click)="openGallery()">
+          <mat-icon style="font-size: 45px; color: '#f8da50'">image</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div style="flex: 9">
+      <textarea
+        class="form-control"
+        [(ngModel)]="text"
+        rows="1"
+        style="width: 100%; resize: none"
+        (keyup.enter)="sendMessage()"
+      ></textarea>
+    </div>
+    <div style="flex: 1">
+      <button mat-icon-button (click)="sendMessage()">
+        <mat-icon style="font-size: 45px; color: '#f8da50'">send</mat-icon>
+      </button>
     </div>
   </div>
-  <input [(ngModel)]="text" type="text" />
-  <button (click)="sendMessage()">send</button>
 </div>

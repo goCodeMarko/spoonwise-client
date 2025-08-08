@@ -11,8 +11,13 @@ import { ViewUsersComponent } from "./components/view-users/view-users.component
 import { ShopListComponent } from "./components/shop-list/shop-list.component";
 import { TableUsersComponent } from "./components/table-users/table-users.component";
 import { ShopListPageComponent } from "./pages/shop-list-page/shop-list-page.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
+import { BlogListPageComponent } from "./pages/blog-list-page/blog-list-page.component";
+import { AddBlogComponent } from "./components/add-blog/add-blog.component";
+import { NgxEditorModule } from "ngx-editor";
+import { MatSelectModule } from "@angular/material/select";
+import { ViewBlogPageComponent } from './pages/view-blog-page/view-blog-page.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +26,9 @@ import { MatInputModule } from "@angular/material/input";
     TableUsersComponent,
     ShopListComponent,
     ShopListPageComponent,
+    BlogListPageComponent,
+    AddBlogComponent,
+    ViewBlogPageComponent,
   ],
   imports: [
     CommonModule,
@@ -30,6 +38,9 @@ import { MatInputModule } from "@angular/material/input";
     MatButtonModule,
     FormsModule,
     MatInputModule,
+    NgxEditorModule,
+    MatSelectModule,
+    ReactiveFormsModule,
     RouterModule.forChild(AdminRoutes),
   ],
 })

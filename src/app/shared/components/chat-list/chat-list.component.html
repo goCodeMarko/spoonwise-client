@@ -1,8 +1,92 @@
 <div
+  style="
+    background-color: white;
+    color: black;
+    padding: 7px;
+    border-radius: 8px;
+    margin-bottom: 7px;
+  "
+  (click)="viewChatroom(spoonwise._id, true)"
+>
+  <div style="display: flex; justify-content: space-between">
+    <div>
+      <div style="display: flex; flex-direction: column">
+        <div style="display: flex; gap: 14px">
+          <div>
+            <div>
+              <img
+                src="
+                        https://shiftart.com/wp-content/uploads/2017/04/RC-Profile-Square.jpg"
+                alt=""
+                width="65"
+                style="border-radius: 50%"
+              />
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+            "
+          >
+            <div>
+              <b>Spoonwise AI</b>
+            </div>
+
+            <div style="display: flex; gap: 7px">
+              <ng-container *ngIf="spoonwise.latestMessages.length > 0">
+                <div>
+                  <b
+                    *ngIf="
+                      [this.authUser._id, this.authUser.shop?._id].includes(
+                        spoonwise.latestMessages[0].senderId
+                      )
+                    "
+                    >You:
+                  </b>
+                  <b>{{
+                    spoonwise.latestMessages[0].content.message | lineClamp : 25
+                  }}</b>
+                </div>
+                <span><b>·</b></span>
+                <div>
+                  <p>
+                    {{ spoonwise.latestMessages[0].createdAt | timeAgo }}
+                  </p>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: center"
+      *ngIf="spoonwise.sentMessageCount"
+    >
+      <div
+        style="
+          background-color: #f8da50;
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div>{{ spoonwise.sentMessageCount }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
   #chatListContainer
   (scroll)="onScroll()"
   style="
-    height: 100dvh;
+    height: 82.7vh;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -58,11 +142,16 @@
                       *ngIf="
                         [this.authUser._id, this.authUser.shop?._id].includes(
                           chatroom.latestMessages[0].senderId
-                        )
+                        ) || !chatroom.latestMessages[0].isAIAgent
                       "
                       >You:
                     </b>
-                    <b>{{ chatroom.latestMessages[0].content.message }}</b>
+                    <b
+                      >{{
+                        chatroom.latestMessages[0].content.message
+                          | lineClamp : 25
+                      }}
+                    </b>
                   </div>
                   <span><b>·</b></span>
                   <div>

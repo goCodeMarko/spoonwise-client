@@ -7,13 +7,13 @@ export class ShopVerificationStatusPipe implements PipeTransform {
   transform(status: string): string {
     switch (status) {
       case "NOT_STARTED":
-        return "Not Yet Submitted";
+        return "Unverified";
       case "IN_PROGRESS":
-        return "Pending Admin Review";
+        return "Pending";
       case "DECLINED":
-        return "Declined by Admin";
+        return "Declined";
       case "APPROVED":
-        return "Approved";
+        return "Verified";
       default:
         return "Unknown Status";
     }

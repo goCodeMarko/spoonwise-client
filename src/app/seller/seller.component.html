@@ -7,7 +7,13 @@
 </div>
 
 <app-sticky-footer
-  *ngIf="routerOutletComponent == 'ProductListPageComponent'"
+  *ngIf="
+    routerOutletComponent == 'ProductListPageComponent' ||
+    routerOutletComponent == 'HomePageComponent' ||
+    routerOutletComponent == 'ChatListPageComponent' ||
+    routerOutletComponent == 'ProfilePageComponent' ||
+    routerOutletComponent == 'AddProductComponent'
+  "
   [showCart]="false"
   [isShop]="true"
 ></app-sticky-footer>

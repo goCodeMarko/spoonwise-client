@@ -3,66 +3,63 @@
     <ng-container>
       <div
         class="ms-icon-container"
-        [routerLink]="isShop ? '/shop/chats' : '/chats'"
+        [routerLink]="isShop ? '/shop/home' : '/home'"
       >
-        <div
-          *ngIf="totalCountSentDeliveredMessages"
+        <button
+          mat-icon-button
+          color="primary"
           style="
-            position: absolute;
-            top: -4px;
-            right: 3px;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: white;
-            color: black;
+            width: 70px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 2;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-            font-size: 13px;
           "
         >
-          {{ totalCountSentDeliveredMessages }}
-        </div>
-        <button
-          mat-icon-button
-          color="primary"
-          style="width: 70px; height: 70px"
-        >
-          <img src="assets/icons/messaging.png" width="50" />
+          <mat-icon>home</mat-icon>
+          <div class="ms-icon-text">Home</div>
         </button>
-        <div class="ms-icon-text">Chats</div>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="isShop">
-      <div class="ms-icon-container" [routerLink]="'/shop/add-product'">
-        <button
-          mat-icon-button
-          color="primary"
-          style="width: 70px; height: 70px"
-        >
-          <img src="assets/icons/add.png" width="50" />
-        </button>
-        <div class="ms-icon-text">Add Product</div>
       </div>
     </ng-container>
 
     <ng-container>
       <div
         class="ms-icon-container"
-        [routerLink]="isShop ? '/shop/profile' : '/profile'"
+        [routerLink]="isShop ? '/shop/deals' : '/deals'"
       >
         <button
           mat-icon-button
           color="primary"
-          style="width: 70px; height: 70px"
+          style="
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
         >
-          <img src="assets/icons/account.png" width="50" />
+          <mat-icon>dining</mat-icon>
+          <div class="ms-icon-text">Deals</div>
         </button>
-        <div class="ms-icon-text">Profile</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isShop">
+      <div class="ms-icon-container" [routerLink]="'/shop/add-product'">
+        <button
+          mat-fab
+          color="main-green"
+          style="
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <mat-icon>add</mat-icon>
+          <div class="ms-icon-text"></div>
+        </button>
       </div>
     </ng-container>
 
@@ -72,7 +69,7 @@
           *ngIf="lineItemCount"
           style="
             position: absolute;
-            top: -4px;
+            top: 15px;
             right: 3px;
             width: 24px;
             height: 24px;
@@ -92,11 +89,82 @@
         <button
           mat-icon-button
           color="primary"
-          style="width: 70px; height: 70px"
+          style="
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
         >
-          <img src="assets/icons/shopping-bag.png" width="50" />
+          <mat-icon>local_mall</mat-icon>
+          <div class="ms-icon-text">Cart</div>
         </button>
-        <div class="ms-icon-text">Cart</div>
+      </div>
+    </ng-container>
+
+    <ng-container>
+      <div
+        class="ms-icon-container"
+        [routerLink]="isShop ? '/shop/chats' : '/chats'"
+      >
+        <div
+          *ngIf="totalCountSentDeliveredMessages"
+          style="
+            position: absolute;
+            top: 15px;
+            right: 3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: white;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+          "
+        >
+          {{ totalCountSentDeliveredMessages }}
+        </div>
+        <button
+          mat-icon-button
+          color="primary"
+          style="
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <mat-icon>chat</mat-icon>
+          <div class="ms-icon-text">Chats</div>
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container>
+      <div
+        class="ms-icon-container"
+        [routerLink]="isShop ? '/shop/profile' : '/profile'"
+      >
+        <button
+          mat-icon-button
+          color="primary"
+          style="
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <mat-icon>account_box</mat-icon>
+          <div class="ms-icon-text">Profile</div>
+        </button>
       </div>
     </ng-container>
   </div>

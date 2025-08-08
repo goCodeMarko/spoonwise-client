@@ -1,3 +1,22 @@
+export enum Language {
+  English = "ENGLISH",
+  Tagalog = "TAGALOG",
+  Cebuano = "CEBUANO",
+  Ilocano = "ILOCANO",
+  Hiligaynon = "HILIGAYNON",
+  Kapampangan = "KAPAMPANGAN",
+  Waray = "WARAY",
+}
+export const LanguageUI: Record<Language, string> = {
+  [Language.English]: "English",
+  [Language.Tagalog]: "Tagalog",
+  [Language.Cebuano]: "Cebuano",
+  [Language.Ilocano]: "Ilocano",
+  [Language.Hiligaynon]: "Hiligaynon",
+  [Language.Kapampangan]: "Kapampangan",
+  [Language.Waray]: "Waray",
+};
+
 export interface IUpdateChatroomsMsgStatusToDelivered {
   chatroomUpdated: {
     chatroomId: string;
@@ -77,10 +96,12 @@ export interface Lalamove {
 
 export interface Message {
   _id?: string;
-  chatroomId: string;
-  senderId: string;
+  chatroomId?: string;
+  senderId?: string;
   content: {
     message: string;
+    buttons?: boolean;
+    attachments?: [{ url: string }];
     order?: {
       lineItems: {
         productId: string;
@@ -138,25 +159,33 @@ export interface Message {
     };
   };
   status: string;
+  isAIAgent?: boolean;
   elementId: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface Chatroom {
+export interface SpoonwiseAI {
   _id: string;
-  users: {
-    shop: User;
-    buyer: User;
-  };
   latestMessages: Message[];
   sentMessageCount: number;
+  settings?: {
+    language: Language;
+  };
   createdAt: string;
   updatedAt: string;
 }
 
+export interface Chatroom extends SpoonwiseAI {
+  users: {
+    shop: User;
+    buyer: User;
+  };
+}
+
 export interface ChatState {
   chatrooms: Chatroom[];
+  spoonwiseAI: SpoonwiseAI;
   allSentMessageCount: number;
   error: any;
 }

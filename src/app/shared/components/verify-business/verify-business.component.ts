@@ -3,8 +3,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
+  OnChanges,
   OnInit,
+  Output,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -38,7 +41,7 @@ import { Router } from "@angular/router";
 (
   pdfjsLib as any
 ).GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.1.81/pdf.worker.min.js`;
-
+import { firstValueFrom } from "rxjs";
 export interface IShop {
   _id: string;
   businessName: string;
@@ -63,7 +66,7 @@ export interface IShop {
     accountName: string;
   };
   verification_process: {
-    completed: boolean;
+    status: string;
     errors: {
       tab1: string;
       tab2: string;
@@ -79,7 +82,7 @@ export interface IShop {
   templateUrl: "./verify-business.component.html",
   styleUrls: ["./verify-business.component.scss"],
 })
-export class VerifyBusinessComponent implements OnInit {
+export class VerifyBusinessComponent implements OnInit, OnChanges {
   @ViewChild("elementBIR") elementBIR!: ElementRef;
   @ViewChild("elementBusinessLogo") elementBusinessLogo!: ElementRef;
   @ViewChild("elementValidID") elementValidID!: ElementRef;
@@ -89,6 +92,7 @@ export class VerifyBusinessComponent implements OnInit {
   @ViewChild("pdfContainer", { static: false })
   pdfContainer!: ElementRef<HTMLDivElement>;
   @Input() shopId?: string;
+  @Input() isAdmin = false;
 
   output = "";
   businessProfileForm: FormGroup;
@@ -113,13 +117,14 @@ export class VerifyBusinessComponent implements OnInit {
     private router: Router
   ) {
     sheet.rootVcRef = vcRef;
-
+    console.log("================================", this.isAdmin);
     this.businessProfileForm = this.fb.group({
       businessLogo: ["", Validators.required],
       bir2303: ["", Validators.required],
       validID: ["", Validators.required],
       businessPermit: ["", Validators.required],
       ownerSelfie: ["", Validators.required],
+      errorMessage: [""],
     });
 
     this.locationContactForm = this.fb.group({
@@ -128,6 +133,7 @@ export class VerifyBusinessComponent implements OnInit {
       barangay: ["", Validators.required],
       address: ["", Validators.required],
       phoneNumber: ["", [Validators.required, Validators.pattern(/^9\d{9}$/)]],
+      errorMessage: [""],
     });
 
     this.settlementForm = this.fb.group({
@@ -136,62 +142,30 @@ export class VerifyBusinessComponent implements OnInit {
         "",
         [Validators.required, Validators.pattern(/^9\d{9}$/)],
       ],
+      errorMessage: [""],
     });
   }
 
-  ngOnInit(): void {
-    this.getShopDetails();
-    this.getProvinces();
+  async ngOnInit() {
+    await this.getShopDetails();
+  }
+
+  ngOnChanges(): void {
+    if (this.isAdmin) {
+      this.businessProfileForm.disable();
+      this.locationContactForm.disable();
+      this.settlementForm.disable();
+    }
   }
 
   isMapStepVisible = false;
   async onStepChange(event: StepperSelectionEvent) {
+    if (!this.shop) await this.getShopDetails();
     if (event.selectedIndex === 1) {
-      this.getShopDetails();
+      // this.getShopDetails();
       this.isMapStepVisible = true; // only show map on step
-
-      if (this.shop.coordinates) {
-        this.coordinates = this.shop.coordinates;
-      }
-
-      if (this.shop.province) {
-        this.locationContactForm.get("province")!.setValue(this.shop.province);
-        await this.onProvinceChange(this.shop.province);
-      }
-      if (this.shop.municipality) {
-        this.locationContactForm
-          .get("municipality")!
-          .setValue(this.shop.municipality);
-        console.log("========init");
-        await this.onMunicipalityChange(this.shop.municipality);
-      }
-
-      if (this.shop.barangay) {
-        this.locationContactForm.get("barangay")!.setValue(this.shop.barangay);
-      }
-
-      if (this.shop.address) {
-        this.locationContactForm.get("address")!.setValue(this.shop.address);
-      }
-
-      if (this.shop.phoneNumber) {
-        this.locationContactForm
-          .get("phoneNumber")!
-          .setValue(this.shop.phoneNumber);
-      }
     } else if (event.selectedIndex === 2) {
-      this.getShopDetails();
-      if (this.shop.settlement_account.accountNumber) {
-        this.settlementForm
-          .get("accountNumber")!
-          .setValue(this.shop.settlement_account.accountNumber);
-      }
-
-      if (this.shop.settlement_account.accountName) {
-        this.settlementForm
-          .get("accountName")!
-          .setValue(this.shop.settlement_account.accountName);
-      }
+      // this.getShopDetails();
     }
   }
 
@@ -204,12 +178,12 @@ export class VerifyBusinessComponent implements OnInit {
   }
 
   provinces!: [{ name: string; psgcCode: string; regionCode: string }];
-  getProvinces() {
-    this.hrs.request("get", `address/provinces`, {}, async (response: any) => {
-      this.provinces = response.data;
+  async getProvinces() {
+    const prov = (await firstValueFrom(
+      this.hrs.request("getV2", `address/provinces`, {})
+    )) as any;
 
-      // this.locationContactForm.get("province")!.setValue("Agusan del Sur");
-    });
+    this.provinces = prov.data;
   }
 
   municipalities!: [{ name: string; psgcCode: string; provinceCode: string }];
@@ -274,90 +248,156 @@ export class VerifyBusinessComponent implements OnInit {
   detectCurrentLocation = false;
   async getShopDetails() {
     const shop = JSON.parse(this.auth.getUserData());
-    console.log("----------shop", shop);
     const shopId = this.shopId ? this.shopId : shop.shop?._id;
+    const getshop = (await firstValueFrom(
+      this.hrs.request("getV2", `shop/getShop/${shopId}`, {})
+    )) as any;
+    console.log("=========getshop", getshop);
+    this.shop = getshop.data;
 
-    this.hrs.request(
-      "get",
-      `shop/getShop/${shopId}`,
-      {},
-      async (response: any) => {
-        this.shop = response.data;
-        console.log("VerifyBusiness::getShopDetails", this.shop);
-        this.subject = {
-          coordinates: {
-            lat: response.data.coordinates.lat,
-            lng: response.data.coordinates.lng,
-          },
-        };
-        if (!this.subject.coordinates.lat && !this.subject.coordinates.lng) {
-          this.detectCurrentLocation = true;
-        }
-        if (this.shop?.logo) {
-          this.businessLogo = {
-            file: this.shop?.logo,
-            fileType: "image",
-          };
-        }
+    console.log("VerifyBusiness::getShopDetails", this.shop);
+    if (
+      this.shop.verification_process.status === "IN_PROGRESS" &&
+      this.isAdmin
+    ) {
+      this.businessProfileForm.get("errorMessage")?.enable();
+      this.locationContactForm.get("errorMessage")?.enable();
+      this.settlementForm.get("errorMessage")?.enable();
+    } else if (!this.isAdmin) {
+      this.businessProfileForm.get("errorMessage")?.disable();
+      this.locationContactForm.get("errorMessage")?.disable();
+      this.settlementForm.get("errorMessage")?.disable();
+    }
 
-        if (this.shop?.documents.businessPermit) {
-          let fetchx = await fetch(this.shop?.documents.businessPermit);
-          const contentType = fetchx.headers.get("Content-Type");
+    this.subject = {
+      coordinates: {
+        lat: getshop!.data.coordinates.lat,
+        lng: getshop!.data.coordinates.lng,
+      },
+    };
+    if (!this.subject.coordinates.lat && !this.subject.coordinates.lng) {
+      this.detectCurrentLocation = true;
+    }
+    if (this.shop?.logo) {
+      this.businessLogo = {
+        file: this.shop?.logo,
+        fileType: "image",
+      };
+    }
 
-          if (contentType === "application/pdf") {
-            this.loadPdfThumbnail(
-              "businessPermit",
-              null,
-              this.shop?.documents.businessPermit
-            );
-            this.loadPdf(null, this.shop?.documents.businessPermit);
-          }
+    if (this.shop?.documents.businessPermit) {
+      let fetchx = await fetch(this.shop?.documents.businessPermit);
+      const contentType = fetchx.headers.get("Content-Type");
 
-          this.businessPermit = {
-            file: this.shop?.documents.businessPermit,
-            fileType: contentType === "application/pdf" ? "pdf" : "image",
-          };
-        }
-        if (this.shop?.documents.bir) {
-          let fetchx = await fetch(this.shop?.documents.bir);
-          const contentType = fetchx.headers.get("Content-Type");
-
-          if (contentType === "application/pdf") {
-            this.loadPdfThumbnail("bir", null, this.shop?.documents.bir);
-            this.loadPdf(null, this.shop?.documents.bir);
-          }
-
-          this.bir = {
-            file: this.shop?.documents.bir,
-            fileType: contentType === "application/pdf" ? "pdf" : "image",
-          };
-        }
-        if (this.shop?.documents.validID) {
-          let fetchx = await fetch(this.shop?.documents.bir);
-          const contentType = fetchx.headers.get("Content-Type");
-
-          if (contentType === "application/pdf") {
-            this.loadPdfThumbnail(
-              "validID",
-              null,
-              this.shop?.documents.validID
-            );
-            this.loadPdf(null, this.shop?.documents.validID);
-          }
-
-          this.validID = {
-            file: this.shop?.documents.validID,
-            fileType: contentType === "application/pdf" ? "pdf" : "image",
-          };
-        }
-        if (this.shop?.documents.owner_selfie) {
-          this.ownerSelfie = {
-            file: this.shop?.documents.owner_selfie,
-            fileType: "image",
-          };
-        }
+      if (contentType === "application/pdf") {
+        this.loadPdfThumbnail(
+          "businessPermit",
+          null,
+          this.shop?.documents.businessPermit
+        );
+        this.loadPdf(null, this.shop?.documents.businessPermit);
       }
-    );
+
+      this.businessPermit = {
+        file: this.shop?.documents.businessPermit,
+        fileType: contentType === "application/pdf" ? "pdf" : "image",
+      };
+    }
+    if (this.shop?.documents.bir) {
+      let fetchx = await fetch(this.shop?.documents.bir);
+      const contentType = fetchx.headers.get("Content-Type");
+
+      if (contentType === "application/pdf") {
+        this.loadPdfThumbnail("bir", null, this.shop?.documents.bir);
+        this.loadPdf(null, this.shop?.documents.bir);
+      }
+
+      this.bir = {
+        file: this.shop?.documents.bir,
+        fileType: contentType === "application/pdf" ? "pdf" : "image",
+      };
+    }
+    if (this.shop?.documents.validID) {
+      let fetchx = await fetch(this.shop?.documents.bir);
+      const contentType = fetchx.headers.get("Content-Type");
+
+      if (contentType === "application/pdf") {
+        this.loadPdfThumbnail("validID", null, this.shop?.documents.validID);
+        this.loadPdf(null, this.shop?.documents.validID);
+      }
+
+      this.validID = {
+        file: this.shop?.documents.validID,
+        fileType: contentType === "application/pdf" ? "pdf" : "image",
+      };
+    }
+    if (this.shop?.documents.owner_selfie) {
+      this.ownerSelfie = {
+        file: this.shop?.documents.owner_selfie,
+        fileType: "image",
+      };
+    }
+
+    if (this.shop.verification_process.errors.tab1) {
+      this.businessProfileForm
+        .get("errorMessage")!
+        .setValue(this.shop.verification_process.errors.tab1);
+    }
+
+    await this.getProvinces();
+    if (this.shop.coordinates) {
+      this.coordinates = this.shop.coordinates;
+    }
+
+    if (this.shop.province) {
+      this.locationContactForm.get("province")!.setValue(this.shop.province);
+      await this.onProvinceChange(this.shop.province);
+    }
+    if (this.shop.municipality) {
+      this.locationContactForm
+        .get("municipality")!
+        .setValue(this.shop.municipality);
+      console.log("========init");
+      await this.onMunicipalityChange(this.shop.municipality);
+    }
+
+    if (this.shop.barangay) {
+      this.locationContactForm.get("barangay")!.setValue(this.shop.barangay);
+    }
+
+    if (this.shop.address) {
+      this.locationContactForm.get("address")!.setValue(this.shop.address);
+    }
+
+    if (this.shop.phoneNumber) {
+      this.locationContactForm
+        .get("phoneNumber")!
+        .setValue(this.shop.phoneNumber);
+    }
+
+    if (this.shop.verification_process.errors.tab2) {
+      this.locationContactForm
+        .get("errorMessage")!
+        .setValue(this.shop.verification_process.errors.tab2);
+    }
+
+    if (this.shop.settlement_account.accountNumber) {
+      this.settlementForm
+        .get("accountNumber")!
+        .setValue(this.shop.settlement_account.accountNumber);
+    }
+
+    if (this.shop.settlement_account.accountName) {
+      this.settlementForm
+        .get("accountName")!
+        .setValue(this.shop.settlement_account.accountName);
+    }
+
+    if (this.shop.verification_process.errors.tab3) {
+      this.settlementForm
+        .get("errorMessage")!
+        .setValue(this.shop.verification_process.errors.tab3);
+    }
   }
   hasModalShown = false;
   public birClass = "custom-file-dropzone-default";
@@ -558,6 +598,82 @@ export class VerifyBusinessComponent implements OnInit {
                 okayBtnText: `<b> Sounds good! <span style="font-size: 30px;line-height: 1;vertical-align: middle;">🎉</span></b>`,
                 title: "Application Sent!",
                 message: `Your application has been sent.`,
+                file: "assets/icons/party.png",
+              },
+            });
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @Output() onDecline = new EventEmitter();
+  @Output() onApprove = new EventEmitter();
+  async declineApplication() {
+    try {
+      const body = {
+        tab1: this.businessProfileForm.get("errorMessage")?.value,
+        tab2: this.locationContactForm.get("errorMessage")?.value,
+        tab3: this.settlementForm.get("errorMessage")?.value,
+        shopId: this.shopId,
+      };
+
+      this.hrs.request(
+        "put",
+        "shop/declineApplication",
+        body,
+        async (response: any) => {
+          console.log("-----response", response);
+          //When success
+          if (response.success) {
+            if (this.isAdmin) this.onDecline.emit(1);
+
+            this.dialog.open(PopUpModalComponent, {
+              width: "500px",
+              data: {
+                deletebutton: false,
+                okaybutton: true,
+                okayBtnText: `<b> Sounds good! <span style="font-size: 30px;line-height: 1;vertical-align: middle;">🎉</span></b>`,
+                title: "Application Declined!",
+                message: `The application has been declined.`,
+                file: "assets/icons/party.png",
+              },
+            });
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async approveApplication() {
+    try {
+      const body = {
+        shopId: this.shopId,
+      };
+      if (this.isAdmin) this.onApprove.emit(1);
+
+      this.hrs.request(
+        "put",
+        "shop/approveApplication",
+        body,
+        async (response: any) => {
+          console.log("-----response", response);
+          //When success
+          if (response.success) {
+            if (this.isAdmin) this.onApprove.emit(1);
+
+            this.dialog.open(PopUpModalComponent, {
+              width: "500px",
+              data: {
+                deletebutton: false,
+                okaybutton: true,
+                okayBtnText: `<b> Sounds good! <span style="font-size: 30px;line-height: 1;vertical-align: middle;">🎉</span></b>`,
+                title: "Application Approved!",
+                message: `The application has been approved.`,
                 file: "assets/icons/party.png",
               },
             });

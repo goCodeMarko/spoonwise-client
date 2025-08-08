@@ -1,17 +1,21 @@
 .container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-  gap: 7px; /* Space between cards */
-  max-height: 53.5dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 52.7dvh;
+  min-height: 52.7dvh;
   overflow-y: scroll;
-  padding: 0px 0px 40px 0px;
-  margin-top: 7px;
+  padding: 0px 0px 7px 0px;
+  margin: 7px 0px;
 }
 
 .container-seller {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-  gap: 7px; /* Space between cards */
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  // display: grid;
+  // grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  // gap: 7px; /* Space between cards */
   max-height: 80.5dvh;
   overflow-y: scroll;
   padding: 0px 0px 40px 0px;
@@ -22,7 +26,7 @@
 .card {
   background: white;
   border-radius: 10px;
-  overflow: hidden;
+  // overflow: hidden;
   text-align: left;
   transition: 0.3s;
   display: flex;
@@ -34,14 +38,13 @@
 
 /* Image takes full width */
 .card .prod-img {
-  width: 100%;
+  width: 120px;
   height: auto;
   object-fit: cover;
 }
 
 /* Content area */
 .card-content {
-  padding: 7px;
   flex-grow: 1; /* Makes the content fill the available space */
   // background-color: #00c6c8;
 }

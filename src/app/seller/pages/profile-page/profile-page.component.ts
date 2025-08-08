@@ -7,6 +7,7 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ProfilePageComponent implements OnInit {
   selectedTab = "to_pay";
+  static componentName = "ProfilePageComponent";
   constructor() {}
 
   ngOnInit(): void {}

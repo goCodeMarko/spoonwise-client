@@ -1,0 +1,10 @@
+.NgxEditor__Wrapper {
+  border: 0px;
+}
+::ng-deep .NgxEditor__Content {
+  height: calc(67vh - 0px) !important;
+  overflow-y: scroll;
+}
+.mat-form-field.invalid .mat-mdc-outline {
+  border-color: red !important;
+}

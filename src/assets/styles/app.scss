@@ -702,7 +702,7 @@ froms
   font-size: $font-16;
 }
 .mat-form-field-underline {
-  background-color: rgba(0, 0, 0, 0.25);
+  // background-color: rgba(0, 0, 0, 0.25);
 }
 .mat-form-field {
   width: 100%;
@@ -915,18 +915,21 @@ list inline
 }
 
 //input fields
-.mat-form-field-appearance-outline:not(.mat-form-field-disabled)
-  .mat-form-field-flex:hover
-  .mat-form-field-outline {
-  color: #90ac8e !important;
-}
-.mat-form-field.mat-focused .mat-form-field-label {
-  color: #90ac8e !important;
-}
-.mat-form-field-appearance-outline:not(.mat-form-field-disabled)
-  .mat-form-field-flex
-  .mat-form-field-outline {
-  color: #90ac8e !important;
+// .mat-form-field-appearance-outline:not(.mat-form-field-disabled)
+//   .mat-form-field-flex:hover
+//   .mat-form-field-outline {
+//   color: #90ac8e !important;
+// }
+// .mat-form-field.mat-focused .mat-form-field-label {
+//   color: #90ac8e !important;
+// }
+// .mat-form-field-appearance-outline:not(.mat-form-field-disabled)
+//   .mat-form-field-flex
+//   .mat-form-field-outline {
+//   color: #90ac8e !important;
+// }
+.mat-form-field.invalid .mat-mdc-outline {
+  border-color: red !important;
 }
 
 //mat-card

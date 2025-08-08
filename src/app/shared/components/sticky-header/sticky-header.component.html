@@ -1,5 +1,67 @@
-<section class="sticky-header">
+<section
+  [ngStyle]="{
+    'justify-content':
+      routerOutletComponent === 'HomePageComponent' ||
+      routerOutletComponent === 'ChatListPageComponent' ||
+      routerOutletComponent === 'ProfilePageComponent' ||
+      routerOutletComponent === 'CartComponent' ||
+      routerOutletComponent === 'AddProductComponent'
+        ? 'center'
+        : 'space-between'
+  }"
+  class="sticky-header"
+>
+  <ng-container
+    *ngIf="routerOutletComponent != 'ProductListPageComponent'; else searchbar"
+  >
+    <ng-container
+      *ngIf="
+        routerOutletComponent === 'HomePageComponent' ||
+          routerOutletComponent === 'ChatListPageComponent' ||
+          routerOutletComponent === 'ProfilePageComponent' ||
+          routerOutletComponent === 'CartComponent' ||
+          routerOutletComponent === 'AddProductComponent';
+        else backbutton
+      "
+      style="color: white; font-size: larger"
+    >
+      <img
+        src="../../assets/images/logo/spoonwise-logo-full.png"
+        style="width: 130px"
+      />
+    </ng-container>
+
+    <ng-template #backbutton>
+      <button mat-icon-button class="mat-icon-size" (click)="goBack()">
+        <mat-icon>arrow_back_ios</mat-icon>
+      </button>
+    </ng-template>
+
+    <!-- 
+    <div
+      style="flex: 1; color: white; font-size: larger"
+      *ngIf="routerOutletComponent === 'CartComponent'"
+    >
+      Shopping Cart ({{ orderQtyCount }})
+    
+
+    <div
+      style="flex: 1; color: white; font-size: larger"
+      *ngIf="routerOutletComponent === 'CheckoutComponent'"
+    >
+      Checkout
+    </div> -->
+  </ng-container>
+
   <ng-template #searchbar>
+    <button
+      *ngIf="isShopViewing"
+      mat-icon-button
+      class="mat-icon-size"
+      (click)="goBack()"
+    >
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
     <div class="input-group search">
       <input
         type="search"
@@ -11,18 +73,12 @@
         [(ngModel)]="searchInput"
       />
 
-      <!-- <button type="button" mat-flat-button style="background-color: #00c6c8">
-        <mat-icon style="font-size: x-large" (click)="search()"
-          >search</mat-icon
-        >
-      </button> -->
-
       <button
         mat-flat-button
-        style="height: 70px; text-align: center"
+        style="height: 50px; text-align: center"
         (click)="openBottomSheet()"
       >
-        <img src="assets/icons/search.png" width="50" />
+        <img src="assets/icons/search.png" width="40" />
       </button>
     </div>
 
@@ -30,42 +86,75 @@
       <button
         mat-icon-button
         color="primary"
-        style="width: 70px; height: 70px; text-align: center"
+        style="width: 50px; text-align: center"
         (click)="openBottomSheet()"
       >
-        <img src="assets/icons/color.png" width="50" />
+        <img src="assets/icons/color.png" width="40" />
       </button>
     </div>
   </ng-template>
 
-  <div
-    *ngIf="routerOutletComponent != 'ProductListPageComponent'; else searchbar"
+  <ng-container
+    *ngIf="routerOutletComponent === 'ChatComponent' && isSpoonwiseAI"
   >
-    <div
-      class="filters"
-      style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 16px;
-      "
+    <button
+      mat-icon-button
+      class="mat-icon-size"
+      (click)="setting(settingSheet)"
     >
-      <button mat-icon-button class="mat-icon-size" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
+      <mat-icon>settings</mat-icon>
+    </button>
+  </ng-container>
+</section>
 
+<ng-template #settingSheet let-context>
+  <ul class="sheet-list">
+    <div style="justify-items: center; margin-bottom: 7px">
       <div
-        style="flex: 1; text-align: center; color: white; font-size: larger"
-        *ngIf="routerOutletComponent === 'CartComponent'"
-      >
-        Shopping Cart ({{ orderQtyCount }})
-      </div>
-      <div
-        style="flex: 1; text-align: center; color: white; font-size: larger"
-        *ngIf="routerOutletComponent === 'CheckoutComponent'"
-      >
-        Checkout
+        style="
+          margin-top: 7px;
+          width: 40px;
+          height: 5px;
+          background-color: #7f7f7f1a;
+          border-radius: 20px;
+        "
+      ></div>
+    </div>
+
+    <div style="margin: 7px">
+      <div>
+        <section
+          style="
+            background: white;
+            padding: 7px;
+            border-radius: 15px;
+            margin-bottom: 7px;
+          "
+        >
+          <mat-radio-group
+            aria-labelledby="example-radio-group-label"
+            class="example-radio-group"
+            [(ngModel)]="selectedLanguage"
+          >
+            <div
+              *ngFor="let language of languages"
+              class="radio-button-custom"
+              [ngClass]="{ selected: selectedLanguage === language }"
+              (click)="setLanguage(language)"
+            >
+              <div>{{ LanguageUI[language] }}</div>
+              <div>
+                <mat-radio-button
+                  class="example-radio-button"
+                  style="display: block; margin-bottom: 10px"
+                  [value]="language"
+                >
+                </mat-radio-button>
+              </div>
+            </div>
+          </mat-radio-group>
+        </section>
       </div>
     </div>
-  </div>
-</section>
+  </ul>
+</ng-template>

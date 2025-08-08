@@ -3,7 +3,11 @@
 <!-- ============================================================== -->
 <div class="main-container">
   <!-- <ng-container *ngIf="true"> -->
-  <mat-toolbar color="primary" class="topbar telative">
+  <mat-toolbar
+    *ngIf="account?.role === 'admin'"
+    color="primary"
+    class="topbar telative"
+  >
     <div class="navbar-header">
       <a class="navbar-brand" href="index.html">
         <!-- Logo icon -->
@@ -69,6 +73,7 @@
       fixedTopGap="0"
       [opened]="mobileQuery.matches"
       [disableClose]="mobileQuery.matches"
+      [hidden]="account?.role !== 'admin'"
     >
       <app-sidebar></app-sidebar>
     </mat-sidenav>

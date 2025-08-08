@@ -1,1 +1,6 @@
-<app-verify-business [shopId]="data._id"></app-verify-business>
+<app-verify-business
+  [shopId]="data._id"
+  [isAdmin]="true"
+  (onDecline)="decline(data._id)"
+  (onApprove)="approve(data._id)"
+></app-verify-business>

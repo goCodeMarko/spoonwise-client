@@ -39,6 +39,7 @@ import { HttpRequestService } from "src/app/http-request/http-request.service";
   styleUrls: ["./add-product.component.scss"],
 })
 export class AddProductComponent implements OnInit {
+  static componentName = "AddProductComponent";
   @ViewChild("scrollContainer") scrollContainer!: ElementRef;
   @ViewChild("openCameraInput") openCameraInput!: ElementRef;
   @ViewChild("openGalleryInput") openGalleryInput!: ElementRef;

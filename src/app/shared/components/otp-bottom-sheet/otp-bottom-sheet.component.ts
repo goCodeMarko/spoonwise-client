@@ -41,9 +41,7 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
     private store: Store,
     private auth: AuthService,
     private cdr: ChangeDetectorRef
-  ) {
-    console.log("context", this.context.props);
-  }
+  ) {}
 
   ngOnInit(): void {}
 
@@ -67,19 +65,15 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
       `user/checkOTP?userId=${this.userId}&otp=${otp}`,
       {},
       async (data: any) => {
-        console.log("===========checkOTP", data);
         if (data.success && data.data.message == "OTP_SUCCESS") {
-          console.log("4444444444444", this.account);
           const user = await this.auth.setToken(this.account);
 
           if (this.role == "buyer") {
-            // this.store.dispatch(setCart());
-            // this.store.dispatch(setToPay());
-            this.auth.navigate("/", "");
+            this.auth.navigate("/home", "");
           } else if (this.role == "seller") {
-            this.auth.navigate("/shop/", "");
+            this.auth.navigate("/shop/home", "");
           } else if (this.role == "admin") {
-            this.auth.navigate("/admin/shop", "");
+            this.auth.navigate("/admin/shops", "");
           }
         } else if (
           !data.success &&
@@ -133,7 +127,6 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
       `user/generateOTP?userId=${this.userId}`,
       {},
       async (data: any) => {
-        console.log("===========data", data?.data?.expiresAt);
         // this.context.props
         if (data.success) {
           this._snackBar.openFromTemplate(this.snackBarTemplate, {

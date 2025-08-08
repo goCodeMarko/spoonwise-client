@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
 import { catchError, map, mergeMap } from "rxjs/operators";
-import { of } from "rxjs";
-import { Chatroom, Message } from "./chat.state";
+import { from, of } from "rxjs";
+import { Chatroom, Message, SpoonwiseAI } from "./chat.state";
 import * as ChatroomAction from "./chat.actions";
 import { environment } from "../../../../environments/environment";
-
+import { base64ToBlob, blobToBase64 } from "base64-blob";
 @Injectable()
 export class ChatroomEffects {
   constructor(private actions$: Actions, private http: HttpClient) {}
@@ -80,9 +80,11 @@ export class ChatroomEffects {
           .pipe(
             map((data: any) => {
               console.log("===========chatrooms", data);
-              let chatrooms: Chatroom[] = data.data;
+              let chatrooms: Chatroom[] = data.data.chatrooms;
+              let spoonwiseAI: SpoonwiseAI = data.data.spoonwiseAI;
               return ChatroomAction.setChatroomsSuccess({
                 chatrooms,
+                spoonwiseAI,
               });
             }),
             catchError((error: any) =>
@@ -129,25 +131,76 @@ export class ChatroomEffects {
   sendMessage$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ChatroomAction.sendMessage),
-      mergeMap(({ message }) =>
-        this.http
+      mergeMap(({ message, forUploadImage }) => {
+        let body: any = {
+          content: message.content,
+          elementId: message.elementId,
+        };
+
+        if (forUploadImage) {
+          return from(base64ToBlob(forUploadImage)).pipe(
+            mergeMap((blob) => {
+              const mime = blob.type || "image/png";
+              const ext = mime.split("/")[1] || "png";
+              const file = new File([blob], `image_123.${ext}`, { type: mime });
+
+              const formData = new FormData();
+              formData.append("details", JSON.stringify(body));
+              formData.append("image", file);
+
+              return this.http
+                .post(
+                  `${environment.SERVER_URL_MAIN}message/sendMessage/${message.chatroomId}`,
+                  formData
+                )
+                .pipe(
+                  map((data: any) => {
+                    let datax: Message = data.data;
+                    const isAIAgent: boolean = datax.isAIAgent ?? false;
+
+                    if (!isAIAgent) {
+                      ChatroomAction.chatroomSort({
+                        message: datax,
+                      });
+                    }
+
+                    return ChatroomAction.sendMessageSuccess({
+                      message: datax,
+                      isSpoonwiseAI: isAIAgent,
+                    });
+                  }),
+                  catchError((error: any) =>
+                    of(
+                      ChatroomAction.sendMessageFailure({
+                        error: error.message,
+                      })
+                    )
+                  )
+                );
+            })
+          );
+        }
+
+        return this.http
           .post(
             `${environment.SERVER_URL_MAIN}message/sendMessage/${message.chatroomId}`,
-            { content: message.content, elementId: message.elementId }
+            body
           )
           .pipe(
             map((data: any) => {
-              console.log("======", data);
-              //   if (data.data.success) {
               let datax: Message = data.data;
-              console.log("datax", datax);
-              ChatroomAction.chatroomSort({
-                message: datax,
-              });
+              const isAIAgent: boolean = datax.isAIAgent ?? false;
+
+              if (!isAIAgent) {
+                ChatroomAction.chatroomSort({
+                  message: datax,
+                });
+              }
+
               return ChatroomAction.sendMessageSuccess({
                 message: datax,
+                isSpoonwiseAI: isAIAgent,
               });
-              //   }
             }),
             catchError((error: any) =>
               of(
@@ -156,8 +209,42 @@ export class ChatroomEffects {
                 })
               )
             )
+          );
+      })
+    )
+  );
+
+  setLanguage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ChatroomAction.setLanguage),
+      mergeMap(({ language, chatroomId }) => {
+        return this.http
+          .put(
+            `${environment.SERVER_URL_MAIN}chatroom/updateLanguage/${chatroomId}`,
+            {
+              language,
+            }
           )
-      )
+          .pipe(
+            map((data: any) => {
+              let datax = data.data;
+
+              console.log("--------sendMessage", datax);
+
+              return ChatroomAction.setLanguageSuccess({
+                language,
+                chatroomId,
+              });
+            }),
+            catchError((error: any) =>
+              of(
+                ChatroomAction.setLanguageFailure({
+                  error: error.message,
+                })
+              )
+            )
+          );
+      })
     )
   );
 }

@@ -32,9 +32,12 @@
             </div>
             <div style="display: flex; gap: 7px">
               <ng-container *ngIf="businessLogo.file">
-                <button mat-stroked-button (click)="remove('businessLogo')">
-                  Remove
-                </button>
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-stroked-button (click)="remove('businessLogo')">
+                    Remove
+                  </button>
+                </ng-container>
+
                 <button
                   mat-stroked-button
                   (click)="preview(mySheet, 'businessLogo')"
@@ -98,9 +101,11 @@
             </div>
             <div style="display: flex; gap: 7px">
               <ng-container *ngIf="businessPermit.file">
-                <button mat-stroked-button (click)="remove('businessPermit')">
-                  Remove
-                </button>
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-stroked-button (click)="remove('businessPermit')">
+                    Remove
+                  </button>
+                </ng-container>
                 <button
                   mat-stroked-button
                   (click)="preview(mySheet, 'businessPermit')"
@@ -159,9 +164,12 @@
             </div>
             <div style="display: flex; gap: 7px">
               <ng-container *ngIf="bir.file">
-                <button mat-stroked-button (click)="remove('bir')">
-                  Remove
-                </button>
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-stroked-button (click)="remove('bir')">
+                    Remove
+                  </button>
+                </ng-container>
+
                 <button mat-stroked-button (click)="preview(mySheet, 'bir')">
                   Preview
                 </button>
@@ -216,9 +224,12 @@
             </div>
             <div style="display: flex; gap: 7px">
               <ng-container *ngIf="validID.file">
-                <button mat-stroked-button (click)="remove('validID')">
-                  Remove
-                </button>
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-stroked-button (click)="remove('validID')">
+                    Remove
+                  </button>
+                </ng-container>
+
                 <button
                   mat-stroked-button
                   (click)="preview(mySheet, 'validID')"
@@ -264,9 +275,12 @@
             </div>
             <div style="display: flex; gap: 7px">
               <ng-container *ngIf="ownerSelfie.file">
-                <button mat-stroked-button (click)="remove('ownerSelfie')">
-                  Remove
-                </button>
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-stroked-button (click)="remove('ownerSelfie')">
+                    Remove
+                  </button>
+                </ng-container>
+
                 <button
                   mat-stroked-button
                   (click)="preview(mySheet, 'ownerSelfie')"
@@ -296,6 +310,25 @@
         />
         <!-- lOGO END -->
 
+        <ng-container
+          *ngIf="
+            isAdmin ||
+            (shop?.verification_process?.status === 'DECLINED' &&
+              shop?.verification_process?.errors?.tab1)
+          "
+        >
+          <mat-form-field appearance="outline" style="margin-top: 7px">
+            <mat-label>Error Message</mat-label>
+            <textarea
+              matInput
+              cols="35"
+              rows="5"
+              formControlName="errorMessage"
+              style="resize: none"
+            ></textarea>
+          </mat-form-field>
+        </ng-container>
+
         <div
           style="
             display: flex;
@@ -319,9 +352,11 @@
             </button>
           </div>
           <div>
-            <button mat-flat-button (click)="saveAsDraftDocs()">
-              Save as Draft
-            </button>
+            <ng-container *ngIf="!isAdmin">
+              <button mat-flat-button (click)="saveAsDraftDocs()">
+                Save as Draft
+              </button>
+            </ng-container>
           </div>
         </div>
       </form>
@@ -336,6 +371,7 @@
           [detectCurrentLocation]="detectCurrentLocation"
           [subject]="subject"
           (dragend)="onDragend($event)"
+          [disabled]="true"
         ></app-map>
       </ng-container>
       <form [formGroup]="locationContactForm">
@@ -413,6 +449,25 @@
         <mat-error *ngIf="isFieldInvalid('phoneNumber')">
           {{ getErrorMessage("phoneNumber") }}
         </mat-error>
+
+        <ng-container
+          *ngIf="
+            isAdmin ||
+            (shop?.verification_process?.status === 'DECLINED' &&
+              shop?.verification_process?.errors?.tab2)
+          "
+        >
+          <mat-form-field appearance="outline" style="margin-top: 7px">
+            <mat-label>Error Message</mat-label>
+            <textarea
+              matInput
+              cols="35"
+              rows="5"
+              formControlName="errorMessage"
+              style="resize: none"
+            ></textarea>
+          </mat-form-field>
+        </ng-container>
       </form>
       <div
         style="
@@ -426,9 +481,11 @@
           <button mat-button matStepperNext>Next</button>
         </div>
         <div>
-          <button mat-flat-button (click)="saveAsDraftLocContact()">
-            Save as Draft
-          </button>
+          <ng-container *ngIf="!isAdmin">
+            <button mat-flat-button (click)="saveAsDraftLocContact()">
+              Save as Draft
+            </button>
+          </ng-container>
         </div>
       </div>
     </mat-step>
@@ -459,6 +516,24 @@
         <mat-error *ngIf="isFieldInvalid('accountNumber')">
           {{ getErrorMessage("accountNumber") }}
         </mat-error>
+        <ng-container
+          *ngIf="
+            isAdmin ||
+            (shop?.verification_process?.status === 'DECLINED' &&
+              shop?.verification_process?.errors?.tab3)
+          "
+        >
+          <mat-form-field appearance="outline" style="margin-top: 7px">
+            <mat-label>Error Message</mat-label>
+            <textarea
+              matInput
+              cols="35"
+              rows="5"
+              formControlName="errorMessage"
+              style="resize: none"
+            ></textarea>
+          </mat-form-field>
+        </ng-container>
       </form>
       <div
         style="
@@ -472,14 +547,36 @@
         </div>
         <div style="display: flex; gap: 7px">
           <div>
-            <button mat-flat-button (click)="saveAsDraftSettlement()">
-              Save as Draft
-            </button>
+            <ng-container *ngIf="!isAdmin">
+              <button mat-flat-button (click)="saveAsDraftSettlement()">
+                Save as Draft
+              </button>
+            </ng-container>
           </div>
           <div>
-            <button mat-flat-button (click)="sendApplication()">
-              Send Application
-            </button>
+            <ng-container *ngIf="!isAdmin">
+              <!-- <button mat-flat-button (click)="remove('businessPermit')">
+                Remove
+              </button> -->
+
+              <button mat-flat-button (click)="sendApplication()">
+                Send Application
+              </button>
+            </ng-container>
+          </div>
+          <div>
+            <ng-container
+              *ngIf="
+                isAdmin && shop?.verification_process?.status === 'IN_PROGRESS'
+              "
+            >
+              <button mat-flat-button (click)="declineApplication()">
+                Decline
+              </button>
+              <button mat-flat-button (click)="approveApplication()">
+                Accept
+              </button>
+            </ng-container>
           </div>
         </div>
       </div>

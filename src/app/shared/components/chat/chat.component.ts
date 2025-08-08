@@ -14,6 +14,7 @@ import { ActivatedRoute, Route, Router } from "@angular/router";
 import { takeUntil } from "rxjs/operators";
 import { AuthService, IUserData } from "src/app/authorization/auth.service";
 import {
+  chunksReceivedFromAI,
   sendingToSentMessage,
   sendMessage,
   sendMessageFailure,
@@ -23,7 +24,7 @@ import {
   setTotalCountSentDeliveredMessages,
   updateChatroomsMsgStatusToSeen,
 } from "../../store/chat/chat.actions";
-import { random, size } from "lodash";
+import _, { random, size } from "lodash";
 import { ObjectId } from "bson";
 import { Actions, ofType } from "@ngrx/effects";
 import { sendMessageSuccess } from "../../../shared/store/chat/chat.actions";
@@ -37,14 +38,21 @@ import { take } from "rxjs/operators";
   styleUrls: ["./chat.component.scss"],
 })
 export class ChatComponent implements OnInit, OnDestroy {
+  static componentName = "ChatComponent";
   chatroomMessages$: Observable<Message[] | []>;
   chatroomMessages: Message[] | [] = [];
   chatroomId: string;
+  isSpoonwiseAI: string;
   authUser!: IUserData;
   private destroy$ = new Subject<void>();
   text = "";
   onNewChatMessage: Subscription;
+  onAIStreamComplete: Subscription;
+
+  fromAI = "";
   @ViewChild("chatContainer", { static: false }) chatContainer!: ElementRef;
+  @ViewChild("openCameraInput") openCameraInput!: ElementRef;
+  @ViewChild("openGalleryInput") openGalleryInput!: ElementRef;
 
   constructor(
     private store: Store,
@@ -56,12 +64,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     private ngZone: NgZone
   ) {
     this.chatroomId = this.route.snapshot.paramMap.get("id")!;
+    this.isSpoonwiseAI =
+      this.route.snapshot.queryParamMap.get("isSpoonwiseAI")!;
     this.auth.getUserData$().subscribe((user) => {
       this.authUser = user;
       console.log(this.authUser);
     });
     this.chatroomMessages$ = this.store
-      .select(selectSortedChatroomMessages(this.chatroomId))
+      .select(
+        selectSortedChatroomMessages(
+          this.chatroomId,
+          this.isSpoonwiseAI === "true"
+        )
+      )
       .pipe(takeUntil(this.destroy$));
     this.chatroomMessages$.subscribe((data) => {
       console.log("=====================messages", data);
@@ -71,6 +86,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.onNewChatMessage = this.socket
       .onNewChatMessage()
       .subscribe((message: any) => {
+        console.log("------------this.isSpoonwiseAI", this.isSpoonwiseAI);
+        this.markSenderMessagesAsSeen();
+      });
+
+    this.onAIStreamComplete = this.socket
+      .onAIStreamComplete()
+      .subscribe((data) => {
         this.markSenderMessagesAsSeen();
       });
   }
@@ -78,11 +100,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.actions$
       .pipe(ofType(sendMessageSuccess), takeUntil(this.destroy$))
-      .subscribe(({ message }) => {
+      .subscribe(({ message, isSpoonwiseAI = false }) => {
+        console.log("---sendMessageSuccess", message);
         this.store.dispatch(
           sendingToSentMessage({
-            chatroomId: message.chatroomId,
+            chatroomId: message.chatroomId!,
             elementId: message.elementId,
+            isSpoonwiseAI,
           })
         );
       });
@@ -140,7 +164,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const message = {
+    let message: Message = {
       elementId,
       chatroomId: this.chatroomId,
       senderId,
@@ -152,15 +176,37 @@ export class ChatComponent implements OnInit, OnDestroy {
       updatedAt: new Date().toISOString(),
     };
 
-    this.store.dispatch(setSendingMessage({ message }));
-    this.store.dispatch(sendMessage({ message }));
+    if (this.forUploadImage) {
+      message.content.attachments = [{ url: this.forUploadImage }];
+    }
+
+    if (this.isSpoonwiseAI === "true") {
+      // when query param is true
+      message.isAIAgent = false; //  all message sent via this component is from the user
+    }
+
+    this.store.dispatch(
+      setSendingMessage({
+        message,
+        isSpoonwiseAI: this.isSpoonwiseAI === "true",
+        forUploadImage: this.forUploadImage,
+      })
+    );
+    this.store.dispatch(
+      sendMessage({
+        message,
+        forUploadImage: this.forUploadImage,
+      })
+    );
+    this.forUploadImage = "";
+    this.text = "";
     console.log("sending message", message);
   }
 
   markSenderMessagesAsSeen() {
     this.hrs.request(
       "put",
-      `message/updateChatroomsMsgStatusToSeen/${this.chatroomId}`,
+      `message/updateChatroomsMsgStatusToSeen/${this.chatroomId}?isSpoonwiseAI=${this.isSpoonwiseAI}`,
       {},
       (response: any) => {
         console.log("======response", response);
@@ -171,5 +217,46 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  forUploadImage: string = "";
+  removeForUpload() {
+    this.forUploadImage = "";
+  }
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement; // Cast the event target to HTMLInputElement to access the files
+    if (input.files && input.files[0]) {
+      if (_.size(input.files) == 1) {
+        // Ensure a file was selected (non-null and at least one file)
+        const file = input.files[0]; // Get the first selected file
+        const reader = new FileReader(); // Create a FileReader to read the file
+
+        reader.readAsDataURL(file); // Read the file as a Base64 data URL
+
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          // Define what to do when file reading is complete
+          const imgSrc = e.target!.result as string; // Get the Base64 image string
+          const image = new Image();
+
+          this.forUploadImage = imgSrc;
+
+          image.src = imgSrc;
+          image.onload = () => {
+            const width = image.width; // Get image width
+            const height = image.height; // Get image height
+
+            const id = Math.random().toString(36).substring(2, 9);
+          };
+        };
+      }
+    }
+  }
+
+  public openCamera(): void {
+    this.openCameraInput.nativeElement.click();
+  }
+
+  public openGallery(): void {
+    this.openGalleryInput.nativeElement.click();
   }
 }

@@ -22,18 +22,36 @@ export const selectChatrooms = createSelector(selectChatState, (state) => {
   return chatroomsWithSortedLatestMessages;
 });
 
+export const selectSpoonwiseAI = createSelector(selectChatState, (state) => {
+  const spoonwiseAI = state.spoonwiseAI;
+
+  return spoonwiseAI;
+});
+
 export const selectAllSentMessageCount = createSelector(
   selectChatState,
   (state) => state.allSentMessageCount
 );
 
-export const selectSortedChatroomMessages = (chatroomId: string) =>
+export const selectSortedChatroomMessages = (
+  chatroomId: string,
+  isSpoonwiseAI = false
+) =>
   createSelector(selectChatState, (state) => {
-    const chatroom = state.chatrooms.find((c) => c._id === chatroomId);
-    if (!chatroom) return [];
+    if (!isSpoonwiseAI) {
+      const chatroom = state.chatrooms.find((c) => c._id === chatroomId);
 
-    return [...chatroom.latestMessages].sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+      if (!chatroom) return [];
+      return [...chatroom.latestMessages].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    } else {
+      const spoonwiseAI = state.spoonwiseAI;
+      if (!spoonwiseAI) return [];
+      return [...spoonwiseAI.latestMessages].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
   });

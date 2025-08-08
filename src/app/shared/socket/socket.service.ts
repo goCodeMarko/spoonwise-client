@@ -141,4 +141,32 @@ export class SocketService implements OnDestroy {
       );
     });
   }
+
+  public onReceivedChunksFromAI(): Observable<{
+    chunks: any;
+    temporaryMessageId: string;
+  }> {
+    console.log("listening On onReceivedChunksFromAI Socket");
+    return new Observable<{ chunks: any; temporaryMessageId: string }>(
+      (observer) => {
+        this.socket.on("onReceivedChunksFromAI", (data) => {
+          observer.next(data);
+        });
+      }
+    );
+  }
+
+  public onAIStreamComplete(): Observable<{
+    message: any;
+    temporaryMessageId: string;
+  }> {
+    console.log("listening On onAIStreamComplete Socket");
+    return new Observable<{ message: any; temporaryMessageId: string }>(
+      (observer) => {
+        this.socket.on("onAIStreamComplete", (data) => {
+          observer.next(data);
+        });
+      }
+    );
+  }
 }

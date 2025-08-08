@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-chat-list-page',
-  templateUrl: './chat-list-page.component.html',
-  styleUrls: ['./chat-list-page.component.scss']
+  selector: "app-chat-list-page",
+  templateUrl: "./chat-list-page.component.html",
+  styleUrls: ["./chat-list-page.component.scss"],
 })
 export class ChatListPageComponent implements OnInit {
+  static componentName = "ChatListPageComponent";
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

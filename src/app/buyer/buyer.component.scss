@@ -1,9 +1,13 @@
-.content {
-  padding: 0em 8px 0px 8px !important;
+.content-with-map {
+  margin: 0px 8px 0px 8px !important;
+}
+.content-without-map {
+  margin: 70px 8px 0px 8px !important;
 }
 
 .contentProfile {
-  padding: 89px 8px 0px 8px !important;
+  margin: 70px 8px 0px 8px !important;
+  // height: 92.5vh;
 }
 
 // button {
@@ -16,7 +20,7 @@
 }
 
 ::ng-deep #map {
-  margin: 88px 7px 7px 7px;
+  margin: 70px 7px 7px 7px;
   height: 200px;
   z-index: 0;
   border-radius: 10px;

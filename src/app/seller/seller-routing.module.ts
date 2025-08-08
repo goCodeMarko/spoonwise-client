@@ -9,6 +9,8 @@ import { SecurityGuard } from "../guards/security.guard";
 import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
 import { ChatComponent } from "../shared/components/chat/chat.component";
 import { VerifyBusinessPageComponent } from "./pages/verify-business-page/verify-business-page.component";
+import { HomePageComponent } from "./pages/home-page/home-page.component";
+import { ViewBlogPageComponent } from "./pages/view-blog-page/view-blog-page.component";
 
 const SellerRoutes: Routes = [
   {
@@ -17,9 +19,14 @@ const SellerRoutes: Routes = [
     canActivate: [SecurityGuard],
     children: [
       {
-        path: "",
+        path: "deals",
         component: ProductListPageComponent,
       },
+      {
+        path: "home",
+        component: HomePageComponent,
+      },
+      { path: "blog/:blogId", component: ViewBlogPageComponent },
       {
         path: "add-product",
         component: AddProductComponent,

@@ -1,0 +1,78 @@
+<div style="display: flex; flex-direction: column; gap: 7px; height: 100%">
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      background-color: #f6f6f6;
+      padding: 7px;
+      border-radius: 5px;
+    "
+  >
+    <div style="display: flex; gap: 7px; align-items: center">
+      <button
+        mat-flat-button
+        color="main-green"
+        (click)="setBlog(BlogStatus.Draft)"
+      >
+        Save as Draft
+      </button>
+      <button
+        mat-flat-button
+        color="main-green"
+        (click)="setBlog(BlogStatus.Published)"
+      >
+        Publish
+      </button>
+    </div>
+    <div>
+      <button (click)="cancelUpdate()" *ngIf="blogId" mat-flat-button>
+        Cancel Update
+      </button>
+    </div>
+    <div>
+      <button mat-flat-button (click)="setAudience()">
+        {{ AudienceUI[selectedAudience] }}
+      </button>
+    </div>
+  </div>
+
+  <div style="background-color: #f6f6f6; padding: 7px; border-radius: 5px">
+    <mat-form-field
+      appearance="outline"
+      [ngClass]="{ invalid: title.invalid && title.touched }"
+    >
+      <!-- <mat-label>Title</mat-label> -->
+      <input type="text" matInput [formControl]="title" placeholder="Title *" />
+    </mat-form-field>
+
+    <mat-error *ngIf="title.invalid && title.touched">
+      Title is required
+    </mat-error>
+  </div>
+
+  <div class="NgxEditor__Wrapper" style="flex: 1; min-height: 0">
+    <div
+      style="
+        background-color: #f6f6f6;
+        padding: 7px;
+        border-radius: 5px;
+
+        display: flex;
+        flex-direction: column;
+      "
+    >
+      <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+      <ngx-editor
+        [editor]="editor"
+        [formControl]="html"
+        [placeholder]="'Content *'"
+        style="flex: 1; min-height: 100%"
+      ></ngx-editor>
+      <mat-error *ngIf="html.invalid && html.touched">
+        Content is required
+      </mat-error>
+    </div>
+  </div>
+</div>

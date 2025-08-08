@@ -3,7 +3,9 @@ import {
   Chatroom,
   IUpdateChatroomsMsgStatusToDelivered,
   IUpdateChatroomsMsgStatusToSeen,
+  Language,
   Message,
+  SpoonwiseAI,
 } from "./chat.state";
 
 export const setPastMessages = createAction(
@@ -45,7 +47,7 @@ export const setChatrooms = createAction("[Chatroom] Set Chatroom");
 
 export const setChatroomsSuccess = createAction(
   "[Chatroom] Set Chatroom Success",
-  props<{ chatrooms: Chatroom[] }>()
+  props<{ chatrooms: Chatroom[]; spoonwiseAI: SpoonwiseAI }>()
 );
 
 export const setChatroomsFailure = createAction(
@@ -70,19 +72,9 @@ export const setTotalCountSentDeliveredMessagesFailure = createAction(
 export const setSendingMessage = createAction(
   "[SendingMessage] Sending Message",
   props<{
-    message: {
-      elementId: string;
-      chatroomId: string;
-      senderId: string;
-      content: {
-        message: string;
-        orderId?: string;
-        productId?: string;
-      };
-      status: string;
-      createdAt: string;
-      updatedAt: string;
-    };
+    message: Message;
+    isSpoonwiseAI?: boolean;
+    forUploadImage?: string;
   }>()
 );
 
@@ -91,12 +83,13 @@ export const sendingToSentMessage = createAction(
   props<{
     chatroomId: string;
     elementId: string;
+    isSpoonwiseAI: boolean;
   }>()
 );
 
 export const plusOneToSentDeliveredCounter = createAction(
   "[plusOneToSentDeliveredCounter] Plus One to Sent/Receive Counter",
-  props<{ message: Message }>()
+  props<{ message: Message; isSpoonwiseAI?: boolean }>()
 );
 
 export const updateChatroomsMsgStatusToDelivered = createAction(
@@ -117,22 +110,14 @@ export const updateChatroomsMsgStatusToSeen = createAction(
 export const sendMessage = createAction(
   "[sendMessage] Send Message",
   props<{
-    message: {
-      elementId: string;
-      chatroomId: string;
-      senderId: string;
-      content: {
-        message: string;
-        orderId?: string;
-        productId?: string;
-      };
-    };
+    message: Message;
+    forUploadImage?: string;
   }>()
 );
 
 export const sendMessageSuccess = createAction(
   "[sendMessage] Send Message Success",
-  props<{ message: Message }>()
+  props<{ message: Message; isSpoonwiseAI?: boolean }>()
 );
 
 export const chatroomSort = createAction(
@@ -143,4 +128,29 @@ export const chatroomSort = createAction(
 export const sendMessageFailure = createAction(
   "[sendMessage] Send Message Failure",
   props<{ error: string }>()
+);
+
+export const setLanguage = createAction(
+  "[Language] Set Language",
+  props<{ language: Language; chatroomId: string }>()
+);
+
+export const setLanguageSuccess = createAction(
+  "[Language] Set Language Success",
+  props<{ language: Language; chatroomId: string }>()
+);
+
+export const setLanguageFailure = createAction(
+  "[Chatroom] Set Chatroom Failure",
+  props<{ error: string }>()
+);
+
+export const chunksReceivedFromAI = createAction(
+  "[Chatroom] Set Chatroom Failure",
+  props<{ chunks: any; tempMessageId: string }>()
+);
+
+export const updateTemporaryMessage = createAction(
+  "[Chatroom] Set Chatroom Failure",
+  props<{ message: Message; tempMessageId: string }>()
 );

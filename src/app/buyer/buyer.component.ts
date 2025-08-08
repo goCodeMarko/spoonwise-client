@@ -18,6 +18,7 @@ import { setToPay } from "../shared/store/order/order.actions";
 import {
   chatroomSort,
   checkChatroomExistsInStore,
+  chunksReceivedFromAI,
   plusOneToSentDeliveredCounter,
   setChatrooms,
   setSendingMessage,
@@ -44,6 +45,7 @@ export class BuyerComponent implements OnInit, OnDestroy {
   onNewChatMessage: Subscription;
   onUpdateChatroomsMsgStatusToDelivered: Subscription;
   onUpdateChatroomsMsgStatusToSeen: Subscription;
+  onReceivedChunksFromAI: Subscription;
 
   constructor(
     private router: Router,
@@ -59,17 +61,29 @@ export class BuyerComponent implements OnInit, OnDestroy {
     this.onNewChatMessage = this.socket
       .onNewChatMessage()
       .subscribe((data: any) => {
-        console.log("Buyer Delivered a message");
-        console.log("----------------data", data);
+        console.log("Message Received", data);
+
         this.markSenderMessagesAsDelivered();
+
         this.store.dispatch(
-          checkChatroomExistsInStore({ chatroom: data.chatroom })
+          setSendingMessage({
+            message: data.message,
+            isSpoonwiseAI: data.isAIAgent,
+          })
         );
-        this.store.dispatch(chatroomSort({ message: data.message }));
-        this.store.dispatch(setSendingMessage({ message: data.message }));
         this.store.dispatch(
-          plusOneToSentDeliveredCounter({ message: data.message })
+          plusOneToSentDeliveredCounter({
+            message: data.message,
+            isSpoonwiseAI: data.isAIAgent,
+          })
         );
+
+        if (!data.isAIAgent) {
+          this.store.dispatch(
+            checkChatroomExistsInStore({ chatroom: data.chatroom })
+          );
+          this.store.dispatch(chatroomSort({ message: data.message }));
+        }
       });
 
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
@@ -99,8 +113,19 @@ export class BuyerComponent implements OnInit, OnDestroy {
           })
         );
       });
-  }
 
+    this.onReceivedChunksFromAI = this.socket
+      .onReceivedChunksFromAI()
+      .subscribe((data) => {
+        this.store.dispatch(
+          chunksReceivedFromAI({
+            chunks: data.chunks,
+            tempMessageId: data.temporaryMessageId,
+          })
+        );
+      });
+  }
+  isShopViewing = false;
   ngOnInit(): void {
     this.markSenderMessagesAsDelivered();
 
@@ -112,6 +137,15 @@ export class BuyerComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe((params) => {
       console.log("params", params);
       if (params.radius) this.radius = params.radius;
+    });
+
+    this.route.queryParams.subscribe((params) => {
+      console.log("params------", params.shop);
+      if (params["shop"]) {
+        this.isShopViewing = true;
+      } else {
+        this.isShopViewing = false;
+      }
     });
 
     this.store.dispatch(setCart());
@@ -193,8 +227,9 @@ export class BuyerComponent implements OnInit, OnDestroy {
   }
 
   fromRouterOutlet(component: any) {
+    console.log("=====================================", component.constructor);
     const name = component.constructor["componentName"] || "unknown";
-    console.log(name);
+    console.log("&&&&&&&&&&&&&&&&&&&&&", name);
     this.routerOutletComponent = name;
   }
 

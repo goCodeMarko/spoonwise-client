@@ -25,7 +25,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ProductListComponent } from "./components/product-list/product-list.component";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
-import { MatRadioButton } from "@angular/material/radio";
+import { MatRadioButton, MatRadioModule } from "@angular/material/radio";
 import { ProfileComponent } from "./components/profile/profile.component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { ProductViewComponent } from "./components/product-view/product-view.component";
@@ -43,6 +43,12 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ShopVerificationStatusPipe } from "./pipes/shop-verification-statuse.pipe";
 import { VerifyBusinessComponent } from "./components/verify-business/verify-business.component";
 import { MatStep, MatStepperModule } from "@angular/material/stepper";
+import { LineClampPipe } from "./pipes/line-clamp/line-clamp.pipe";
+import { BlogListComponent } from "./components/blog-list/blog-list/blog-list.component";
+import { ViewBlogComponent } from "./components/view-blog/view-blog.component";
+import { HomeListComponent } from "./components/home-list/home-list.component";
+import { NearShopListComponent } from "./components/near-shop-list/near-shop-list.component";
+import { CountDown2Pipe } from './pipes/count-down2.pipe';
 
 @NgModule({
   declarations: [
@@ -66,6 +72,12 @@ import { MatStep, MatStepperModule } from "@angular/material/stepper";
     MapComponent,
     OtpBottomSheetComponent,
     VerifyBusinessComponent,
+    LineClampPipe,
+    BlogListComponent,
+    ViewBlogComponent,
+    HomeListComponent,
+    NearShopListComponent,
+    CountDown2Pipe,
   ],
   imports: [
     MatCardModule,
@@ -86,6 +98,7 @@ import { MatStep, MatStepperModule } from "@angular/material/stepper";
     NgxStarRatingModule,
     MatSnackBarModule,
     MatStepperModule,
+    MatRadioModule,
   ],
   exports: [
     AccordionAnchorDirective,
@@ -106,8 +119,12 @@ import { MatStep, MatStepperModule } from "@angular/material/stepper";
     TimeAgoPipe,
     CountDownPipe,
     ShopVerificationStatusPipe,
+    LineClampPipe,
     MapComponent,
     VerifyBusinessComponent,
+    BlogListComponent,
+    ViewBlogComponent,
+    HomeListComponent,
   ],
   providers: [MenuItems],
 })

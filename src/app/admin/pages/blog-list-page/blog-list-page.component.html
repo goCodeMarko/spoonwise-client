@@ -1,0 +1,29 @@
+<div
+  style="
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    gap: 7px;
+    padding: 7px;
+    box-sizing: border-box;
+    height: calc(100vh - 81px);
+    min-height: 0;
+  "
+>
+  <div
+    style="
+      padding: 8px;
+      background-color: white;
+      border-radius: 7px;
+      gap: 7px;
+      height: 100%;
+      overflow: hidden;
+    "
+  >
+    <app-blog-list (editBlog)="onEditBlog($event)"></app-blog-list>
+  </div>
+
+  <div style="padding: 8px; background-color: white; border-radius: 7px">
+    <app-add-blog [blog]="blog" (cancelUpdate)="cancelUpdate()"></app-add-blog>
+  </div>
+</div>

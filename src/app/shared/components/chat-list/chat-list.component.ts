@@ -9,8 +9,11 @@ import {
 import { Store } from "@ngrx/store";
 import { Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { selectChatrooms } from "../../store/chat/chat.selectors";
-import { Chatroom } from "../../store/chat/chat.state";
+import {
+  selectChatrooms,
+  selectSpoonwiseAI,
+} from "../../store/chat/chat.selectors";
+import { Chatroom, SpoonwiseAI } from "../../store/chat/chat.state";
 import {
   sendMessageSuccess,
   setChatrooms,
@@ -31,6 +34,8 @@ import { size } from "lodash";
 export class ChatListComponent implements OnInit, OnDestroy {
   chatrooms!: Chatroom[];
   chatrooms$!: Observable<Chatroom[]>;
+  spoonwise!: SpoonwiseAI;
+  spoonwise$!: Observable<SpoonwiseAI>;
   @Input()
   isShop = false;
   private destroy$ = new Subject<void>();
@@ -48,6 +53,10 @@ export class ChatListComponent implements OnInit, OnDestroy {
     this.chatrooms$ = this.store
       .select(selectChatrooms)
       .pipe(takeUntil(this.destroy$));
+
+    this.spoonwise$ = this.store
+      .select(selectSpoonwiseAI)
+      .pipe(takeUntil(this.destroy$));
   }
 
   ngOnInit(): void {
@@ -56,6 +65,11 @@ export class ChatListComponent implements OnInit, OnDestroy {
     this.chatrooms$.subscribe((data) => {
       console.log("-------data", data);
       this.chatrooms = data;
+    });
+
+    this.spoonwise$.subscribe((data) => {
+      console.log("-------dataxxxxxxxxxxx", data);
+      this.spoonwise = data;
     });
 
     this.actions$
@@ -86,9 +100,9 @@ export class ChatListComponent implements OnInit, OnDestroy {
     return chatroom._id;
   }
 
-  viewChatroom(chatroomId: string) {
+  viewChatroom(chatroomId: string, isSpoonwiseAI = false): void {
     this.router.navigate([this.isShop ? "/shop/chats" : "/chats", chatroomId], {
-      queryParams: {},
+      queryParams: { isSpoonwiseAI },
     });
   }
 

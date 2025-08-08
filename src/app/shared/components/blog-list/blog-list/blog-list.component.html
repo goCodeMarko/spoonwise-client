@@ -1,0 +1,116 @@
+<ng-container *ngIf="horizontalBlogListView; else verticalBlogListView">
+  <div
+    #blogListContainer
+    (scroll)="onScrollHorizontal()"
+    style="
+      display: flex;
+      flex-direction: row;
+      gap: 7px;
+      overflow-y: scroll;
+      height: 50vh;
+    "
+  >
+    <div
+      *ngFor="let blog of blogs"
+      style="
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        background-color: white;
+        border-radius: 7px;
+        padding: 7px;
+        min-width: 300px;
+        min-height: auto;
+        position: relative;
+      "
+    >
+      <div style="display: flex; flex-direction: column">
+        <div>
+          <h4>{{ blog.title | lineClamp : 200 }}</h4>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <div>{{ blog.createdAt | timeAgo }}</div>
+          <div></div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="blog-content"
+          [innerHTML]="blog.content | lineClamp : 270"
+        ></div>
+      </div>
+      <div
+        style="
+          display: flex;
+          gap: 7px;
+          flex-direction: column;
+          position: absolute;
+          bottom: 7px;
+          left: 7px;
+          right: 7px;
+          width: calc(100% - 14px);
+        "
+      >
+        <a
+          [routerLink]="[isShop ? '/shop/blog' : '/blog', blog._id]"
+          style="width: 100%"
+        >
+          <button mat-stroked-button style="width: 100%">Read More</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #verticalBlogListView>
+  <div
+    #blogListContainer
+    (scroll)="onScroll()"
+    style="
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow-y: scroll;
+      height: 100%;
+    "
+  >
+    <div
+      *ngFor="let blog of blogs"
+      style="
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        background-color: #f6f6f6;
+        border-radius: 7px;
+        padding: 7px;
+      "
+    >
+      <div style="display: flex; flex-direction: column">
+        <div>
+          <h3>{{ blog.title | lineClamp : 200 }}</h3>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <div>{{ blog.createdAt | timeAgo }}</div>
+          <div>{{ blog.audience }}</div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="blog-content"
+          [innerHTML]="blog.content | lineClamp : 270"
+        ></div>
+      </div>
+      <div style="display: flex; gap: 7px; flex-direction: column">
+        <div>
+          <a [routerLink]="['/admin/blog', blog._id]">
+            <button mat-flat-button style="width: 100%">View</button>
+          </a>
+        </div>
+        <div>
+          <button (click)="onEdit(blog)" mat-flat-button style="width: 100%">
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -53,28 +53,41 @@
   <ng-container *ngIf="!productListOnLoad; else productListLoader">
     <ng-container *ngFor="let prod of products; let i = index">
       <div class="card">
-        <div style="display: flex; justify-content: space-between">
-          <div>
-            <mat-slide-toggle
-              *ngIf="showPublishSlider"
-              [checked]="prod.isPublish"
-              (change)="updatePublish(prod._id, $event)"
-            ></mat-slide-toggle>
-          </div>
-          <div>
-            <p>
-              <img
-                src="assets/icons/expired.png"
-                width="20"
-                style="vertical-align: sub"
-              />
+        <div
+          style="
+            position: absolute;
+            background: #000000a8;
+            padding: 1px 3px;
+            left: 18px;
+            top: 7px;
+            color: white;
+            font-size: smaller;
+          "
+        >
+          <!-- <img
+            src="assets/icons/expired.png"
+            width="20"
+            style="vertical-align: sub"
+          /> -->
 
-              {{ prod.expiryDate | date : "MM-dd-yy" }}
-            </p>
-          </div>
+          <!-- Expires in 30000 -->
+          {{ prod.expiryDate | countdown2 }}
         </div>
 
-        <div (click)="viewProduct(prod._id)">
+        <ng-container *ngIf="showPublishSlider">
+          <div
+            style="display: flex; justify-content: space-between; height: 30px"
+          >
+            <div>
+              <mat-slide-toggle
+                [checked]="prod.isPublish"
+                (change)="updatePublish(prod._id, $event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
+        </ng-container>
+
+        <div (click)="viewProduct(prod._id)" style="display: flex; gap: 7px">
           <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
           <div class="card-content">
             <h5 class="line-clamp">
@@ -118,8 +131,7 @@
               style="
                 display: flex;
                 justify-content: space-between;
-                height: 20px;
-                margin-top: 7px;
+                height: 30px;
               "
             >
               <p>

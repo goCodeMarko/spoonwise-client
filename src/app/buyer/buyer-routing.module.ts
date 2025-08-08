@@ -12,6 +12,8 @@ import { ProfilePageComponent } from "./pages/profile-page/profile-page.componen
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
 import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
 import { ChatComponent } from "../shared/components/chat/chat.component";
+import { HomePageComponent } from "./pages/home-page/home-page.component";
+import { ViewBlogPageComponent } from "./pages/view-blog-page/view-blog-page.component";
 
 const BuyerRoutes: Routes = [
   {
@@ -19,7 +21,12 @@ const BuyerRoutes: Routes = [
     component: BuyerComponent,
     canActivate: [SecurityGuard],
     children: [
-      { path: "", component: ProductListPageComponent },
+      { path: "deals", component: ProductListPageComponent },
+      {
+        path: "home",
+        component: HomePageComponent,
+      },
+      { path: "blog/:blogId", component: ViewBlogPageComponent },
       {
         path: "product/:id",
         component: ProductViewPageComponent,

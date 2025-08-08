@@ -53,6 +53,10 @@ import { chatroomReducer } from "./shared/store/chat/chat.reducer";
 import { RegisterComponent } from "./register/register/register.component";
 import { MapComponent } from "./shared/components/map/map.component";
 import { ViewShopModalComponent } from "./modals/view-shop-modal/view-shop-modal.component";
+import { SelectAudienceModalComponent } from "./modals/select-audience-modal/select-audience-modal.component";
+import { blogReducer } from "./shared/store/blog/blog.reducer";
+import { BlogEffects } from "./shared/store/blog/blog.effects";
+import { PipesPipe } from './line-clamp/shared/pipes.pipe';
 
 @NgModule({
   declarations: [
@@ -68,6 +72,8 @@ import { ViewShopModalComponent } from "./modals/view-shop-modal/view-shop-modal
     CameraModalComponent,
     RegisterComponent,
     ViewShopModalComponent,
+    SelectAudienceModalComponent,
+    PipesPipe,
   ],
   imports: [
     BrowserModule,
@@ -99,11 +105,17 @@ import { ViewShopModalComponent } from "./modals/view-shop-modal/view-shop-modal
       cart: cartReducer,
       order: orderReducer,
       chat: chatroomReducer,
+      blog: blogReducer,
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Keeps the last 25 states
     }),
-    EffectsModule.forRoot([CartEffects, OrderEffects, ChatroomEffects]),
+    EffectsModule.forRoot([
+      CartEffects,
+      OrderEffects,
+      ChatroomEffects,
+      BlogEffects,
+    ]),
   ],
   providers: [
     HttpRequestService,

@@ -68,10 +68,10 @@ File: scss
 }
 
 .mat-flat-button {
-  height: 60px; /* Set the desired height */
+  // height: 60px; /* Set the desired height */
 }
 .mat-button {
-  height: 60px; /* Set the desired height */
+  // height: 60px; /* Set the desired height */
 }
 
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
@@ -342,7 +342,23 @@ label.star {
 }
 
 .mat-form-field-flex .mat-form-field-outline {
-  background-color: white;
+  // background-color: white;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  background-color: white !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+  background-color: white !important;
+}
+
+.mat-input-element {
+  background-color: white !important;
+}
+
+.mat-form-field-wrapper {
+  padding-top: 0 !important;
 }
 
 // .mat-step-header:hover:not([aria-disabled]) {

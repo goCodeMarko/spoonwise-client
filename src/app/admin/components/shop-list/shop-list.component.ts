@@ -184,9 +184,25 @@ export class ShopListComponent implements OnInit, AfterViewInit {
 
   viewShop(shop: Shop) {
     console.log("-------shop", shop);
-    this.dialog.open(ViewShopModalComponent, {
+    const dialogRef = this.dialog.open(ViewShopModalComponent, {
       width: "500px",
       data: shop,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.status === "declined") {
+        this.shops.map((shop) => {
+          if (shop._id === result.id) {
+            shop.verification_process.status = "DECLINED";
+          }
+        });
+      } else if (result?.status === "approved") {
+        this.shops.map((shop) => {
+          if (shop._id === result.id) {
+            shop.verification_process.status = "APPROVED";
+          }
+        });
+      }
     });
   }
 

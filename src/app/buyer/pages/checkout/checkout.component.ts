@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
@@ -53,7 +53,7 @@ export interface CartItem {
   templateUrl: "./checkout.component.html",
   styleUrls: ["./checkout.component.scss"],
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent implements OnInit, OnDestroy {
   static componentName = "CheckoutComponent";
   checkedLineItems!: CartItem[];
   selectCheckedLineItems$: Observable<CartItem[]>;
@@ -83,11 +83,6 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectCheckedLineItems$.subscribe((data) => {
-      console.log(
-        "//////////////////checkedLineItems$ CheckoutComponent",
-        data
-      );
-
       const sortedData = JSON.parse(JSON.stringify(data));
       const response = sortedData
         .sort((a: any, b: any) =>
@@ -109,6 +104,11 @@ export class CheckoutComponent implements OnInit {
     //
     //   this.commission = data;
     // });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   changePaymentMethod(value: string) {

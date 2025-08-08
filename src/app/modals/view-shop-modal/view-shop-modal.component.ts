@@ -12,7 +12,14 @@ export class ViewShopModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  ngOnInit(): void {
-    console.log("==============data", this.data);
+  ngOnInit(): void {}
+
+  decline(id: string) {
+    console.log("---------_jd", id);
+    this.dialog.close({ status: "declined", id: id });
+  }
+
+  approve(id: string) {
+    this.dialog.close({ status: "approved", id: id });
   }
 }

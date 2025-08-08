@@ -1,0 +1,38 @@
+<div style="margin: 20px">
+  <div>
+    <p>
+      Who can see your post? Your default audience is set to Public, but you can
+      change the audience of this specific blog.
+    </p>
+  </div>
+  <div>
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      class="example-radio-group"
+      [(ngModel)]="selectedAudience"
+    >
+      <div
+        *ngFor="let audience of audiences"
+        class="radio-button-custom"
+        [ngClass]="{ selected: selectedAudience === audience }"
+        (click)="setAudience(audience)"
+      >
+        <div>{{ AudienceUI[audience] }}</div>
+        <div>
+          <mat-radio-button
+            class="example-radio-button"
+            style="display: block; margin-bottom: 10px"
+            [value]="audience"
+          >
+          </mat-radio-button>
+        </div>
+      </div>
+    </mat-radio-group>
+  </div>
+  <div
+    style="display: flex; justify-content: flex-end; gap: 7px; margin-top: 7px"
+  >
+    <button mat-flat-button (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="main-green" (click)="done()">Done</button>
+  </div>
+</div>
