@@ -34,6 +34,7 @@
     "@schematics/angular": "13.3.11",
     "base64-blob": "^1.4.1",
     "bootstrap": "^5.3.3",
+    "browser-image-compression": "^2.0.2",
     "bson": "^4.7.2",
     "chartist": "^0.11.4",
     "core-js": "^2.6.11",
