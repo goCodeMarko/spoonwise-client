@@ -18,7 +18,7 @@
         [this.authUser._id, this.authUser.shop?._id].includes(
           chatroomMessages[0].senderId
         )) ||
-      !chatroomMessages[0].isAIAgent
+      chatroomMessages[0].isAIAgent
     "
   >
     {{ chatroomMessages[0].status | titlecase }} ·
@@ -43,7 +43,8 @@
       *ngIf="
         [this.authUser._id, this.authUser.shop?._id].includes(
           message?.senderId
-        ) || !message.isAIAgent;
+        ) ||
+          (!message.isAIAgent && isSpoonwiseAI === 'true');
         else leftSide
       "
     >
