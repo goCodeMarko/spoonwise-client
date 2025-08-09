@@ -6,6 +6,7 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./chat-page.component.scss"],
 })
 export class ChatPageComponent implements OnInit {
+  static componentName = "ChatPageComponent";
   constructor() {}
 
   ngOnInit(): void {}

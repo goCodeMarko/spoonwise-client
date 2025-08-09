@@ -7,6 +7,7 @@ import { setToPay } from "../shared/store/order/order.actions";
 import {
   chatroomSort,
   checkChatroomExistsInStore,
+  chunksReceivedFromAI,
   plusOneToSentDeliveredCounter,
   setChatrooms,
   setSendingMessage,
@@ -27,6 +28,7 @@ export class SellerComponent implements OnInit, OnDestroy {
   onNewChatMessage: Subscription;
   onUpdateChatroomsMsgStatusToDelivered: Subscription;
   onUpdateChatroomsMsgStatusToSeen: Subscription;
+  onReceivedChunksFromAI: Subscription;
 
   constructor(
     private socket: SocketService,
@@ -48,6 +50,13 @@ export class SellerComponent implements OnInit, OnDestroy {
         this.store.dispatch(
           plusOneToSentDeliveredCounter({ message: data.message })
         );
+
+        if (!data.isAIAgent) {
+          this.store.dispatch(
+            checkChatroomExistsInStore({ chatroom: data.chatroom })
+          );
+          this.store.dispatch(chatroomSort({ message: data.message }));
+        }
       });
 
     this.onUpdateChatroomsMsgStatusToDelivered = this.socket
@@ -68,6 +77,17 @@ export class SellerComponent implements OnInit, OnDestroy {
         this.store.dispatch(
           updateChatroomsMsgStatusToSeen({
             updatedChatroom,
+          })
+        );
+      });
+
+    this.onReceivedChunksFromAI = this.socket
+      .onReceivedChunksFromAI()
+      .subscribe((data) => {
+        this.store.dispatch(
+          chunksReceivedFromAI({
+            chunks: data.chunks,
+            tempMessageId: data.temporaryMessageId,
           })
         );
       });

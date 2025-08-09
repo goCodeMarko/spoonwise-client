@@ -129,6 +129,28 @@ export class MapComponent
     this.dragend.emit(this.subject.coordinates);
   }
 
+  private updateLocByUserClick(lat: string, lng: string) {
+    if (this.marker) {
+      this.map.removeLayer(this.marker);
+    }
+
+    if (this.circle) {
+      this.map.removeLayer(this.circle);
+    }
+
+    // Move the radius circle alog with the marker
+    if (this.radius > 0) this.circle.setLatLng([lat, lng]);
+
+    this.subject = {
+      coordinates: {
+        lat: lat.toString(),
+        lng: lng.toString(),
+      },
+    };
+    this.dragend.emit(this.subject.coordinates);
+    this.setUserMapPin();
+  }
+
   private async loadMap() {
     console.log("loadMap");
     // Destroy existing map if already initialized
@@ -150,23 +172,37 @@ export class MapComponent
         [21.0, 127.0], // Northeast corner (Batanes)
       ],
       maxBoundsViscosity: 1.0, // Fully restrict panning outside bounds
-      zoomAnimation: false,
-      fadeAnimation: false,
+      zoomAnimation: true,
+      fadeAnimation: true,
+      zoomControl: false,
     }).setView([0, 0], 1);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}{r}.png", {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
-      id: "mapbox/streets-v11",
       detectRetina: true,
-      zoomOffset: -1,
     }).addTo(this.map);
 
-    const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
+    L.control
+      .zoom({
+        position: "topleft",
+        zoomInText: '<i class="material-icons" style="color: #f8da50;">add</i>',
+        zoomOutText:
+          '<i class="material-icons" style="color: #f8da50;">remove</i>',
+      })
+      .addTo(this.map);
 
-    container.innerHTML = `
-  <style>`;
+    //   const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
+
+    //   container.innerHTML = `
+    // <style>`;
+
+    this.map.on("click", (event: any) => {
+      const { lat, lng } = event.latlng;
+
+      this.updateLocByUserClick(lat, lng);
+    });
 
     this.addRadiusSlider();
 
@@ -202,7 +238,7 @@ export class MapComponent
     gpsButton.onAdd = () => {
       const container = L.DomUtil.create("div", "gps-control");
       container.innerHTML = `
-        <button id="gpsButton">GPS</button>
+        <button id="gpsButton"> <i class="material-icons">gps_fixed</i></button>
       `;
 
       const gpsButton = container.querySelector(
@@ -223,7 +259,6 @@ export class MapComponent
 
       return container;
     };
-
     gpsButton.addTo(this.map);
 
     const sliderControl = L.control({ position: "topright" });
@@ -232,7 +267,15 @@ export class MapComponent
       const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       container.innerHTML = `
   <style>
-
+      #gpsButton {
+      background: white;
+      border-radius: 10px;
+      top: 25px;
+       color: #f8da50;
+      padding: 4px;
+      border: none;  
+      width: 38px;      
+      }
     #radius-slider {
       -webkit-appearance: none; 
       appearance: none;
@@ -244,7 +287,7 @@ export class MapComponent
     }
 
     #radius-value {
-      color: #00C6C8;
+      color: #f8da50;
     }
    
     #radius-slider::-webkit-slider-thumb {
@@ -253,7 +296,7 @@ export class MapComponent
       width: 20px; 
       height: 20px; 
       border-radius: 50%;
-      background: #00C6C8;
+      background: #f8da50;
       cursor: pointer; 
     }
 
@@ -262,7 +305,7 @@ export class MapComponent
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: #00C6C8; 
+      background: #f8da50; 
       cursor: pointer;
     }
 
@@ -279,19 +322,12 @@ export class MapComponent
       border-radius: 10px !important;
       border: none !important;
     }
-    .leaflet-control-zoom-out span {
-      color: #00C6C8;
-    }
 
      .leaflet-control-zoom-in {
       border-radius: 10px !important;
       border: none !important;
     }
-      .leaflet-control-zoom-in span {
-      color: #00C6C8;
-    }
 
-    
     .leaflet-control-attribution {
       bottom: 7px;
       right: 7px;
@@ -364,7 +400,7 @@ export class MapComponent
         [this.subject.coordinates.lat, this.subject.coordinates.lng],
         {
           color: "transparent",
-          fillColor: "#00c6c8",
+          fillColor: "#f8da50",
           fillOpacity: 0.3,
           stroke: false,
           radius: this.radius, // 1km in meters
