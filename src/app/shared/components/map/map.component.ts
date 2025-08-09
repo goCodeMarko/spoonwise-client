@@ -177,7 +177,7 @@ export class MapComponent
       zoomControl: false,
     }).setView([0, 0], 1);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}{r}.png", {
+    L.tileLayer("https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
