@@ -44,7 +44,7 @@
         [this.authUser._id, this.authUser.shop?._id].includes(
           message?.senderId
         ) ||
-          (!message.isAIAgent && isSpoonwiseAI === 'true');
+          (!message.isAIAgent && isSpoonwiseAI == 'true');
         else leftSide
       "
     >
@@ -61,7 +61,7 @@
             <img
               [src]="message.content.attachments[0].url"
               alt=""
-              style="width: 70vw"
+              style="width: 70vw; border-radius: 20px"
             />
           </div>
         </ng-container>
@@ -79,17 +79,20 @@
     <ng-template #leftSide>
       <div style="display: flex; justify-content: start; align-items: center">
         <div>
-          <div class="message">
-            <p [innerHTML]="message.content.message"></p>
-
-            <!-- <ng-container *ngIf="message.content.buttons">
-              <div style="display: flex; flex-direction: column; gap: 7px">
-                <button mat-flat-button color="main-green">Button 1</button>
-                <button mat-flat-button color="main-green">Button 2</button>
-                <button mat-flat-button color="main-green">Button 3</button>
-              </div>
-            </ng-container> -->
-          </div>
+          <ng-container *ngIf="message?.content?.attachments?.length > 0">
+            <div>
+              <img
+                [src]="message.content.attachments[0].url"
+                alt=""
+                style="width: 70vw; border-radius: 20px"
+              />
+            </div>
+          </ng-container>
+          <ng-container *ngIf="message?.content?.message">
+            <div class="message">
+              <p [innerHTML]="message.content.message"></p>
+            </div>
+          </ng-container>
         </div>
       </div>
     </ng-template>
