@@ -113,7 +113,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   load = true;
   async userData() {
-    await this.auth.updateUserData();
     this.load = false;
     this.authUser = JSON.parse(this.auth.getUserData());
     console.log("---xxxxxxxxx", this.authUser);
