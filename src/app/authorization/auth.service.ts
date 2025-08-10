@@ -92,6 +92,8 @@ export class AuthService {
         const account = JSON.stringify(data.account);
         const token = data.token;
 
+        localStorage.removeItem("account");
+        localStorage.removeItem("token");
         localStorage.setItem("account", account);
         localStorage.setItem("token", token);
 
@@ -153,6 +155,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("account");
 
     this.router.navigate(["/login"]);
   }
