@@ -334,6 +334,7 @@ export const chatroomReducer = createReducer(
       );
 
       if (exists) {
+        console.log("-111");
         return {
           ...state,
           spoonwiseAI: {
@@ -355,6 +356,7 @@ export const chatroomReducer = createReducer(
           error: null,
         };
       } else {
+        console.log("-222");
         const newMessage: Message = {
           isAIAgent: true,
           elementId: tempMessageId,
@@ -377,6 +379,25 @@ export const chatroomReducer = createReducer(
       }
     }
   ),
+
+  on(ChatroomAction.chatSellerSuccess, (state, { chatroom }) => {
+    const isChatroomExists = state.chatrooms.find(
+      (data) => data._id === chatroom._id
+    );
+
+    if (!isChatroomExists) {
+      return {
+        ...state,
+        chatrooms: [...state.chatrooms, chatroom].sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        ),
+        error: null,
+      };
+    } else {
+      return { ...state };
+    }
+  }),
 
   on(
     ChatroomAction.updateTemporaryMessage,

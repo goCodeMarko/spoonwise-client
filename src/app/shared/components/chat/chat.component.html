@@ -14,11 +14,10 @@
   <div
     style="display: flex; justify-content: end; align-items: center"
     *ngIf="
-      (chatroomMessages[0] &&
-        [this.authUser._id, this.authUser.shop?._id].includes(
-          chatroomMessages[0].senderId
-        )) ||
-      chatroomMessages[0].isAIAgent
+      chatroomMessages[0] &&
+      [this.authUser._id, this.authUser.shop?._id].includes(
+        chatroomMessages[0].senderId
+      )
     "
   >
     {{ chatroomMessages[0].status | titlecase }} ·
@@ -90,7 +89,10 @@
           </ng-container>
           <ng-container *ngIf="message?.content?.message">
             <div class="message">
-              <p [innerHTML]="message.content.message"></p>
+              <p
+                [innerHTML]="message.content.message"
+                style="margin-top: 0; margin-bottom: 0"
+              ></p>
             </div>
           </ng-container>
         </div>

@@ -36,18 +36,23 @@
 
             <div style="display: flex; gap: 7px">
               <ng-container *ngIf="spoonwise.latestMessages.length > 0">
-                <div>
-                  <b
+                <div style="display: flex">
+                  <div
                     *ngIf="
                       [this.authUser._id, this.authUser.shop?._id].includes(
                         spoonwise.latestMessages[0].senderId
                       )
                     "
-                    >You:
-                  </b>
-                  <b>{{
-                    spoonwise.latestMessages[0].content.message | lineClamp : 25
-                  }}</b>
+                    style="margin-right: 7px"
+                  >
+                    You:
+                  </div>
+                  <div
+                    [innerHTML]="
+                      spoonwise.latestMessages[0].content.message
+                        | lineClamp : 20
+                    "
+                  ></div>
                 </div>
                 <span><b>·</b></span>
                 <div>
@@ -137,21 +142,23 @@
 
               <div style="display: flex; gap: 7px">
                 <ng-container *ngIf="chatroom.latestMessages.length > 0">
-                  <div>
-                    <b
+                  <div style="display: flex">
+                    <div
                       *ngIf="
                         [this.authUser._id, this.authUser.shop?._id].includes(
                           chatroom.latestMessages[0].senderId
-                        ) || !chatroom.latestMessages[0].isAIAgent
+                        )
                       "
-                      >You:
-                    </b>
-                    <b
-                      >{{
+                      style="margin-right: 7px"
+                    >
+                      You:
+                    </div>
+                    <div
+                      [innerHTML]="
                         chatroom.latestMessages[0].content.message
-                          | lineClamp : 25
-                      }}
-                    </b>
+                          | lineClamp : 20
+                      "
+                    ></div>
                   </div>
                   <span><b>·</b></span>
                   <div>

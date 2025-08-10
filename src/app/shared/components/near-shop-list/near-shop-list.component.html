@@ -99,11 +99,13 @@
           ><button mat-stroked-button style="width: 100%">Visit Shop</button></a
         >
 
-        <a [routerLink]="['/deals']" [queryParams]="{ shop: shop._id }"
-          ><button mat-stroked-button style="width: 100%">
-            Chat Seller
-          </button></a
+        <button
+          (click)="chatSeller(shop._id)"
+          mat-stroked-button
+          style="width: 100%"
         >
+          Chat Seller
+        </button>
       </div>
     </div>
   </div>

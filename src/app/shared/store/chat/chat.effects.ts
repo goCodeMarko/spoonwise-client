@@ -247,4 +247,33 @@ export class ChatroomEffects {
       })
     )
   );
+
+  chatSeller$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ChatroomAction.chatSeller),
+      mergeMap(({ shopId }) =>
+        this.http
+          .get(
+            `${environment.SERVER_URL_CLUSTERS}chatroom/chatSeller?shopId=${shopId}`,
+            {}
+          )
+          .pipe(
+            map((data: any) => {
+              let chatroom: Chatroom = data.data;
+
+              return ChatroomAction.chatSellerSuccess({
+                chatroom,
+              });
+            }),
+            catchError((error: any) =>
+              of(
+                ChatroomAction.chatSellerFailure({
+                  error: error.message,
+                })
+              )
+            )
+          )
+      )
+    )
+  );
 }

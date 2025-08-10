@@ -181,6 +181,7 @@ export class MapComponent
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
+
       detectRetina: true,
     }).addTo(this.map);
 

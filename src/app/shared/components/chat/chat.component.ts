@@ -85,6 +85,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.onNewChatMessage = this.socket
       .onNewChatMessage()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((message: any) => {
         console.log("------------this.isSpoonwiseAI", this.isSpoonwiseAI);
         this.markSenderMessagesAsSeen();
@@ -92,6 +93,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.onAIStreamComplete = this.socket
       .onAIStreamComplete()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.markSenderMessagesAsSeen();
       });

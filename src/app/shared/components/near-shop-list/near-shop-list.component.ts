@@ -20,6 +20,8 @@ import { selectBlogs } from "../../store/blog/blog.selector";
 import { Store } from "@ngrx/store";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { INearestShops } from "src/app/models/nearest-shops.model";
+import { chatSeller, chatSellerSuccess } from "../../store/chat/chat.actions";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-near-shop-list",
@@ -28,18 +30,33 @@ import { INearestShops } from "src/app/models/nearest-shops.model";
 })
 export class NearShopListComponent implements OnInit {
   nearestShops: INearestShops[] = [];
+  destroy$ = new Subject<void>();
 
   constructor(
     private store: Store,
     private actions$: Actions,
-    private hrs: HttpRequestService
+    private hrs: HttpRequestService,
+    private route: Router
   ) {}
 
   ngOnInit(): void {
     this.getNearShops();
+
+    this.actions$
+      .pipe(ofType(chatSellerSuccess), takeUntil(this.destroy$))
+      .subscribe((action) => {
+        const chatroom = action.chatroom;
+
+        this.route.navigate([`/chats/${chatroom._id}`], {
+          queryParams: { isSpoonwiseAI: false },
+        });
+      });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   getNearShops() {
     this.hrs.request("get", "shop/getNearestShops", {}, async (res: any) => {
@@ -47,6 +64,10 @@ export class NearShopListComponent implements OnInit {
       const data: INearestShops[] = res.data;
       this.nearestShops = data;
     });
+  }
+
+  chatSeller(shopId: string) {
+    this.store.dispatch(chatSeller({ shopId }));
   }
 
   @ViewChild("blogListContainer", { static: false })

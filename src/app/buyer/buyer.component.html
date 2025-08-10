@@ -3,8 +3,10 @@
   (onSearch)="search($event)"
 ></app-sticky-header>
 
-<!--   [ngStyle]="{ 'margin-top': isShopViewing ? '89px' : '0px' }" -->
-<div *ngIf="routerOutletComponent == 'ProductListPageComponent'">
+<div
+  *ngIf="routerOutletComponent == 'ProductListPageComponent'"
+  style="position: relative"
+>
   <div *ngIf="!isMapLoading; else loading">
     <app-map
       *ngIf="!isShopViewing"
@@ -28,20 +30,24 @@
     ></div>
   </ng-template>
 </div>
-<div
-  [ngClass]="
-    routerOutletComponent == 'ProfilePageComponent' ||
-    routerOutletComponent == 'ChatListPageComponent' ||
-    routerOutletComponent == 'CartComponent' ||
-    routerOutletComponent == 'CheckoutComponent' ||
-    routerOutletComponent == 'HomePageComponent'
-      ? 'contentProfile'
-      : !isShopViewing && routerOutletComponent == 'ProductListPageComponent'
-      ? 'content-with-map'
-      : 'content-without-map'
-  "
->
-  <router-outlet (activate)="fromRouterOutlet($event)"> </router-outlet>
+
+<!--   [ngStyle]="{ 'margin-top': isShopViewing ? '89px' : '0px' }" -->
+<div>
+  <div
+    [ngClass]="
+      routerOutletComponent == 'ProfilePageComponent' ||
+      routerOutletComponent == 'ChatListPageComponent' ||
+      routerOutletComponent == 'CartComponent' ||
+      routerOutletComponent == 'CheckoutComponent' ||
+      routerOutletComponent == 'HomePageComponent'
+        ? 'contentProfile'
+        : !isShopViewing && routerOutletComponent == 'ProductListPageComponent'
+        ? 'content-with-map'
+        : 'content-without-map'
+    "
+  >
+    <router-outlet (activate)="fromRouterOutlet($event)"> </router-outlet>
+  </div>
 </div>
 
 <app-sticky-footer

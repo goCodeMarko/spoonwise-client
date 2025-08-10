@@ -154,3 +154,18 @@ export const updateTemporaryMessage = createAction(
   "[Chatroom] Set Chatroom Failure",
   props<{ message: Message; tempMessageId: string }>()
 );
+
+export const chatSeller = createAction(
+  "[Chatroom] Set Chat Seller",
+  props<{ shopId: string }>()
+);
+
+export const chatSellerSuccess = createAction(
+  "[Chatroom] Chat Seller Success",
+  props<{ chatroom: Chatroom }>()
+);
+
+export const chatSellerFailure = createAction(
+  "[Chatroom] Chat Seller Failure",
+  props<{ error: string }>()
+);
