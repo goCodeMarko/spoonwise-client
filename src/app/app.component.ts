@@ -49,6 +49,7 @@ export class AppComponent implements OnInit {
       "assets/images/logo/lalamove-icon.webp",
       "assets/images/logo/lalamove-whole-logo.png",
       "assets/icons/check.png",
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     ];
     // Preload the listed images
     imagePreloadService.preload(imagesToPreload);
