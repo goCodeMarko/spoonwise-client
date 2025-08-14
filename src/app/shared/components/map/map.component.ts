@@ -17,6 +17,7 @@ import { firstValueFrom, Observable, Subscriber } from "rxjs";
 import { AuthService } from "src/app/authorization/auth.service";
 import { GeolocationService } from "../../services/geolocation/geolocation.service";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
+import { style } from "@angular/animations";
 declare let L: any; // Declare Leaflet from the global scope
 
 @Component({
@@ -32,11 +33,13 @@ export class MapComponent
   marker: any;
 
   @Input() shops: any[] = [];
+  @Input() buyers: any[] = [];
   @Input() subject: any = {};
   @Input() radius: number = 0;
   @Input() detectCurrentLocation = false;
   @Input() checkDBLocation = false;
   @Input() disabled = true;
+  @Input() isShop = false;
 
   @Output() dragend = new EventEmitter<any>();
 
@@ -50,26 +53,18 @@ export class MapComponent
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       if (params.radius) this.radius = params.radius * 1000;
-      console.log("===========this.radius", this.radius);
     });
   }
 
   ngAfterViewInit(): void {
-    // Use setTimeout to wait for DOM rendering
-    // setTimeout(() => {
     this.loadMap();
 
-    // Trigger map size recalculation (must be visible!)
-    // setTimeout(() => {
     if (this.map) {
       this.map.invalidateSize();
     }
-    //   }, 300); // small delay helps ensure it's visible
-    // }, 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("===========ngOnChanges", changes);
     if (
       changes["subject"] &&
       this.subject?.coordinates?.lat &&
@@ -81,7 +76,6 @@ export class MapComponent
   }
 
   ngOnDestroy(): void {
-    console.log("ngOnDestroy");
     if (this.map) {
       this.map.off(); // Remove all event listeners
       this.map.remove(); // Completely removes the map and its layers from the DOM
@@ -129,6 +123,20 @@ export class MapComponent
     this.dragend.emit(this.subject.coordinates);
   }
 
+  private async getShopCoordinates() {
+    const { data } = (await firstValueFrom(
+      this.hrs.request("getV2", `shop/getShop`, {})
+    )) as any;
+
+    this.subject = {
+      coordinates: {
+        lat: data.coordinates.lat.toString(),
+        lng: data.coordinates.lng.toString(),
+      },
+    };
+    this.dragend.emit(this.subject.coordinates);
+  }
+
   private updateLocByUserClick(lat: string, lng: string) {
     if (this.marker) {
       this.map.removeLayer(this.marker);
@@ -152,20 +160,24 @@ export class MapComponent
   }
 
   private async loadMap() {
-    console.log("loadMap");
     // Destroy existing map if already initialized
     if (this.map) {
       this.map.off(); // Remove all event listeners
       this.map.remove(); // Properly destroy the map
       this.map = null; // Clear the reference
     }
-    if (this.detectCurrentLocation && !this.checkDBLocation)
-      await this.getCurrentPosition();
-    if (this.checkDBLocation) await this.getPositionFromDB();
+
+    if (!this.isShop) {
+      if (this.detectCurrentLocation && !this.checkDBLocation)
+        await this.getCurrentPosition();
+      if (this.checkDBLocation) await this.getPositionFromDB();
+    } else if (this.isShop) {
+      await this.getShopCoordinates();
+    }
 
     this.map = L.map("map", {
       center: [12.8797, 121.774], // Center of the Philippines
-      zoom: 4, // Adjust zoom level
+      zoom: 30, // Adjust zoom level
       minZoom: 5,
       maxBounds: [
         [4.5, 116.0], // Southwest corner (Palawan)
@@ -175,70 +187,74 @@ export class MapComponent
       zoomAnimation: true,
       fadeAnimation: true,
       zoomControl: false,
-    }).setView([0, 0], 1);
+    }).setView([0, 5], 5);
 
+    //  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
-
       detectRetina: true,
     }).addTo(this.map);
 
-    L.control
-      .zoom({
-        position: "topleft",
-        zoomInText: '<i class="material-icons" style="color: #f8da50;">add</i>',
-        zoomOutText:
-          '<i class="material-icons" style="color: #f8da50;">remove</i>',
-      })
-      .addTo(this.map);
+    this.addZoomControl();
 
-    //   const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
-
-    //   container.innerHTML = `
-    // <style>`;
-
-    this.map.on("click", (event: any) => {
-      const { lat, lng } = event.latlng;
-
-      this.updateLocByUserClick(lat, lng);
-    });
-
-    this.addRadiusSlider();
-
-    this.setUserMapPin();
-
-    //SHOPS MARKER
-    console.log("============shops", this.shops);
-    if (size(this.shops) > 0) {
-      const coordinates = this.shops.map((shop) => {
-        return { lat: shop.coordinates.lat, lng: shop.coordinates.lng };
-      });
-      const SHOPIcon = L.icon({
-        iconUrl: "https://cdn-icons-png.flaticon.com/128/869/869432.png",
-        iconSize: [40, 40], // Width and height
-        iconAnchor: [20, 40], // Pinpoint position (center-bottom)
-        popupAnchor: [0, -40], // Position relative to the marker
-      });
-      coordinates.forEach((SHOP) => {
-        L.marker([SHOP.lat, SHOP.lng], {
-          draggable: false,
-          icon: SHOPIcon,
-        })
-          .bindPopup("Angular Leaflet")
-          .addTo(this.map);
-      });
+    if (!this.isShop) {
+      this.addRadiusSlider();
+      this.addGPSButton();
     }
-    //END
+
+    if (!this.isShop) this.setUserMapPin();
+    else this.setUserMapPin("seller");
+
+    if (!this.isShop) {
+      this.addNearShops();
+
+      this.map.on("click", (event: any) => {
+        const { lat, lng } = event.latlng;
+
+        this.updateLocByUserClick(lat, lng);
+      });
+    } else {
+      this.addNearBuyers();
+    }
   }
 
-  addRadiusSlider(): void {
+  addZoomControl(): void {
+    // Create the zoom control
+    const zoomControl = L.control.zoom({
+      position: "topleft",
+      zoomInText: '<i class="material-icons" style="color: #f8da50;">add</i>',
+      zoomOutText:
+        '<i class="material-icons" style="color: #f8da50;">remove</i>',
+    });
+
+    // Add it to the map
+    zoomControl.addTo(this.map);
+
+    // Access and style its container element
+    const container = zoomControl.getContainer();
+    container.style.background = "white";
+    container.style.borderRadius = "10px";
+    container.style.padding = "4px";
+    container.style.border = "none";
+  }
+
+  addGPSButton(): void {
     const gpsButton = L.control({ position: "topleft" });
 
     gpsButton.onAdd = () => {
       const container = L.DomUtil.create("div", "gps-control");
       container.innerHTML = `
+        <style>     
+        #gpsButton {
+          background: white;
+          border-radius: 10px;
+          top: 25px;
+          color: #f8da50;
+          padding: 4px;
+          border: none;  
+          width: 38px;      
+          }
+          </style>
         <button id="gpsButton"> <i class="material-icons">gps_fixed</i></button>
       `;
 
@@ -261,22 +277,16 @@ export class MapComponent
       return container;
     };
     gpsButton.addTo(this.map);
+  }
 
+  addRadiusSlider(): void {
     const sliderControl = L.control({ position: "topright" });
 
     sliderControl.onAdd = () => {
       const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       container.innerHTML = `
   <style>
-      #gpsButton {
-      background: white;
-      border-radius: 10px;
-      top: 25px;
-       color: #f8da50;
-      padding: 4px;
-      border: none;  
-      width: 38px;      
-      }
+ 
     #radius-slider {
       -webkit-appearance: none; 
       appearance: none;
@@ -308,25 +318,6 @@ export class MapComponent
       border-radius: 50%;
       background: #f8da50; 
       cursor: pointer;
-    }
-
-     .leaflet-touch .leaflet-bar {
-      background: white;
-      border-radius: 10px;
-      top: 7px;
-      color:red;
-      padding: 4px;
-      border: none;
-    }
-
-    .leaflet-control-zoom-out {
-      border-radius: 10px !important;
-      border: none !important;
-    }
-
-     .leaflet-control-zoom-in {
-      border-radius: 10px !important;
-      border: none !important;
     }
 
     .leaflet-control-attribution {
@@ -395,8 +386,53 @@ export class MapComponent
     sliderControl.addTo(this.map);
   }
 
-  setUserMapPin() {
-    if (this.radius > 0) {
+  addNearShops() {
+    //SHOPS MARKER
+    if (size(this.shops) > 0) {
+      const coordinates = this.shops.map((shop) => {
+        return { lat: shop.coordinates.lat, lng: shop.coordinates.lng };
+      });
+      const SHOPIcon = L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/128/869/869432.png",
+        iconSize: [40, 40], // Width and height
+        iconAnchor: [20, 40], // Pinpoint position (center-bottom)
+        popupAnchor: [0, -40], // Position relative to the marker
+      });
+      coordinates.forEach((SHOP) => {
+        L.marker([SHOP.lat, SHOP.lng], {
+          draggable: false,
+          icon: SHOPIcon,
+        })
+          .bindPopup("Angular Leaflet")
+          .addTo(this.map);
+      });
+    }
+    //END
+  }
+
+  addNearBuyers() {
+    //Buyers Marker
+    if (size(this.buyers) > 0) {
+      const BuyerIcon = L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/128/8587/8587894.png",
+        iconSize: [40, 40], // Width and height
+        iconAnchor: [20, 40], // Pinpoint position (center-bottom)
+        popupAnchor: [0, -40], // Position relative to the marker
+      });
+      this.buyers.forEach((buyer) => {
+        L.marker([buyer.coordinates.lat, buyer.coordinates.lng], {
+          draggable: false,
+          icon: BuyerIcon,
+        })
+          .bindPopup()
+          .addTo(this.map);
+      });
+    }
+    //END
+  }
+
+  setUserMapPin(userType = "buyer") {
+    if (this.radius > 0 && userType === "buyer") {
       this.circle = L.circle(
         [this.subject.coordinates.lat, this.subject.coordinates.lng],
         {
@@ -417,9 +453,13 @@ export class MapComponent
       { animate: true }
     );
 
+    const iconUrl =
+      userType === "buyer"
+        ? "https://cdn-icons-png.flaticon.com/128/8587/8587894.png"
+        : "https://cdn-icons-png.flaticon.com/128/869/869432.png";
     //USER LOC MARKER
     const userLoc = L.icon({
-      iconUrl: "https://cdn-icons-png.flaticon.com/128/8587/8587894.png",
+      iconUrl,
       iconSize: [50, 50], // Width and height
       iconAnchor: [20, 40], // Pinpoint position (center-bottom)
       popupAnchor: [0, -40], // Position relative to the marker
@@ -427,7 +467,7 @@ export class MapComponent
     this.marker = L.marker(
       [this.subject.coordinates.lat, this.subject.coordinates.lng],
       {
-        draggable: this.disabled,
+        draggable: !this.disabled,
         icon: userLoc,
       }
     )

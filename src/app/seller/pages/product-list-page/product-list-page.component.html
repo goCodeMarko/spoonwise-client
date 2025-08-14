@@ -1,1 +1,33 @@
-<app-product-list [showPublishSlider]="true" [isShop]="true"></app-product-list>
+<button
+  style="
+    position: absolute;
+    z-index: 2;
+    top: 323px;
+    left: 6%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    color: #f8da50;
+    padding: 4px;
+    border: none;
+    width: 38px;
+  "
+  (click)="toggleProductVisibility()"
+>
+  <i class="material-icons">grain</i>
+</button>
+<app-product-list
+  [productVisibility]="productVisibility"
+  [showPublishSlider]="true"
+  [isShop]="true"
+  style="
+    position: absolute;
+    z-index: 2;
+    top: 395px;
+    left: 0;
+    right: 0;
+    margin-left: 7px;
+    margin-right: 7px;
+    width: auto;
+  "
+></app-product-list>

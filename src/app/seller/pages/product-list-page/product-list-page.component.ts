@@ -7,8 +7,11 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ProductListPageComponent implements OnInit {
   static componentName = "ProductListPageComponent";
-
+  productVisibility = false;
   constructor() {}
 
   ngOnInit(): void {}
+  toggleProductVisibility() {
+    this.productVisibility = !this.productVisibility;
+  }
 }

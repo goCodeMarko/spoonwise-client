@@ -1,3 +1,8 @@
 .content {
-  margin: 70px 8px 0px 8px;
+  margin: 70px 8px 0px 8px !important;
+}
+::ng-deep #map {
+  height: 90vh;
+  z-index: 1;
+  margin-top: 7vh !important;
 }

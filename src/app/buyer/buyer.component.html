@@ -3,36 +3,34 @@
   (onSearch)="search($event)"
 ></app-sticky-header>
 
-<div
-  *ngIf="routerOutletComponent == 'ProductListPageComponent'"
-  style="position: relative"
->
-  <div *ngIf="!isMapLoading; else loading">
-    <app-map
-      *ngIf="!isShopViewing"
-      class="buyer-component"
-      [shops]="this.shops"
-      [detectCurrentLocation]="true"
-      [checkDBLocation]="true"
-      [radius]="3000"
-      (dragend)="onMapDragend($event)"
-    ></app-map>
-  </div>
-  <ng-template #loading>
-    <div
-      class="loader"
-      style="
-        padding: 88px 7px 7px 7px;
-        height: 200px;
-        z-index: 0;
-        border-radius: 10px;
-      "
-    ></div>
-  </ng-template>
-</div>
-
 <!--   [ngStyle]="{ 'margin-top': isShopViewing ? '89px' : '0px' }" -->
-<div>
+<div style="position: relative">
+  <div *ngIf="routerOutletComponent == 'ProductListPageComponent'">
+    <div *ngIf="!isMapLoading; else loading">
+      <app-map
+        *ngIf="!isShopViewing"
+        class="buyer-component"
+        [shops]="this.shops"
+        [detectCurrentLocation]="true"
+        [checkDBLocation]="true"
+        [disabled]="false"
+        [radius]="3000"
+        (dragend)="onMapDragend($event)"
+      ></app-map>
+    </div>
+    <ng-template #loading>
+      <div
+        class="loader"
+        style="
+          padding: 88px 7px 3px 7px;
+          height: 100vh;
+          z-index: 0;
+          border-radius: 10px;
+        "
+      ></div>
+    </ng-template>
+  </div>
+
   <div
     [ngClass]="
       routerOutletComponent == 'ProfilePageComponent' ||

@@ -1,195 +1,220 @@
-<section style="background-color: white; color: black; border-radius: 7px">
-  <div style="display: flex; justify-content: space-between">
-    <div style="width: 43dvw; margin-left: 7px">
-      <mat-form-field appearance="outline" style="color: white">
-        <mat-select [formControl]="selectControl">
-          <mat-option value="latest">Latest</mat-option>
-          <mat-option value="nearest">Nearest</mat-option>
-          <mat-option value="cheapest">Cheapest</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <button
-        [disabled]="this.meta.page === 1"
-        (click)="prev()"
-        mat-icon-button
-        color="primary"
-        style="width: 70px; height: 70px; position: relative"
+<ng-container *ngIf="productVisibility">
+  <section
+    style="
+      background-color: white;
+      color: black;
+      border-radius: 10px;
+      margin-bottom: 7px;
+    "
+  >
+    <div
+      style="
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 7px;
+      "
+    >
+      <div style="width: 35vw; margin-left: 7px">
+        <mat-form-field appearance="outline" style="color: white">
+          <mat-select [formControl]="selectControl">
+            <mat-option value="latest">Latest</mat-option>
+            <mat-option value="nearest">Nearest</mat-option>
+            <mat-option value="cheapest">Cheapest</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div
+        style="
+          justify-content: unset;
+          display: flex;
+          align-items: center;
+          gap: 7px;
+        "
       >
-        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
-          >arrow_back_ios</mat-icon
+        <button
+          [disabled]="this.meta.page === 1"
+          (click)="prev()"
+          mat-icon-button
         >
-      </button>
-      {{ this.meta.page }} of {{ this.meta.pages }}
+          <mat-icon style="width: 30px; color: #f8da50"
+            >arrow_back_ios</mat-icon
+          >
+        </button>
 
-      <button
-        [disabled]="this.meta.page === this.meta.pages"
-        (click)="next()"
-        mat-icon-button
-        color="primary"
-        style="width: 70px; height: 70px; position: relative"
-      >
-        <mat-icon style="font-size: x-large; color: #00c6c8" (click)="search()"
-          >arrow_forward_ios</mat-icon
-        >
-      </button>
-    </div>
-  </div>
-</section>
-
-<ng-container *ngIf="!isShop; else shopContainer">
-  <div class="container">
-    <ng-container *ngTemplateOutlet="productList"></ng-container>
-  </div>
-</ng-container>
-<ng-template #shopContainer>
-  <div class="container-seller">
-    <ng-container *ngTemplateOutlet="productList"></ng-container>
-  </div>
-</ng-template>
-
-<ng-template #productList>
-  <ng-container *ngIf="!productListOnLoad; else productListLoader">
-    <ng-container *ngFor="let prod of products; let i = index">
-      <div class="card">
-        <div
-          style="
-            position: absolute;
-            background: #000000a8;
-            padding: 1px 3px;
-            left: 18px;
-            top: 7px;
-            color: white;
-            font-size: smaller;
-          "
-        >
-          <!-- <img
-            src="assets/icons/expired.png"
-            width="20"
-            style="vertical-align: sub"
-          /> -->
-
-          <!-- Expires in 30000 -->
-          {{ prod.expiryDate | countdown2 }}
+        <div style="text-align: center">
+          {{ this.meta.page }} of {{ this.meta.pages }}
         </div>
 
-        <ng-container *ngIf="showPublishSlider">
-          <div
-            style="display: flex; justify-content: space-between; height: 30px"
+        <!-- style="
+          width: 70px;
+          height: 70px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        " -->
+        <button
+          [disabled]="this.meta.page === this.meta.pages"
+          (click)="next()"
+          mat-icon-button
+        >
+          <mat-icon style="width: 30px; color: #f8da50"
+            >arrow_forward_ios</mat-icon
           >
-            <div>
-              <mat-slide-toggle
-                [checked]="prod.isPublish"
-                (change)="updatePublish(prod._id, $event)"
-              ></mat-slide-toggle>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <ng-container *ngIf="!isShop; else shopContainer">
+    <div class="container">
+      <ng-container *ngTemplateOutlet="productList"></ng-container>
+    </div>
+  </ng-container>
+  <ng-template #shopContainer>
+    <div class="container-seller">
+      <ng-container *ngTemplateOutlet="productList"></ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #productList>
+    <ng-container *ngIf="!productListOnLoad; else productListLoader">
+      <ng-container *ngFor="let prod of products; let i = index">
+        <div class="card">
+          <ng-container *ngIf="showPublishSlider">
+            <div style="display: flex; justify-content: start; height: 30px">
+              <div>
+                <mat-slide-toggle
+                  [checked]="prod.isPublish"
+                  (change)="updatePublish(prod._id, $event)"
+                ></mat-slide-toggle>
+              </div>
+            </div>
+          </ng-container>
+
+          <div
+            style="
+              position: absolute;
+              background: #f8da50;
+              padding: 1px 3px;
+              right: 7px;
+              top: 7px;
+              color: white;
+              font-size: smaller;
+            "
+          >
+            {{ prod.expiryDate | countdown2 }}
+          </div>
+
+          <div (click)="viewProduct(prod._id)" style="display: flex; gap: 3px">
+            <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
+            <div class="card-content">
+              <b>
+                {{ prod.name | lineClamp : 15 }}
+              </b>
+              <div
+                style="display: flex; gap: 7px; height: 20px; margin-top: 7px"
+              >
+                <ng-container *ngFor="let b of prod.specialOffers">
+                  <small
+                    *ngIf="b == '10000'"
+                    style="background-color: greenyellow; padding: 0px 7px"
+                    >{{ specialOfferLabels[b] }}</small
+                  >
+                  <small
+                    *ngIf="b == '10001'"
+                    style="background-color: pink; padding: 0px 7px"
+                    >{{ specialOfferLabels[b] }}</small
+                  >
+                </ng-container>
+              </div>
+              <div style="display: flex; gap: 3px; flex-direction: column">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    height: 20px;
+                  "
+                >
+                  <p class="price-color">
+                    {{ prod.price | currency : "PHP" : "symbol" }}
+                  </p>
+
+                  <p>
+                    ~{{ prod.distance }}km
+                    <img
+                      src="assets/icons/location.png"
+                      width="20"
+                      style="vertical-align: sub"
+                    />
+                  </p>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    height: 30px;
+                  "
+                >
+                  <p>
+                    {{ prod.shop.businessName }}
+                  </p>
+                  <p>
+                    {{ prod.rating | number : "1.1-1" }}
+                    <img
+                      src="assets/icons/star.png"
+                      width="20"
+                      style="vertical-align: sub"
+                    />
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </ng-container>
+        </div>
+      </ng-container>
+    </ng-container>
 
-        <div (click)="viewProduct(prod._id)" style="display: flex; gap: 7px">
-          <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
+    <ng-template #productListLoader>
+      <div *ngFor="let prod of [1, 2, 3, 4]; let i = index">
+        <div class="card">
+          <div class="loader" style="width: 100%; height: 188.5px"></div>
           <div class="card-content">
             <h5 class="line-clamp">
-              {{ prod.name }}
+              <div class="loader" style="width: 100%; height: 35px"></div>
             </h5>
             <div style="display: flex; gap: 7px; height: 20px">
-              <ng-container *ngFor="let b of prod.specialOffers">
-                <small
-                  *ngIf="b == '10000'"
-                  style="background-color: greenyellow; padding: 0px 7px"
-                  >{{ specialOfferLabels[b] }}</small
-                >
-                <small
-                  *ngIf="b == '10001'"
-                  style="background-color: pink; padding: 0px 7px"
-                  >{{ specialOfferLabels[b] }}</small
-                >
-              </ng-container>
+              <div class="loader" style="width: 88px; height: 24px"></div>
+              <div class="loader" style="width: 43px; height: 24px"></div>
             </div>
             <div
               style="
                 display: flex;
                 justify-content: space-between;
                 height: 20px;
+                margin-top: 7px;
               "
             >
-              <p class="price-color">
-                {{ prod.price | currency : "PHP" : "symbol" }}
-              </p>
+              <div class="loader" style="width: 60px; height: 24px"></div>
 
-              <p>
-                ~{{ prod.distance }}km
-                <img
-                  src="assets/icons/location.png"
-                  width="20"
-                  style="vertical-align: sub"
-                />
-              </p>
+              <div class="loader" style="width: 53px; height: 24px"></div>
             </div>
             <div
               style="
                 display: flex;
                 justify-content: space-between;
-                height: 30px;
+                height: 20px;
+                margin-top: 7px;
               "
             >
-              <p>
-                {{ prod.shop.businessName }}
-              </p>
-              <p>
-                {{ prod.rating | number : "1.1-1" }}
-                <img
-                  src="assets/icons/star.png"
-                  width="20"
-                  style="vertical-align: sub"
-                />
-              </p>
+              <div class="loader" style="width: 88px; height: 24px"></div>
+
+              <div class="loader" style="width: 47px; height: 24px"></div>
             </div>
           </div>
         </div>
       </div>
-    </ng-container>
-  </ng-container>
-
-  <ng-template #productListLoader>
-    <div *ngFor="let prod of [1, 2, 3, 4]; let i = index">
-      <div class="card">
-        <div class="loader" style="width: 100%; height: 188.5px"></div>
-        <div class="card-content">
-          <h5 class="line-clamp">
-            <div class="loader" style="width: 100%; height: 35px"></div>
-          </h5>
-          <div style="display: flex; gap: 7px; height: 20px">
-            <div class="loader" style="width: 88px; height: 24px"></div>
-            <div class="loader" style="width: 43px; height: 24px"></div>
-          </div>
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              height: 20px;
-              margin-top: 7px;
-            "
-          >
-            <div class="loader" style="width: 60px; height: 24px"></div>
-
-            <div class="loader" style="width: 53px; height: 24px"></div>
-          </div>
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              height: 20px;
-              margin-top: 7px;
-            "
-          >
-            <div class="loader" style="width: 88px; height: 24px"></div>
-
-            <div class="loader" style="width: 47px; height: 24px"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </ng-template>
   </ng-template>
-</ng-template>
+</ng-container>

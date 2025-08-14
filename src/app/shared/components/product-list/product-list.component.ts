@@ -12,6 +12,7 @@ import {
 } from "../../enums/index";
 import { FormControl } from "@angular/forms";
 import { MatSlideToggleChange } from "@angular/material/slide-toggle";
+import { I } from "@angular/cdk/keycodes";
 
 interface params {
   skip: number;
@@ -38,12 +39,13 @@ export class ProductListComponent implements OnInit {
   selectControl = new FormControl("latest"); // Default value
   products: object[] = [];
   productListOnLoad: boolean = true;
-  queryParams: params = { skip: 0, limit: 4 };
+  queryParams: params = { skip: 0, limit: 10 };
   meta: Meta = { limit: 0, page: 0, pages: 0, total: 0 };
   specialOfferIds = Object.values(SpecialOffer);
   specialOfferLabels = SpecialOfferLabels;
   @Input() showPublishSlider = false;
   @Input() isShop = false;
+  @Input() productVisibility = false;
 
   constructor(
     private hrs: HttpRequestService,

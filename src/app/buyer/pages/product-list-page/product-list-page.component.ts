@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 
 @Component({
   selector: "app-product-list-page",
@@ -7,8 +7,12 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ProductListPageComponent implements OnInit {
   static componentName = "ProductListPageComponent";
-
+  productVisibility = false;
   constructor() {}
 
   ngOnInit(): void {}
+
+  toggleProductVisibility() {
+    this.productVisibility = !this.productVisibility;
+  }
 }

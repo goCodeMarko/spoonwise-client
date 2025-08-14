@@ -2,8 +2,27 @@
   [routerOutletComponent]="routerOutletComponent"
 ></app-sticky-header>
 
-<div class="content">
-  <router-outlet (activate)="fromRouterOutlet($event)"></router-outlet>
+<div style="position: relative">
+  <div *ngIf="routerOutletComponent == 'ProductListPageComponent'">
+    <div *ngIf="!isMapLoading; else loading">
+      <app-map [isShop]="true" [disabled]="true" [buyers]="buyers"></app-map>
+    </div>
+    <ng-template #loading>
+      <div
+        class="loader"
+        style="
+          padding: 88px 7px 3px 7px;
+          height: 100vh;
+          z-index: 0;
+          border-radius: 10px;
+        "
+      ></div>
+    </ng-template>
+  </div>
+
+  <div class="content">
+    <router-outlet (activate)="fromRouterOutlet($event)"></router-outlet>
+  </div>
 </div>
 
 <app-sticky-footer
