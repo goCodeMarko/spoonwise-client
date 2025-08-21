@@ -13,3 +13,15 @@ export const selectBlog = (blogId: string) =>
     const blog = state.blogs.find((blog) => blog._id === blogId);
     return blog;
   });
+
+export const selectSavedBlogs = createSelector(selectBlogState, (state) => {
+  const savedBlogs = state.savedBlogs
+    .map((blog) => {
+      return { ...blog, isSaved: true };
+    })
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+    );
+  return savedBlogs;
+});

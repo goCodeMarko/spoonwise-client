@@ -71,6 +71,16 @@ export class HttpRequestService {
             return callback(error.error);
           }
         );
+      case "postV2":
+        URL = [
+          "serviceWorker/subscribe",
+          "order/lalamove/createOrder",
+          "order/checkout",
+        ].includes(endpoint)
+          ? environment.SERVER_URL_MAIN
+          : environment.SERVER_URL_CLUSTERS;
+
+        return this.http.post(`${URL}${endpoint}`, payload);
 
       case "put":
         URL =

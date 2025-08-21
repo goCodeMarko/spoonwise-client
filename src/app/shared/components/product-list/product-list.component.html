@@ -1,12 +1,5 @@
 <ng-container *ngIf="productVisibility">
-  <section
-    style="
-      background-color: white;
-      color: black;
-      border-radius: 10px;
-      margin-bottom: 7px;
-    "
-  >
+  <section style="background-color: white; color: black; border-radius: 10px">
     <div
       style="
         flex: 1;
@@ -111,7 +104,7 @@
             <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
             <div class="card-content">
               <b>
-                {{ prod.name | lineClamp : 15 }}
+                {{ prod.name | lineClamp : 25 }}
               </b>
               <div
                 style="display: flex; gap: 7px; height: 20px; margin-top: 7px"

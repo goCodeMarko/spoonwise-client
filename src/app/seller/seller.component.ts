@@ -17,6 +17,7 @@ import {
 } from "../shared/store/chat/chat.actions";
 import { HttpRequestService } from "../http-request/http-request.service";
 import _ from "lodash";
+import { getSavedBlogs } from "../shared/store/blog/blog.actions";
 
 @Component({
   selector: "app-seller",
@@ -103,6 +104,7 @@ export class SellerComponent implements OnInit, OnDestroy {
     this.store.dispatch(setToPay());
     this.store.dispatch(setTotalCountSentDeliveredMessages());
     this.store.dispatch(setChatrooms());
+    this.store.dispatch(getSavedBlogs());
   }
 
   ngOnDestroy(): void {

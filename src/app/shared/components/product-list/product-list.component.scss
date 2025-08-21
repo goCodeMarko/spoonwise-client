@@ -1,7 +1,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 7px;
   max-height: 42.7dvh;
   min-height: 42.7dvh;
   overflow-y: scroll;
@@ -12,7 +11,6 @@
 .container-seller {
   display: flex;
   flex-direction: column;
-  gap: 7px;
   // display: grid;
   // grid-template-columns: repeat(2, 1fr); /* Two equal columns */
   // gap: 7px; /* Space between cards */

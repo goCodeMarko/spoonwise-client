@@ -378,3 +378,11 @@ label.star {
     font-weight: 500;
   }
 }
+
+bottom-sheet {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 999999 !important; // ensure it's above map and header
+}

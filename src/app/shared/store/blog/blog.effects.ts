@@ -134,4 +134,97 @@ export class BlogEffects {
       })
     )
   );
+
+  getSavedBlogs$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BlogAction.getSavedBlogs),
+      mergeMap(({}) => {
+        return this.http
+          .get(`${environment.SERVER_URL_CLUSTERS}user/getSavedBlogs`, {})
+          .pipe(
+            map((response: any) => {
+              console.log("response", response);
+              let blogs = response.data || [];
+              return BlogAction.getSavedBlogsSuccess({
+                blogs,
+              });
+            }),
+            catchError((error: any) =>
+              of(
+                BlogAction.getSavedBlogsFailure({
+                  error: error.message,
+                })
+              )
+            )
+          );
+      })
+    )
+  );
+
+  saveBlog$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BlogAction.saveBlog),
+      mergeMap(({ blog }) => {
+        console.log("------------------blog", blog);
+        return this.http
+          .post(`${environment.SERVER_URL_MAIN}user/saveBlog/${blog._id}`, {})
+          .pipe(
+            tap((data: any) => {
+              console.log("Blog:", data);
+            }),
+            map((data: any) => {
+              if (data.success) {
+                console.log("blog", blog);
+                return BlogAction.saveBlogSuccess({ blog, data });
+              } else {
+                return BlogAction.saveBlogFailure({
+                  error: data.data.message,
+                });
+              }
+            }),
+            catchError((error: any) => {
+              console.log("error", error);
+              return of(
+                BlogAction.saveBlogFailure({
+                  error: error.message,
+                })
+              );
+            })
+          );
+      })
+    )
+  );
+
+  unsaveBlog$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BlogAction.unsaveBlog),
+      mergeMap(({ id }) => {
+        return this.http
+          .put(`${environment.SERVER_URL_MAIN}user/unsaveBlog/${id}`, {})
+          .pipe(
+            tap((data: any) => {
+              console.log("--------------unsaveBlog");
+              console.log("Blog:", data);
+            }),
+            map((data: any) => {
+              if (data.success) {
+                return BlogAction.unsaveBlogSuccess({ id, data });
+              } else {
+                return BlogAction.unsaveBlogFailure({
+                  error: data.data.message,
+                });
+              }
+            }),
+            catchError((error: any) => {
+              console.log("error", error);
+              return of(
+                BlogAction.unsaveBlogFailure({
+                  error: error.message,
+                })
+              );
+            })
+          );
+      })
+    )
+  );
 }

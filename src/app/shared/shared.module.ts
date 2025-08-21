@@ -48,7 +48,7 @@ import { BlogListComponent } from "./components/blog-list/blog-list/blog-list.co
 import { ViewBlogComponent } from "./components/view-blog/view-blog.component";
 import { HomeListComponent } from "./components/home-list/home-list.component";
 import { NearShopListComponent } from "./components/near-shop-list/near-shop-list.component";
-import { CountDown2Pipe } from './pipes/count-down2.pipe';
+import { CountDown2Pipe } from "./pipes/count-down2.pipe";
 
 @NgModule({
   declarations: [

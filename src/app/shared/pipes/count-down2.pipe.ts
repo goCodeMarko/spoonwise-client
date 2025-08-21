@@ -44,25 +44,21 @@ export class CountDown2Pipe implements PipeTransform, OnDestroy {
     // 2 days and above left
     if (diff > twoDays) {
       const days = Math.ceil(diff / oneDay);
-      return `${days} day${days > 1 ? "s" : ""} left`;
+      return `${days}d  left`;
     }
 
     //if below two days left
     if (diff <= twoDays && diff > fiftyNineMinutes) {
       const hours = Math.floor(diff / (60 * 60 * 1000));
       const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-      return `${this.pad(hours)} hour${hours > 1 ? "s" : ""} ${this.pad(
-        minutes
-      )} minute${minutes > 1 ? "s" : ""} left`;
+      return `${this.pad(hours)}h ${this.pad(minutes)}m left`;
     }
 
     // Less than or equal to 1 hour
     const hours = Math.floor(diff / (60 * 60 * 1000));
     const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
     const seconds = Math.floor((diff % (60 * 1000)) / 1000);
-    return `${this.pad(minutes)} minute${minutes > 1 ? "s" : ""} ${this.pad(
-      seconds
-    )} second${seconds > 1 ? "s" : ""} left`;
+    return `${this.pad(minutes)}m ${this.pad(seconds)}s left`;
   }
 
   private pad(num: number): string {

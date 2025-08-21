@@ -32,5 +32,6 @@ export interface IBlog {
 
 export interface IBlogState {
   blogs: IBlog[];
+  savedBlogs: IBlog[];
   error: any;
 }

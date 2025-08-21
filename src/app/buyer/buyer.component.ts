@@ -27,6 +27,7 @@ import {
   updateChatroomsMsgStatusToSeen,
 } from "../shared/store/chat/chat.actions";
 import { GeolocationService } from "../shared/services/geolocation/geolocation.service";
+import { getSavedBlogs } from "../shared/store/blog/blog.actions";
 
 @Component({
   selector: "app-buyer",
@@ -152,6 +153,7 @@ export class BuyerComponent implements OnInit, OnDestroy {
     this.store.dispatch(setToPay());
     this.store.dispatch(setTotalCountSentDeliveredMessages());
     this.store.dispatch(setChatrooms());
+    this.store.dispatch(getSavedBlogs());
   }
 
   ngOnDestroy(): void {
