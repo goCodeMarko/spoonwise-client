@@ -78,7 +78,7 @@ export class AddProductComponent implements OnInit {
       qty: [1, [Validators.required, Validators.min(1)]],
       price: ["", [Validators.required, Validators.min(0)]],
       specialOffers: [[], []],
-      online: [true],
+      isPublished: [true],
     });
   }
 
@@ -347,7 +347,7 @@ export class AddProductComponent implements OnInit {
       ctx.drawImage(img, startX, startY, size, size, 0, 0, size, size);
     }
 
-    const imgSrc = canvas.toDataURL("image/png");
+    const imgSrc = canvas.toDataURL("image/png", 0.1);
 
     this.copies.push({
       img: imgSrc,

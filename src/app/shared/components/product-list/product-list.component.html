@@ -1,5 +1,5 @@
 <ng-container *ngIf="productVisibility">
-  <section style="background-color: white; color: black; border-radius: 10px">
+  <section style="background-color: white; color: black; border-radius: 7px">
     <div
       style="
         flex: 1;
@@ -13,7 +13,7 @@
         <mat-form-field appearance="outline" style="color: white">
           <mat-select [formControl]="selectControl">
             <mat-option value="latest">Latest</mat-option>
-            <mat-option value="nearest">Nearest</mat-option>
+            <mat-option value="nearest" *ngIf="!isShop">Nearest</mat-option>
             <mat-option value="cheapest">Cheapest</mat-option>
           </mat-select>
         </mat-form-field>
@@ -75,17 +75,6 @@
     <ng-container *ngIf="!productListOnLoad; else productListLoader">
       <ng-container *ngFor="let prod of products; let i = index">
         <div class="card">
-          <ng-container *ngIf="showPublishSlider">
-            <div style="display: flex; justify-content: start; height: 30px">
-              <div>
-                <mat-slide-toggle
-                  [checked]="prod.isPublish"
-                  (change)="updatePublish(prod._id, $event)"
-                ></mat-slide-toggle>
-              </div>
-            </div>
-          </ng-container>
-
           <div
             style="
               position: absolute;
@@ -134,7 +123,7 @@
                     {{ prod.price | currency : "PHP" : "symbol" }}
                   </p>
 
-                  <p>
+                  <p *ngIf="!isShop">
                     ~{{ prod.distance }}km
                     <img
                       src="assets/icons/location.png"
@@ -153,7 +142,7 @@
                   <p>
                     {{ prod.shop.businessName }}
                   </p>
-                  <p>
+                  <p *ngIf="!isShop">
                     {{ prod.rating | number : "1.1-1" }}
                     <img
                       src="assets/icons/star.png"
@@ -161,6 +150,23 @@
                       style="vertical-align: sub"
                     />
                   </p>
+
+                  <ng-container *ngIf="showPublishSlider">
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: start;
+                        height: 30px;
+                      "
+                    >
+                      <div>
+                        <mat-slide-toggle
+                          [checked]="prod.isPublish"
+                          (change)="updatePublish(prod._id, $event)"
+                        ></mat-slide-toggle>
+                      </div>
+                    </div>
+                  </ng-container>
                 </div>
               </div>
             </div>

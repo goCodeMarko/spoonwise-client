@@ -840,7 +840,7 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
             };
           } else if (fileType.startsWith("application/pdf")) {
             // Handle PDF file
-            const typedArray = new Uint8Array(reader.result as ArrayBuffer);
+            const typedArray = reader.result as ArrayBuffer;
             const blob = new Blob([typedArray], { type: "application/pdf" });
 
             if (type === "bir") {
@@ -980,7 +980,7 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
     if (url) {
       let fetchx = await fetch(url);
       const arrayBuffer = await fetchx.arrayBuffer();
-      typedArray = new Uint8Array(arrayBuffer);
+      typedArray = arrayBuffer;
     }
 
     const pdf: PDFDocumentProxy = await getDocument({ data: typedArray! })
@@ -1009,7 +1009,7 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
     if (url) {
       let fetchx = await fetch(url);
       const arrayBuffer = await fetchx.arrayBuffer();
-      typedArray = new Uint8Array(arrayBuffer);
+      typedArray = arrayBuffer;
     }
 
     this.renderedPages = []; // clear before re-rendering

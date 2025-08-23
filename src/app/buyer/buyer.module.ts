@@ -31,8 +31,8 @@ import { ProfilePageComponent } from "./pages/profile-page/profile-page.componen
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
 import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
 import { ChatPageComponent } from "./pages/chat-page/chat-page.component";
-import { HomePageComponent } from './pages/home-page/home-page.component';
-import { ViewBlogPageComponent } from './pages/view-blog-page/view-blog-page.component';
+import { HomePageComponent } from "./pages/home-page/home-page.component";
+import { ViewBlogPageComponent } from "./pages/view-blog-page/view-blog-page.component";
 
 @NgModule({
   declarations: [

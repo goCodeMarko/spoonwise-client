@@ -204,7 +204,7 @@
         <div>
           <div *ngIf="order.latestStatus.status == 'TO_RECEIVE' && !isShop">
             <button
-              mat-stroked-button
+              mat-flat-button
               *ngIf="order.reviews.rate == 0"
               (click)="
                 openStoreRatingSheet(
@@ -220,7 +220,13 @@
         </div>
 
         <div style="display: flex; flex-direction: row-reverse; gap: 7px">
-          <div style="display: flex; gap: 7px">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+            "
+          >
             <div
               *ngIf="
                 order.latestStatus.status == 'TO_PAY' ||
@@ -228,7 +234,7 @@
               "
             >
               <button
-                mat-stroked-button
+                mat-flat-button
                 [disabled]="isCancelBtnLoad"
                 (click)="
                   updateOrderStatus(
@@ -255,7 +261,7 @@
               >
                 <button
                   color="main-green"
-                  mat-stroked-button
+                  mat-flat-button
                   (click)="
                     updateOrderStatus(
                       order,
@@ -280,10 +286,10 @@
             >
               <button
                 color="main-green"
-                mat-stroked-button
+                mat-flat-button
                 (click)="payNow(order?.invoice?.url)"
               >
-                Pay Now
+                Pay Now ({{ order?.invoice.expiryDate | countdown2 }})
               </button>
             </div>
 
@@ -291,7 +297,7 @@
               <div *ngIf="order.latestStatus.status == 'FOR_REVIEW' && isShop">
                 <button
                   color="main-green"
-                  mat-stroked-button
+                  mat-flat-button
                   (click)="
                     updateOrderStatus(
                       order,
@@ -310,7 +316,7 @@
               <div *ngIf="order.latestStatus.status == 'TO_PACK' && isShop">
                 <button
                   color="main-green"
-                  mat-stroked-button
+                  mat-flat-button
                   (click)="
                     updateOrderStatus(
                       order,
@@ -351,7 +357,7 @@
                 "
               >
                 <button
-                  mat-stroked-button
+                  mat-flat-button
                   (click)="openSheet(mySheet, order.shop._id, order.orderId)"
                 >
                   <img
@@ -373,7 +379,7 @@
               "
               (click)="pickUpMeetUp(order.orderId, order.shop._id)"
             >
-              <button mat-stroked-button>
+              <button mat-flat-button>
                 {{ order.shippingOption == "PICK_UP" ? "PICK UP" : "MEET UP" }}
               </button>
             </div>
