@@ -14,6 +14,7 @@ import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.com
 import { ChatComponent } from "../shared/components/chat/chat.component";
 import { HomePageComponent } from "./pages/home-page/home-page.component";
 import { ViewBlogPageComponent } from "./pages/view-blog-page/view-blog-page.component";
+import { ViewShopPageComponent } from "./pages/view-shop-page/view-shop-page.component";
 
 const BuyerRoutes: Routes = [
   {
@@ -50,6 +51,10 @@ const BuyerRoutes: Routes = [
       {
         path: "chats/:id",
         component: ChatComponent,
+      },
+      {
+        path: "deals/shop/:shopId",
+        component: ViewShopPageComponent,
       },
     ],
   },

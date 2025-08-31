@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  max-height: 42.7dvh;
+
   min-height: 42.7dvh;
   overflow-y: scroll;
   padding: 0px 0px 100px 0px;
@@ -14,7 +14,7 @@
   // display: grid;
   // grid-template-columns: repeat(2, 1fr); /* Two equal columns */
   // gap: 7px; /* Space between cards */
-  max-height: 42.7dvh;
+
   min-height: 42.7dvh;
   overflow-y: scroll;
   padding: 0px 0px 100px 0px;
@@ -40,6 +40,10 @@
 
   &:last-child {
     border-radius: 0px 0px 7px 7px;
+  }
+
+  &:only-child {
+    border-radius: 7px;
   }
 }
 

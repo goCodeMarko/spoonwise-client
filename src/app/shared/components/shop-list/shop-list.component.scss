@@ -1,0 +1,30 @@
+::ng-deep .blog-content img {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+.card {
+  background: white;
+  border-radius: 0px;
+  // overflow: hidden;
+  text-align: left;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: none;
+  padding: 3px;
+
+  &:first-child {
+    border-radius: 7px 7px 0px 0px;
+  }
+
+  &:last-child {
+    border-radius: 0px 0px 7px 7px;
+  }
+
+  &:only-child {
+    border-radius: 7px;
+  }
+}

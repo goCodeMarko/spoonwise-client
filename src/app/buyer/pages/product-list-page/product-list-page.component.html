@@ -1,32 +1,47 @@
 <button
-  style="
-    position: absolute;
-    z-index: 2;
-    top: 323px;
-    left: 7%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 10px;
-    color: #f8da50;
-    padding: 4px;
-    border: none;
-    width: 38px;
-  "
+  class="side-button"
+  style="top: 263px; left: 7%; transform: translate(-50%, -50%)"
   (click)="toggleProductVisibility()"
 >
-  <i class="material-icons">restaurant</i>
+  <i
+    class="material-icons"
+    [ngStyle]="{ color: productVisibility ? '#f8da50' : '#f6f6f6' }"
+    >restaurant</i
+  >
 </button>
+
+<button
+  class="side-button"
+  style="top: 313px; left: 7%; transform: translate(-50%, -50%)"
+  (click)="toggleShopProductVisibility()"
+>
+  <i
+    class="material-icons"
+    [ngStyle]="{ color: ratingVisibility ? '#f8da50' : '#f6f6f6' }"
+  >
+    star
+  </i>
+</button>
+<button
+  class="side-button"
+  style="top: 363px; left: 7%; transform: translate(-50%, -50%)"
+  (click)="toggleDistanceVisibility()"
+>
+  <i
+    class="material-icons"
+    [ngStyle]="{ color: distanceVisibility ? '#f8da50' : '#f6f6f6' }"
+  >
+    route
+  </i>
+</button>
+<app-shop-list
+  [distanceVisibility]="distanceVisibility"
+  [ratingVisibility]="ratingVisibility"
+  [sortBy]="'rating'"
+  class="position"
+></app-shop-list>
 <app-product-list
-  [productVisibility]="productVisibility"
+  [visibility]="productVisibility"
   [showPublishSlider]="false"
-  style="
-    position: absolute;
-    z-index: 2;
-    top: 395px;
-    left: 0;
-    right: 0;
-    margin-left: 7px;
-    margin-right: 7px;
-    width: auto;
-  "
+  class="position"
 ></app-product-list>

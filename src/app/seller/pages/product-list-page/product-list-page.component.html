@@ -14,10 +14,14 @@
   "
   (click)="toggleProductVisibility()"
 >
-  <i class="material-icons">restaurant</i>
+  <i
+    class="material-icons"
+    [ngStyle]="{ color: productVisibility ? '#f8da50' : '#f6f6f6' }"
+    >restaurant</i
+  >
 </button>
 <app-product-list
-  [productVisibility]="productVisibility"
+  [visibility]="productVisibility"
   [showPublishSlider]="true"
   [isShop]="true"
   style="

@@ -6,7 +6,7 @@ import * as _ from "lodash";
 import { AuthService } from "../authorization/auth.service";
 import { Location } from "@angular/common";
 import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subject, Subscription, takeUntil } from "rxjs";
 
 import {
   selectLineItemCount,
@@ -47,6 +47,7 @@ export class BuyerComponent implements OnInit, OnDestroy {
   onUpdateChatroomsMsgStatusToDelivered: Subscription;
   onUpdateChatroomsMsgStatusToSeen: Subscription;
   onReceivedChunksFromAI: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -135,10 +136,12 @@ export class BuyerComponent implements OnInit, OnDestroy {
     this.getCategories();
     this.getSpecialOffers();
 
-    this.route.queryParams.subscribe((params) => {
-      console.log("params", params);
-      if (params.radius) this.radius = params.radius;
-    });
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        console.log("params", params);
+        if (params.radius) this.radius = params.radius;
+      });
 
     this.route.queryParams.subscribe((params) => {
       console.log("params------", params.shop);
@@ -161,6 +164,9 @@ export class BuyerComponent implements OnInit, OnDestroy {
     this.onUpdateChatroomsMsgStatusToDelivered.unsubscribe();
     this.onNewChatMessage.unsubscribe();
     this.onUpdateChatroomsMsgStatusToSeen.unsubscribe();
+    this.onReceivedChunksFromAI.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getCategories() {

@@ -1,9 +1,19 @@
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  ChangeDetectorRef,
+  SimpleChange,
+  SimpleChanges,
+} from "@angular/core";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import * as _ from "lodash";
 import { ActivatedRoute, Route, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
-import { Observable } from "rxjs";
+import { Observable, Subject, takeUntil } from "rxjs";
 import {
   ProductCategory,
   ProductCategoryLabels,
@@ -35,7 +45,7 @@ interface Meta {
   templateUrl: "./product-list.component.html",
   styleUrls: ["./product-list.component.scss"],
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
   selectControl = new FormControl("latest"); // Default value
   products: object[] = [];
   productListOnLoad: boolean = true;
@@ -45,7 +55,8 @@ export class ProductListComponent implements OnInit {
   specialOfferLabels = SpecialOfferLabels;
   @Input() showPublishSlider = false;
   @Input() isShop = false;
-  @Input() productVisibility = false;
+  @Input() visibility = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private hrs: HttpRequestService,
@@ -62,31 +73,34 @@ export class ProductListComponent implements OnInit {
         queryParamsHandling: "merge",
       });
     });
-    this.route.queryParams.subscribe((params) => {
-      this.queryParams = { ...this.queryParams, ...params };
-      console.log("this.queryParams", this.queryParams);
-      if (params.page) this.queryParams.skip = params.page - 1;
-      if (params.sort) this.queryParams.sort = params.sort;
-      if (params.search) this.queryParams.search = params.search;
-      else delete this.queryParams.search;
-      if (params.categories)
-        this.queryParams.categories = params.categories.split(" ");
-      else delete this.queryParams.categories;
-      if (params.specialOffer)
-        this.queryParams.specialOffer = params.specialOffer;
-      else delete this.queryParams.specialOffer;
+    this.listenToQueryParams();
+  }
 
-      this.getProducts();
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["visibility"]) {
+      const currentVisibility = changes["visibility"].currentValue;
+
+      if (!currentVisibility) {
+        this.destroy$.next();
+      } else {
+        this.listenToQueryParams();
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getProducts() {
     this.productListOnLoad = true;
+    const shop = this.route.snapshot.paramMap.get("shopId") || "";
 
     this.hrs.request(
       "get",
       "product/getProducts",
-      this.queryParams,
+      { ...this.queryParams, shop },
       async (res: any) => {
         if (res.success && _.has(res, "data")) {
           this.products = res.data.items;
@@ -150,5 +164,30 @@ export class ProductListComponent implements OnInit {
         }
       }
     );
+  }
+
+  private listenToQueryParams() {
+    if (!this.visibility) return;
+
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        this.queryParams = { ...this.queryParams, ...params };
+
+        if (params.page) this.queryParams.skip = params.page - 1;
+        if (params.sort) this.queryParams.sort = params.sort;
+        if (params.search) this.queryParams.search = params.search;
+        else delete this.queryParams.search;
+
+        if (params.categories)
+          this.queryParams.categories = params.categories.split(" ");
+        else delete this.queryParams.categories;
+
+        if (params.specialOffer)
+          this.queryParams.specialOffer = params.specialOffer;
+        else delete this.queryParams.specialOffer;
+        console.log("---shared/product-list");
+        this.getProducts();
+      });
   }
 }

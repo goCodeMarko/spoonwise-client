@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NearShopListComponent } from './near-shop-list.component';
+import { ViewShopPageComponent } from './view-shop-page.component';
 
-describe('NearShopListComponent', () => {
-  let component: NearShopListComponent;
-  let fixture: ComponentFixture<NearShopListComponent>;
+describe('ViewShopPageComponent', () => {
+  let component: ViewShopPageComponent;
+  let fixture: ComponentFixture<ViewShopPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NearShopListComponent ]
+      declarations: [ ViewShopPageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NearShopListComponent);
+    fixture = TestBed.createComponent(ViewShopPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

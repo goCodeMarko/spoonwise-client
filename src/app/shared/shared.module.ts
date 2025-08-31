@@ -47,7 +47,7 @@ import { LineClampPipe } from "./pipes/line-clamp/line-clamp.pipe";
 import { BlogListComponent } from "./components/blog-list/blog-list/blog-list.component";
 import { ViewBlogComponent } from "./components/view-blog/view-blog.component";
 import { HomeListComponent } from "./components/home-list/home-list.component";
-import { NearShopListComponent } from "./components/near-shop-list/near-shop-list.component";
+import { ShopListComponent } from "./components/shop-list/shop-list.component";
 import { CountDown2Pipe } from "./pipes/count-down2.pipe";
 
 @NgModule({
@@ -76,7 +76,7 @@ import { CountDown2Pipe } from "./pipes/count-down2.pipe";
     BlogListComponent,
     ViewBlogComponent,
     HomeListComponent,
-    NearShopListComponent,
+    ShopListComponent,
     CountDown2Pipe,
   ],
   imports: [
@@ -125,6 +125,7 @@ import { CountDown2Pipe } from "./pipes/count-down2.pipe";
     BlogListComponent,
     ViewBlogComponent,
     HomeListComponent,
+    ShopListComponent,
   ],
   providers: [MenuItems],
 })

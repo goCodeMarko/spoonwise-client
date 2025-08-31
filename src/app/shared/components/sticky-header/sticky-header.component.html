@@ -12,7 +12,11 @@
   class="sticky-header"
 >
   <ng-container
-    *ngIf="routerOutletComponent != 'ProductListPageComponent'; else searchbar"
+    *ngIf="
+      routerOutletComponent != 'ProductListPageComponent' &&
+        routerOutletComponent != 'ViewShopPageComponent';
+      else searchbar
+    "
   >
     <ng-container
       *ngIf="
@@ -55,10 +59,10 @@
 
   <ng-template #searchbar>
     <button
-      *ngIf="isShopViewing"
       mat-icon-button
       class="mat-icon-size"
       (click)="goBack()"
+      *ngIf="routerOutletComponent === 'ViewShopPageComponent'"
     >
       <mat-icon>arrow_back_ios</mat-icon>
     </button>
@@ -66,7 +70,11 @@
       <input
         type="search"
         class="form-control"
-        placeholder="Search"
+        [placeholder]="
+          routerOutletComponent === 'ViewShopPageComponent'
+            ? 'Search in Shop'
+            : 'Search'
+        "
         aria-label="Search"
         aria-describedby="search-addon"
         (keyup.enter)="emitSearch()"
@@ -76,7 +84,7 @@
       <button
         mat-flat-button
         style="height: 50px; text-align: center"
-        (click)="openBottomSheet()"
+        (click)="emitSearch()"
       >
         <img src="assets/icons/search.png" width="40" />
       </button>

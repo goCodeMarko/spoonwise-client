@@ -1,4 +1,4 @@
-<ng-container *ngIf="productVisibility">
+<ng-container *ngIf="visibility">
   <section style="background-color: white; color: black; border-radius: 7px">
     <div
       style="
@@ -40,13 +40,6 @@
           {{ this.meta.page }} of {{ this.meta.pages }}
         </div>
 
-        <!-- style="
-          width: 70px;
-          height: 70px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        " -->
         <button
           [disabled]="this.meta.page === this.meta.pages"
           (click)="next()"
@@ -66,7 +59,14 @@
     </div>
   </ng-container>
   <ng-template #shopContainer>
-    <div class="container-seller">
+    <div
+      class="container-seller"
+      [ngStyle]="{
+        'min-height': this.route.snapshot.paramMap.get('shopId')
+          ? '72dvh'
+          : '42.7dvh'
+      }"
+    >
       <ng-container *ngTemplateOutlet="productList"></ng-container>
     </div>
   </ng-template>
