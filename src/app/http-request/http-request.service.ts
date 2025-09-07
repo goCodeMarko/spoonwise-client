@@ -80,7 +80,12 @@ export class HttpRequestService {
           ? environment.SERVER_URL_MAIN
           : environment.SERVER_URL_CLUSTERS;
 
-        return this.http.post(`${URL}${endpoint}`, payload);
+        return this.http.post(`${URL}${endpoint}`, payload).pipe(
+          catchError((error) => {
+            console.error("HTTP error:", error); // Optionally log to monitoring
+            throw error; // Re-throw so component can handle it
+          })
+        );
 
       case "put":
         URL =

@@ -168,8 +168,8 @@ export class MapComponent
     }
 
     if (!this.isShop) {
-      if (this.detectCurrentLocation && !this.checkDBLocation)
-        await this.getCurrentPosition();
+      // if (this.detectCurrentLocation && !this.checkDBLocation)
+      await this.getCurrentPosition();
       if (this.checkDBLocation) await this.getPositionFromDB();
     } else if (this.isShop) {
       await this.getShopCoordinates();

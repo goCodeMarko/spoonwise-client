@@ -1,14 +1,18 @@
 import {
-  AfterViewChecked,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
 } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { GeolocationService } from "src/app/shared/services/geolocation/geolocation.service";
 import { allowedEmailDomainsValidator } from "../../shared/form-validators/allowed-email-domains.validator";
 import { passwordsMatchValidator } from "../../shared/form-validators/passwords-match.validator";
@@ -17,14 +21,29 @@ import * as _ from "lodash";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { MatDialog } from "@angular/material/dialog";
 import { PopUpModalComponent } from "src/app/modals/pop-up-modal/pop-up-modal.component";
+import { passwordGroupRequiredValidator } from "src/app/shared/form-validators/password-group-required.validator";
+import {
+  catchError,
+  exhaustMap,
+  filter,
+  finalize,
+  map,
+  Subject,
+  takeUntil,
+  tap,
+} from "rxjs";
 
+interface ICreateAccountPayload {
+  account: any;
+  modalContent: { title: string; message: string };
+}
 @Component({
   selector: "app-register",
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.scss"],
 })
-export class RegisterComponent implements OnInit, OnChanges, AfterViewChecked {
-  registrationForm!: FormGroup;
+export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
+  registrationForm: FormGroup;
   subject!: {
     coordinates: {
       lat: string | number;
@@ -35,6 +54,8 @@ export class RegisterComponent implements OnInit, OnChanges, AfterViewChecked {
   createAccountLoad = false;
   @Output() onBack = new EventEmitter();
   @Input() currentDisplay: string = "";
+  private createAccount$ = new Subject<ICreateAccountPayload>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private geolocationService: GeolocationService,
@@ -42,179 +63,172 @@ export class RegisterComponent implements OnInit, OnChanges, AfterViewChecked {
     private hrs: HttpRequestService,
     private dialog: MatDialog
   ) {
-    this.initForm();
+    this.registrationForm = this.setForm();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.createAccount$
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(() => this.registrationForm.valid),
+        tap(() => (this.createAccountLoad = true)),
+        exhaustMap(({ account, modalContent }) =>
+          this.hrs.request("postV2", "user/addUser", account).pipe(
+            map((res) => ({ res, modalContent })),
+            catchError((error) => {
+              this.dialog.open(PopUpModalComponent, {
+                width: "500px",
+                data: {
+                  deletebutton: false,
+                  okaybutton: true,
+                  okayBtnText: "Close",
+                  title: "Something went wrong",
+                  message: error?.error?.message || "Unable to create account.",
+                  file: "assets/icons/error.png",
+                },
+              });
 
-  ngAfterViewChecked(): void {}
+              return error;
+            })
+          )
+        ),
+        finalize(() => (this.createAccountLoad = false))
+      )
+      .subscribe(({ res, modalContent }: any) => {
+        if (res.data && res.success) {
+          this.back();
+          this.dialog.open(PopUpModalComponent, {
+            width: "500px",
+            data: {
+              deletebutton: false,
+              okaybutton: true,
+              okayBtnText: `<b><span style="font-size: 30px;line-height: 1;vertical-align: middle;">🎉</span> Sounds good!</b>`,
+              title: modalContent.title,
+              message: modalContent.message,
+              file: "assets/icons/party.png",
+            },
+          });
+        }
+      });
+  }
 
   ngOnChanges(change: any) {
-    console.log("==========change", change.currentDisplay.currentValue);
     this.currentDisplay = change.currentDisplay.currentValue;
-    this.initForm();
-  }
-
-  onDragend(event: any) {
-    console.log("=============event", event);
-    this.coordinates = {
-      lat: event.lat.toString(),
-      lng: event.lng.toString(),
-    };
-  }
-
-  detectCurrentLocation = false;
-  initForm() {
+    this.registrationForm = this.setForm();
     if (this.currentDisplay === "seller-form") {
-      this.detectCurrentLocation = true;
-      // this.geolocationService
-      //   .getCurrentPosition()
-      //   .then((position) => {
-      //     this.coordinates = {
-      //       lat: position.coords.latitude.toString(),
-      //       lng: position.coords.longitude.toString(),
-      //     };
-      //     this.subject = {
-      //       coordinates: {
-      //         lat: position.coords.latitude.toString(),
-      //         lng: position.coords.longitude.toString(),
-      //       },
-      //     };
-      //   })
-      //   .catch((err) => {
-      //     console.error(err);
-      //   });
-
-      this.registrationForm = this.fb.group({
-        firstname: ["", Validators.required],
-        lastname: ["", Validators.required],
-        businessname: ["", Validators.required],
-        email: [
-          "",
-          [
-            Validators.required,
-            Validators.email,
-            allowedEmailDomainsValidator(["gmail.com", "ymail.com"]),
-          ],
-        ],
-
-        passwordGroup: this.fb.group(
-          {
-            password: ["", [Validators.required, passwordStrengthValidator()]],
-            confirmPassword: ["", Validators.required],
-          },
-          { validators: passwordsMatchValidator }
-        ),
-      });
+      this.registrationForm.addControl(
+        "businessname",
+        this.fb.control("", Validators.required)
+      );
     } else {
-      this.registrationForm = this.fb.group({
-        firstname: ["", Validators.required],
-        lastname: ["", Validators.required],
-        email: [
-          "",
-          [
-            Validators.required,
-            Validators.email,
-            allowedEmailDomainsValidator(["gmail.com", "ymail.com"]),
-          ],
-        ],
-        passwordGroup: this.fb.group(
-          {
-            password: ["", [Validators.required, passwordStrengthValidator()]],
-            confirmPassword: ["", Validators.required],
-          },
-          { validators: passwordsMatchValidator }
-        ),
-      });
+      if (!this.registrationForm.get("businessname")) return;
+
+      this.registrationForm.removeControl("businessname");
     }
-    this.registrationForm.reset();
-    this.resetFormErrors();
   }
 
-  resetFormErrors() {
-    // // Mark all controls as pristine and untouched, and clear their errors
-    // this.registrationForm.markAsPristine();
-    // this.registrationForm.markAsUntouched();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-    // Iterate over all form controls to clear their errors
-    Object.values(this.registrationForm.controls).forEach((control) => {
-      if (control instanceof FormGroup) {
-        Object.values(control.controls).forEach((innerControl) => {
-          innerControl.reset(); // ✅ This clears value + state
-        });
-      } else {
-        control.reset(); // ✅ This clears value + state
-      }
+  setForm(): FormGroup {
+    return this.fb.group({
+      firstname: ["", Validators.required],
+      lastname: ["", Validators.required],
+      email: [
+        "",
+        [
+          Validators.required,
+          Validators.email,
+          allowedEmailDomainsValidator(["gmail.com", "ymail.com"]),
+        ],
+      ],
+      passwordGroup: this.fb.group(
+        {
+          password: ["", [passwordStrengthValidator()]],
+          confirmPassword: [""],
+        },
+        {
+          validators: [passwordsMatchValidator, passwordGroupRequiredValidator],
+        }
+      ),
     });
   }
 
-  passwordGroupHasError(errorCode: string): boolean {
-    const group = this.registrationForm.get("passwordGroup");
-    return !!(
-      group &&
-      group.hasError(errorCode) &&
-      (group.dirty || group.touched)
-    );
-  }
-
-  isInvalid(
-    formcontrol: string,
-    formgroup: null | string = null,
-    formGroupErrorOnly = false
+  isInvalidFormGroup(
+    formGroupName: string,
+    displayName: string
   ): object | null {
-    const element = formgroup
-      ? formGroupErrorOnly
-        ? this.registrationForm.get(formgroup)
-        : this.registrationForm.get(`${formgroup}.${formcontrol}`)
-      : this.registrationForm.get(formcontrol);
-    let errors = element?.errors || {};
+    const formGroup = this.registrationForm.get(formGroupName);
     let message = "";
 
-    if (!errors?.passwordStrength?.hasUppercase)
-      message += "Password must contain at least one capital letter.<br>";
-    if (!errors?.passwordStrength?.hasNumber)
-      message += "Password must contain at least one number.<br>";
-    if (!errors?.passwordStrength?.hasSpecialChar)
-      message += "Password must contain at least one special character.<br>";
-    if (!errors?.passwordStrength?.isLongEnough)
-      message += "Password must be at least 8 characters long.";
-    if (errors?.required) message = "First Name is required.";
-    if (errors?.passwordsMismatch) message = "Passwords do not match.";
-    if (errors?.invalidDomain)
-      message = "Only @gmail.com and @ymail.com email addresses are allowed.";
+    if (!formGroup) return null;
+    if (!(formGroup instanceof FormGroup)) return null;
+    if (!((formGroup.touched || formGroup.dirty) && formGroup.invalid))
+      return null;
 
-    if (
-      element &&
-      element.invalid &&
-      (element.dirty || element.touched) &&
-      !formGroupErrorOnly
-    ) {
-      return { errors, message };
-    }
-    if (
-      formGroupErrorOnly &&
-      formgroup == "passwordGroup" &&
-      element &&
-      element.invalid &&
-      (this.registrationForm.get(`${formgroup}.${formcontrol}`)?.dirty ||
-        this.registrationForm.get(`${formgroup}.${formcontrol}`)?.touched)
-    ) {
-      return { errors, message };
-    }
+    if (formGroupName === "passwordGroup") {
+      const password = formGroup.get("password");
+      const confirmPassword = formGroup.get("confirmPassword");
 
-    return null;
-  }
-  markAllTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach((control) => {
-      control.markAsTouched();
-      if (control instanceof FormGroup) {
-        this.markAllTouched(control); // Recursively mark nested form groups
+      if (formGroup.hasError("groupRequired") && password?.touched) {
+        return { message: `${displayName} is required.<br>` };
       }
-    });
+
+      if (
+        formGroup.hasError("passwordsMismatch") &&
+        password?.dirty &&
+        confirmPassword?.touched
+      ) {
+        message = `${displayName} do not match.<br>`;
+      }
+    }
+
+    return { message: message };
   }
 
-  back() {
-    this.onBack.emit();
+  isInvalidFormControl(
+    formControlName: string,
+    displayName: string
+  ): { message: string } | null {
+    const formControl = this.registrationForm.get(formControlName);
+    let message = "";
+
+    if (!formControl) return null;
+    if (!(formControl instanceof FormControl)) return null;
+    if (!((formControl.touched || formControl.dirty) && formControl.invalid))
+      return null;
+
+    if (formControl.hasError("required")) {
+      message = `${displayName} is required.<br>`;
+    }
+
+    if (formControlName === "email") {
+      if (formControl.hasError("invalidDomain")) {
+        message = `Only @gmail.com and @ymail.com email addresses are allowed.<br>`;
+      }
+    }
+
+    if (formControlName === "passwordGroup.password") {
+      if (!formControl.hasError("passwordStrength")) return null;
+
+      if (!formControl.errors?.passwordStrength.hasUppercase) {
+        message += `${displayName} must contain at least one capital letter.<br>`;
+        console.log("messahe", message);
+      }
+      if (!formControl.errors?.passwordStrength.hasNumber) {
+        message += `${displayName} must contain at least one number.<br>`;
+      }
+      if (!formControl.errors?.passwordStrength.hasSpecialChar) {
+        message += `${displayName} must contain at least one special character.<br>`;
+      }
+      if (!formControl.errors?.passwordStrength.isLongEnough) {
+        message += `${displayName} must be at least 8 characters long.<br>`;
+      }
+    }
+
+    return { message: message };
   }
 
   async createAccount() {
@@ -240,22 +254,27 @@ export class RegisterComponent implements OnInit, OnChanges, AfterViewChecked {
         message: `You're all set! Start exploring amazing products and enjoy seamless shopping with your new account.`,
       };
     }
+    this.createAccount$.next({ account, modalContent });
+  }
 
-    this.hrs.request("post", "user/addUser", account, (res: any) => {
-      if (res.data && res.success) {
-        this.back();
-        this.dialog.open(PopUpModalComponent, {
-          width: "500px",
-          data: {
-            deletebutton: false,
-            okaybutton: true,
-            okayBtnText: `<b><span style="font-size: 30px;line-height: 1;vertical-align: middle;">🎉</span> Sounds good!</b>`,
-            title: modalContent.title,
-            message: modalContent.message,
-            file: "assets/icons/party.png",
-          },
-        });
+  markAllTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markAllTouched(control); // Recursively mark nested form groups
       }
     });
+  }
+
+  detectCurrentLocation = false;
+  onDragend(event: any) {
+    this.coordinates = {
+      lat: event.lat.toString(),
+      lng: event.lng.toString(),
+    };
+  }
+
+  back() {
+    this.onBack.emit();
   }
 }

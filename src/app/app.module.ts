@@ -56,7 +56,7 @@ import { ViewShopModalComponent } from "./modals/view-shop-modal/view-shop-modal
 import { SelectAudienceModalComponent } from "./modals/select-audience-modal/select-audience-modal.component";
 import { blogReducer } from "./shared/store/blog/blog.reducer";
 import { BlogEffects } from "./shared/store/blog/blog.effects";
-import { PipesPipe } from './line-clamp/shared/pipes.pipe';
+import { PipesPipe } from "./line-clamp/shared/pipes.pipe";
 
 @NgModule({
   declarations: [

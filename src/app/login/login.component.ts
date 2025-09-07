@@ -75,28 +75,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  private transactionId!: string;
-  private getTransaction(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // Parse the client's local timezone
-      const startDate = moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss");
-      const endDate = moment().endOf("day").format("YYYY-MM-DDTHH:mm:ss");
-
-      this.hrs.request(
-        "get",
-        "transaction/getTransaction",
-        { startDate, endDate },
-        async (res: any) => {
-          if (res.success && _.has(res, "data")) {
-            this.transactionId = res.data?._id;
-          }
-
-          resolve();
-        }
-      );
-    });
-  }
-
   async openSheet<T>(
     content: BottomSheetContent<OtpSheetProps>,
     userId: string,
