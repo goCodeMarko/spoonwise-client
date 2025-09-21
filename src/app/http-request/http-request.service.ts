@@ -23,7 +23,21 @@ export class HttpRequestService {
         return this.http.get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
           params: payload,
         });
+      case "postV2":
+        URL = [
+          "serviceWorker/subscribe",
+          "order/lalamove/createOrder",
+          "order/checkout",
+        ].includes(endpoint)
+          ? environment.SERVER_URL_MAIN
+          : environment.SERVER_URL_CLUSTERS;
 
+        return this.http.post(`${URL}${endpoint}`, payload).pipe(
+          catchError((error) => {
+            console.error("HTTP error:", error); // Optionally log to monitoring
+            throw error; // Re-throw so component can handle it
+          })
+        );
       case "download":
         return this.http
           .get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
@@ -70,21 +84,6 @@ export class HttpRequestService {
           (error) => {
             return callback(error.error);
           }
-        );
-      case "postV2":
-        URL = [
-          "serviceWorker/subscribe",
-          "order/lalamove/createOrder",
-          "order/checkout",
-        ].includes(endpoint)
-          ? environment.SERVER_URL_MAIN
-          : environment.SERVER_URL_CLUSTERS;
-
-        return this.http.post(`${URL}${endpoint}`, payload).pipe(
-          catchError((error) => {
-            console.error("HTTP error:", error); // Optionally log to monitoring
-            throw error; // Re-throw so component can handle it
-          })
         );
 
       case "put":

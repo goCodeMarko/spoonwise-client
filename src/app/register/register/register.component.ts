@@ -13,7 +13,6 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
-import { GeolocationService } from "src/app/shared/services/geolocation/geolocation.service";
 import { allowedEmailDomainsValidator } from "../../shared/form-validators/allowed-email-domains.validator";
 import { passwordsMatchValidator } from "../../shared/form-validators/passwords-match.validator";
 import { passwordStrengthValidator } from "src/app/shared/form-validators/password-string.validator";
@@ -58,7 +57,6 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private geolocationService: GeolocationService,
     private fb: FormBuilder,
     private hrs: HttpRequestService,
     private dialog: MatDialog
@@ -156,7 +154,7 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  isInvalidFormGroup(
+  isFormGroupInvalid(
     formGroupName: string,
     displayName: string
   ): object | null {
@@ -188,7 +186,7 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
     return { message: message };
   }
 
-  isInvalidFormControl(
+  isFormControlInvalid(
     formControlName: string,
     displayName: string
   ): { message: string } | null {

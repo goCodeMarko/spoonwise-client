@@ -1,11 +1,10 @@
 .container {
   display: flex;
   flex-direction: column;
-
-  min-height: 42.7dvh;
+  height: 418px;
   overflow-y: scroll;
-  padding: 0px 0px 100px 0px;
-  margin: 3px 0px;
+  padding: 0px 0px 0px 0px;
+  // margin: 3px 0px;
 }
 
 .container-seller {

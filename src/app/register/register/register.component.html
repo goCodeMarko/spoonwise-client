@@ -1,5 +1,5 @@
 <div style="padding: 7px">
-  <form [formGroup]="registrationForm" style="padding-top: 57px">
+  <form [formGroup]="registrationForm" style="padding: 57px 30px">
     <div style="display: flex; flex-direction: column">
       <ng-container *ngIf="currentDisplay === 'seller-form'">
         <app-map
@@ -7,7 +7,7 @@
           [detectCurrentLocation]="detectCurrentLocation"
           [checkDBLocation]="false"
           [disabled]="false"
-          class="mb-1"
+          class="mb-2"
         ></app-map>
       </ng-container>
       <ng-container *ngIf="currentDisplay === 'seller-form'">
@@ -22,7 +22,7 @@
           "
         />
         <ng-container
-          *ngIf="isInvalidFormControl('businessname', 'Business Name') as err"
+          *ngIf="isFormControlInvalid('businessname', 'Business Name') as err"
         >
           <mat-error [innerHtml]="err.message"></mat-error>
         </ng-container>
@@ -39,7 +39,7 @@
         "
       />
       <ng-container
-        *ngIf="isInvalidFormControl('firstname', 'First Name') as err"
+        *ngIf="isFormControlInvalid('firstname', 'First Name') as err"
       >
         <mat-error [innerHtml]="err.message"></mat-error>
       </ng-container>
@@ -56,7 +56,7 @@
       />
 
       <ng-container
-        *ngIf="isInvalidFormControl('lastname', 'Last Name') as err"
+        *ngIf="isFormControlInvalid('lastname', 'Last Name') as err"
       >
         <mat-error [innerHtml]="err.message"></mat-error>
       </ng-container>
@@ -71,7 +71,7 @@
           registrationForm.get('email')?.invalid
         "
       />
-      <ng-container *ngIf="isInvalidFormControl('email', 'Email') as err">
+      <ng-container *ngIf="isFormControlInvalid('email', 'Email') as err">
         <mat-error [innerHtml]="err.message"></mat-error>
       </ng-container>
 
@@ -90,7 +90,7 @@
         />
         <ng-container
           *ngIf="
-            isInvalidFormControl('passwordGroup.password', 'Password') as err
+            isFormControlInvalid('passwordGroup.password', 'Password') as err
           "
         >
           <mat-error [innerHtml]="err.message"></mat-error>
@@ -109,7 +109,7 @@
           "
         />
         <ng-container
-          *ngIf="isInvalidFormGroup('passwordGroup', 'Passwords') as err"
+          *ngIf="isFormGroupInvalid('passwordGroup', 'Passwords') as err"
         >
           <mat-error [innerHtml]="err.message"></mat-error>
         </ng-container>

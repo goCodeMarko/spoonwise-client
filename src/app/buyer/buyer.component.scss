@@ -3,11 +3,11 @@
   z-index: 2;
 }
 .content-without-map {
-  margin: 70px 8px 0px 8px !important;
+  margin: 0px 8px 0px 8px !important;
 }
 
 .contentProfile {
-  margin: 70px 8px 0px 8px !important;
+  margin: 0px 8px 0px 8px !important;
 }
 
 .shopping-cart {
@@ -15,9 +15,6 @@
 }
 
 ::ng-deep #map {
-  // margin: 70px 7px 3px 7px;
-  height: 90vh;
-  z-index: 1;
-  margin-top: 6.5vh;
-  // border-radius: 10px;
+  height: 826px;
+  z-index: 0;
 }
