@@ -49,6 +49,10 @@ import { ViewBlogComponent } from "./components/view-blog/view-blog.component";
 import { HomeListComponent } from "./components/home-list/home-list.component";
 import { ShopListComponent } from "./components/shop-list/shop-list.component";
 import { CountDown2Pipe } from "./pipes/count-down2.pipe";
+import { DashboardComponent } from "./components/dashboard/dashboard/dashboard.component";
+import { OrderStatusTotalsComponent } from "./components/order-status-totals/order-status-totals/order-status-totals.component";
+import { OrderStatusPipe } from "./pipes/order-status.pipe";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
 
 @NgModule({
   declarations: [
@@ -78,6 +82,9 @@ import { CountDown2Pipe } from "./pipes/count-down2.pipe";
     HomeListComponent,
     ShopListComponent,
     CountDown2Pipe,
+    OrderStatusPipe,
+    OrderStatusTotalsComponent,
+    DashboardComponent,
   ],
   imports: [
     MatCardModule,
@@ -99,6 +106,7 @@ import { CountDown2Pipe } from "./pipes/count-down2.pipe";
     MatSnackBarModule,
     MatStepperModule,
     MatRadioModule,
+    NgxChartsModule,
   ],
   exports: [
     AccordionAnchorDirective,
@@ -120,12 +128,15 @@ import { CountDown2Pipe } from "./pipes/count-down2.pipe";
     CountDownPipe,
     ShopVerificationStatusPipe,
     LineClampPipe,
+    OrderStatusPipe,
     MapComponent,
     VerifyBusinessComponent,
     BlogListComponent,
     ViewBlogComponent,
     HomeListComponent,
     ShopListComponent,
+    OrderStatusTotalsComponent,
+    DashboardComponent,
   ],
   providers: [MenuItems],
 })

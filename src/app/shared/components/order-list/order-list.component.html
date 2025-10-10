@@ -1,12 +1,12 @@
-<div style="height: 645px; overflow-y: scroll">
-  <div
-    style="
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      margin: 7px 0px 7px 0px;
-    "
-  >
+<div
+  style="
+    height: calc(100dvh - 56.1px - 84px - 79px - 48px - 48px - 7px);
+    padding-top: 7px;
+    padding-bottom: 7px;
+    overflow-y: scroll;
+  "
+>
+  <div style="display: flex; flex-direction: column; gap: 7px">
     <div
       *ngFor="let order of orderItems; let i = index; trackBy: trackByOrderId"
       style="

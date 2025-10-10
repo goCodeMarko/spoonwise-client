@@ -27,6 +27,7 @@ import {
   filter,
   finalize,
   map,
+  of,
   Subject,
   takeUntil,
   tap,
@@ -86,7 +87,7 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
                 },
               });
 
-              return error;
+              return of(error);
             })
           )
         ),

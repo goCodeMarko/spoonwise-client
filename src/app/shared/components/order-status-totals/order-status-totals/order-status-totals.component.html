@@ -1,0 +1,51 @@
+<ng-container *ngIf="onload; else dataLoaded"> Loading... </ng-container>
+<ng-template
+  #dataLoaded
+  style="display: flex; flex-direction: column; gap: 7px"
+>
+  <div
+    style="
+      overflow-x: scroll;
+      background-color: white;
+      margin-top: 7px;
+      border-radius: 8px;
+      height: 30vh;
+    "
+  >
+    <ngx-charts-bar-horizontal
+      [results]="data"
+      [scheme]="colorScheme"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="false"
+      [showXAxisLabel]="false"
+      [showYAxisLabel]="false"
+      [showDataLabel]="true"
+      [barPadding]="5"
+      [gradient]="false"
+    >
+    </ngx-charts-bar-horizontal>
+  </div>
+  <!-- <div
+    style="
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+      margin-top: 7px;
+    "
+  >
+    <div
+      style="background-color: white; padding: 7px; border-radius: 8px"
+      *ngFor="let data of data.data"
+    >
+      <div style="display: flex; flex-direction: column; gap: 7px">
+        <div>
+          {{ data.status | orderStatusPipe | uppercase }}
+        </div>
+        <div style="font-weight: 700; font-size: xx-large; color: #f8da50">
+          {{ data.count }}
+        </div>
+      </div>
+    </div>
+  </div> -->
+</ng-template>

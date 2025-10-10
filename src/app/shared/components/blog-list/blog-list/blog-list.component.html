@@ -7,7 +7,14 @@
       flex-direction: column;
       gap: 7px;
       overflow-y: scroll;
-      height: 826px;
+
+      padding-top: 7px;
+      padding-bottom: 7px;
+    "
+    [ngStyle]="
+      savedBlogsOnly
+        ? { height: 'calc(100dvh - 56.11px - 84px - 79px - 48px)' }
+        : { height: 'calc(100dvh - 56.11px - 84px)' }
     "
   >
     <div

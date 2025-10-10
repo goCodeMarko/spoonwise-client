@@ -26,8 +26,9 @@ import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.com
 import { ChatPageComponent } from "./pages/chat-page/chat-page.component";
 import { VerifyBusinessPageComponent } from "./pages/verify-business-page/verify-business-page.component";
 import { MapComponent } from "../shared/components/map/map.component";
-import { HomePageComponent } from './pages/home-page/home-page.component';
-import { ViewBlogPageComponent } from './pages/view-blog-page/view-blog-page.component';
+import { HomePageComponent } from "./pages/home-page/home-page.component";
+import { ViewBlogPageComponent } from "./pages/view-blog-page/view-blog-page.component";
+import { DashboardComponent } from "../shared/components/dashboard/dashboard/dashboard.component";
 
 @NgModule({
   declarations: [

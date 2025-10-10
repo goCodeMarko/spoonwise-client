@@ -1,6 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
+import { filter } from "lodash";
+import { finalize, Subscription, map, tap, Observable } from "rxjs";
+import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { SocketService } from "src/app/shared/socket/socket.service";
+import { IOrderStatusTotals } from "src/app/shared/models/order-status-totals.model";
+import { OrderStatusPipe } from "src/app/shared/pipes/order-status.pipe";
 
 @Component({
   selector: "app-profile-page",
@@ -8,11 +12,23 @@ import { SocketService } from "src/app/shared/socket/socket.service";
   styleUrls: ["./profile-page.component.scss"],
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
-  selectedTab = "to_pay";
-  static componentName = "ProfilePageComponent";
-  constructor(private socket: SocketService) {}
+  static componentName: string = "ProfilePageComponent";
+  selectedTab: string;
+  orderStatusTotalsOnLoad: boolean;
+  orderStatusTotals$: Observable<IOrderStatusTotals>;
 
-  ngOnInit(): void {}
+  constructor(
+    private hrs: HttpRequestService,
+    private orderStatusPipe: OrderStatusPipe
+  ) {
+    this.orderStatusTotalsOnLoad = true;
+    this.selectedTab = "to_pay";
+    this.orderStatusTotals$ = this.getOrderStatusTotals();
+  }
+
+  ngOnInit(): void {
+    this.getOrderStatusTotals();
+  }
 
   ngOnDestroy(): void {}
 
@@ -37,5 +53,31 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         this.selectedTab = "cancelled";
         break;
     }
+  }
+
+  getOrderStatusTotals(): Observable<IOrderStatusTotals> {
+    return this.hrs
+      .request("getV2", "order/getOrderStatusTotals", {
+        start: "2025-01-01",
+        end: "2025-10-06",
+      })
+      .pipe(
+        map((res: any) => {
+          const formattedData = res.data.map((data: any) => {
+            return {
+              name: this.orderStatusPipe.transform(data.status),
+              value: data.count || 23,
+            };
+          });
+
+          return formattedData;
+        }),
+        tap((res: any) => {
+          console.log("??????????????????", res);
+        }),
+        finalize(() => {
+          this.orderStatusTotalsOnLoad = false;
+        })
+      );
   }
 }

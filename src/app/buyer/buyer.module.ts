@@ -33,7 +33,8 @@ import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.com
 import { ChatPageComponent } from "./pages/chat-page/chat-page.component";
 import { HomePageComponent } from "./pages/home-page/home-page.component";
 import { ViewBlogPageComponent } from "./pages/view-blog-page/view-blog-page.component";
-import { ViewShopPageComponent } from './pages/view-shop-page/view-shop-page.component';
+import { ViewShopPageComponent } from "./pages/view-shop-page/view-shop-page.component";
+import { DashboardComponent } from "../shared/components/dashboard/dashboard/dashboard.component";
 
 @NgModule({
   declarations: [

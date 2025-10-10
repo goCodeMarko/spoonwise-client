@@ -138,9 +138,17 @@ export class ChatComponent implements OnInit, OnDestroy {
   onScroll(): void {
     const container = this.chatContainer.nativeElement as HTMLElement;
     const isAtTop =
-      Math.abs(container.scrollTop) + container.clientHeight ===
+      Math.ceil(Math.abs(container.scrollTop) + container.clientHeight) ===
       container.scrollHeight;
 
+    console.log(
+      "-----------  Math.ceil(Math.abs(container.scrollTop) + container.clientHeight)",
+      Math.ceil(Math.abs(container.scrollTop) + container.clientHeight)
+    );
+
+    console.log("----------- container.scrollHeight", container.scrollHeight);
+
+    console.log("-----------isAtTop", isAtTop);
     if (isAtTop && !this.onLoad && !this.allMessageHasBeenDisplayed) {
       console.log("chatroomMessages", this.chatroomMessages);
       this.onLoad = true;

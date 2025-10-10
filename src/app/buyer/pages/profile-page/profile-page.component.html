@@ -1,5 +1,13 @@
 <app-profile>
   <mat-tab-group>
+    <mat-tab label="Dashboard">
+      <app-dashboard style="margin-top: 7px">
+        <app-order-status-totals
+          [data]="orderStatusTotals$ | async"
+          [onload]="orderStatusTotalsOnLoad"
+        ></app-order-status-totals>
+      </app-dashboard>
+    </mat-tab>
     <mat-tab label="Orders">
       <mat-tab-group
         style="margin-top: 7px"
