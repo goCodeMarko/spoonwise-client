@@ -3,5 +3,11 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   background-color: #f6f6f6;
-  overflow: hidden; /* 💥 disables scroll bar on body */
+  // overflow: hidden; /* 💥 disables scroll bar on body */
+}
+
+@media (max-width: 700px) {
+  body {
+    max-width: 700px;
+  }
 }
