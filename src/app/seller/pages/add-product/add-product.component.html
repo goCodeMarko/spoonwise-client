@@ -1,4 +1,10 @@
-<div style="margin-top: 70px">
+<div
+  style="
+    height: calc(100dvh - 56.1px - 84px);
+    overflow-y: scroll;
+    margin-top: 7px;
+  "
+>
   <mat-stepper linear #stepper>
     <mat-step [stepControl]="copiesForm" [editable]="true">
       <ng-template matStepLabel>Upload Fruit Images</ng-template>

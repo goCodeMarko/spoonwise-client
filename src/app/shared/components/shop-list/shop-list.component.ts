@@ -53,15 +53,16 @@ export class ShopListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.actions$
-      .pipe(ofType(chatSellerSuccess), takeUntil(this.destroy$))
-      .subscribe((action) => {
-        const chatroom = action.chatroom;
-
-        this.router.navigate([`/chats/${chatroom._id}`], {
-          queryParams: { isSpoonwiseAI: false },
-        });
-      });
+    // console.log("ddddddd");
+    // this.actions$
+    //   .pipe(ofType(chatSellerSuccess), takeUntil(this.destroy$))
+    //   .subscribe((action) => {
+    //     const chatroom = action.chatroom;
+    //     console.log("===============");
+    //     this.router.navigate([`/chats/${chatroom._id}`], {
+    //       queryParams: { isSpoonwiseAI: false },
+    //     });
+    //   });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

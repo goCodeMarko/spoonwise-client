@@ -1,32 +1,64 @@
 <ng-container *ngIf="onload; else dataLoaded"> Loading... </ng-container>
-<ng-template
-  #dataLoaded
-  style="display: flex; flex-direction: column; gap: 7px"
->
-  <div
-    style="
-      overflow-x: scroll;
-      background-color: white;
-      margin-top: 7px;
-      border-radius: 8px;
-      height: 30vh;
-    "
-  >
-    <ngx-charts-bar-horizontal
-      [results]="data"
-      [scheme]="colorScheme"
-      [xAxis]="true"
-      [yAxis]="true"
-      [legend]="false"
-      [showXAxisLabel]="false"
-      [showYAxisLabel]="false"
-      [showDataLabel]="true"
-      [barPadding]="5"
-      [gradient]="false"
+<ng-template #dataLoaded>
+  <div style="display: flex; flex-direction: column; gap: 7px">
+    <div
+      style="
+        overflow-x: scroll;
+        background-color: white;
+        margin-top: 7px;
+        border-radius: 8px;
+      "
     >
-    </ngx-charts-bar-horizontal>
-  </div>
-  <!-- <div
+      <div style="height: 30vh">
+        <ngx-charts-line-chart
+          [results]="x"
+          [scheme]="colorScheme"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [yScaleMax]="500"
+          yAxisLabel="Sales"
+          [autoScale]="true"
+          [animations]="true"
+          [timeline]="false"
+          [roundDomains]="true"
+        >
+        </ngx-charts-line-chart>
+      </div>
+    </div>
+    <div
+      style="overflow-x: scroll; background-color: white; border-radius: 8px"
+    >
+      <div style="height: 30vh">
+        <ngx-charts-bar-horizontal
+          [results]="data"
+          [scheme]="colorScheme"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="false"
+          [animations]="true"
+          [showXAxisLabel]="false"
+          [showYAxisLabel]="false"
+          [showDataLabel]="true"
+          [barPadding]="5"
+          [gradient]="false"
+        >
+        </ngx-charts-bar-horizontal>
+      </div>
+
+      <div style="height: 60vh">
+        <ngx-charts-pie-grid
+          [results]="data"
+          [scheme]="colorScheme"
+          [legend]="false"
+          [animations]="true"
+          [tooltipDisabled]="false"
+        >
+        </ngx-charts-pie-grid>
+      </div>
+    </div>
+    <!-- <div
     style="
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -48,4 +80,5 @@
       </div>
     </div>
   </div> -->
+  </div>
 </ng-template>

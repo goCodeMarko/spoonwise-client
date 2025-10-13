@@ -1,180 +1,187 @@
-<div style="height: 80vh; overflow-y: scroll">
-  <div style="display: flex; flex-direction: column; gap: 10px">
-    <div>
-      <div>Payment Method</div>
+<div
+  style="
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+  "
+>
+  <div>
+    <div>Payment Method</div>
 
-      <div class="option-container">
-        <div
-          class="option"
-          (click)="changePaymentMethod('ONLINE')"
-          [class.selected]="paymentMethod === 'ONLINE'"
-        >
-          Online Payment
-        </div>
-
-        <div
-          class="option"
-          (click)="changePaymentMethod('CASH')"
-          [class.selected]="paymentMethod === 'CASH'"
-        >
-          Cash
-        </div>
-
-        <!-- Hidden Radio Buttons -->
-        <input
-          type="radio"
-          name="options"
-          value="ONLINE"
-          [(ngModel)]="paymentMethod"
-          hidden
-        />
-        <input
-          type="radio"
-          name="options"
-          value="CASH"
-          [(ngModel)]="paymentMethod"
-          hidden
-        />
+    <div class="option-container">
+      <div
+        class="option"
+        (click)="changePaymentMethod('ONLINE')"
+        [class.selected]="paymentMethod === 'ONLINE'"
+      >
+        Online Payment
       </div>
+
+      <div
+        class="option"
+        (click)="changePaymentMethod('CASH')"
+        [class.selected]="paymentMethod === 'CASH'"
+      >
+        Cash
+      </div>
+
+      <!-- Hidden Radio Buttons -->
+      <input
+        type="radio"
+        name="options"
+        value="ONLINE"
+        [(ngModel)]="paymentMethod"
+        hidden
+      />
+      <input
+        type="radio"
+        name="options"
+        value="CASH"
+        [(ngModel)]="paymentMethod"
+        hidden
+      />
     </div>
+  </div>
 
-    <div>
-      <div>Shipping Option</div>
-      <div class="option-container">
-        <div
-          class="option"
-          (click)="changeShippingOption('LALAMOVE')"
-          [class.selected]="shippingOption === 'LALAMOVE'"
-          [class.disabled]="disabledLalamoveBtn"
-          [attr.disabled]="disabledLalamoveBtn ? true : null"
-        >
-          Lalamove
-        </div>
+  <div>
+    <div>Shipping Option</div>
+    <div class="option-container">
+      <div
+        class="option"
+        (click)="changeShippingOption('LALAMOVE')"
+        [class.selected]="shippingOption === 'LALAMOVE'"
+        [class.disabled]="disabledLalamoveBtn"
+        [attr.disabled]="disabledLalamoveBtn ? true : null"
+      >
+        Lalamove
+      </div>
 
-        <div
-          class="option"
-          (click)="changeShippingOption('STORE_PICKUP')"
-          [class.selected]="shippingOption === 'STORE_PICKUP'"
-        >
-          Store Pickup
-        </div>
+      <div
+        class="option"
+        (click)="changeShippingOption('STORE_PICKUP')"
+        [class.selected]="shippingOption === 'STORE_PICKUP'"
+      >
+        Store Pickup
+      </div>
 
-        <div
-          hidden="true"
-          class="option"
-          (click)="changeShippingOption('MEETUP')"
-          [class.selected]="shippingOption === 'MEETUP'"
-        >
-          Meetup
-        </div>
+      <div
+        hidden="true"
+        class="option"
+        (click)="changeShippingOption('MEETUP')"
+        [class.selected]="shippingOption === 'MEETUP'"
+      >
+        Meetup
+      </div>
 
-        <!-- Hidden Radio Buttons -->
-        <input
-          type="radio"
-          name="options"
-          value="ONLINE"
-          [(ngModel)]="shippingOption"
-          hidden
-        />
-        <input
-          type="radio"
-          name="options"
-          value="STORE_PICKUP"
-          [(ngModel)]="shippingOption"
-          hidden
-        />
-        <input
-          type="radio"
-          name="options"
-          value="MEETUP"
-          [(ngModel)]="shippingOption"
-          hidden
-        />
+      <!-- Hidden Radio Buttons -->
+      <input
+        type="radio"
+        name="options"
+        value="ONLINE"
+        [(ngModel)]="shippingOption"
+        hidden
+      />
+      <input
+        type="radio"
+        name="options"
+        value="STORE_PICKUP"
+        [(ngModel)]="shippingOption"
+        hidden
+      />
+      <input
+        type="radio"
+        name="options"
+        value="MEETUP"
+        [(ngModel)]="shippingOption"
+        hidden
+      />
+    </div>
+  </div>
+</div>
+
+<div
+  *ngFor="let cart of checkedLineItems; let i = index"
+  style="
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+  "
+>
+  <div
+    style="
+      height: calc(100dvh - 56.11px - 172.4px - 70px);
+      overflow-y: scroll;
+      padding-bottom: 7px;
+    "
+  >
+    <div style="margin-bottom: 12px">
+      <div>
+        <b style="font-weight: 700; margin-bottom: 12px">{{
+          cart.shop.businessName
+        }}</b>
       </div>
     </div>
 
     <div
-      *ngFor="let cart of checkedLineItems; let i = index"
+      *ngFor="let lineItem of cart.lineItems; let i = index"
       style="
-        background-color: white;
-        color: black;
-        padding: 10px;
-        border-radius: 8px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 16px;
+        margin-bottom: 10px;
       "
     >
       <div>
-        <div style="margin-bottom: 12px">
-          <div>
-            <b style="font-weight: 700; margin-bottom: 12px">{{
-              cart.shop.businessName
-            }}</b>
-          </div>
-        </div>
-
-        <div
-          *ngFor="let lineItem of cart.lineItems; let i = index"
+        <img
+          [src]="lineItem.images[0]"
+          alt=""
           style="
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 16px;
-            margin-bottom: 10px;
+            width: 110px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 15px;
           "
-        >
-          <div>
-            <img
-              [src]="lineItem.images[0]"
-              alt=""
-              style="
-                width: 110px;
-                height: auto;
-                object-fit: cover;
-                border-radius: 15px;
-              "
-            />
-          </div>
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-            "
-          >
-            <div class="line-clamp" (click)="viewProduct(lineItem.productId)">
-              {{ lineItem.name }}
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 7px">
-              <div *ngFor="let offer of lineItem.specialOffers; let i = index">
-                {{ offer.name }}
-              </div>
-              <div></div>
-            </div>
-            <div style="display: flex; justify-content: space-between">
-              <div style="display: flex; flex-direction: column">
-                <div>Stocks: {{ lineItem.qty }}</div>
-
-                <b>{{ lineItem.price | currency : "PHP" : "symbol" }}</b>
-              </div>
-              <div>x{{ lineItem.orderQty }}</div>
-            </div>
-          </div>
-        </div>
+        />
       </div>
-
-      <hr />
       <div
         style="
           display: flex;
-          align-items: center;
+          flex-direction: column;
           justify-content: space-between;
         "
       >
-        <div>Total {{ cart.totalItems }} Item(s)</div>
-        <div>
-          <b style="color: #fb5630">{{
-            cart.subtotal | currency : "PHP" : "symbol"
-          }}</b>
+        <div class="line-clamp" (click)="viewProduct(lineItem.productId)">
+          {{ lineItem.name }}
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <div *ngFor="let offer of lineItem.specialOffers; let i = index">
+            {{ offer.name }}
+          </div>
+          <div></div>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <div style="display: flex; flex-direction: column">
+            <div>Stocks: {{ lineItem.qty }}</div>
+
+            <b>{{ lineItem.price | currency : "PHP" : "symbol" }}</b>
+          </div>
+          <div>x{{ lineItem.orderQty }}</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <hr />
+  <div
+    style="display: flex; align-items: center; justify-content: space-between"
+  >
+    <div>Total {{ cart.totalItems }} Item(s)</div>
+    <div>
+      <b style="color: #fb5630">{{
+        cart.subtotal | currency : "PHP" : "symbol"
+      }}</b>
     </div>
   </div>
 </div>

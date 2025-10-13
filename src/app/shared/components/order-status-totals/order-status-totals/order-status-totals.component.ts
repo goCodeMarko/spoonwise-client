@@ -15,6 +15,28 @@ import { IOrderStatusTotals } from "src/app/shared/models/order-status-totals.mo
 export class OrderStatusTotalsComponent implements OnInit, OnChanges {
   @Input() data!: IOrderStatusTotals;
   @Input() onload: boolean = true;
+  x = [
+    {
+      name: "Sales",
+      series: [
+        { name: "Oct 1", value: 150 },
+        { name: "Oct 2", value: 250 },
+        { name: "Oct 3", value: 180 },
+        { name: "Oct 4", value: 300 },
+        { name: "Oct 5", value: 400 },
+      ],
+    },
+    {
+      name: "Incoming",
+      series: [
+        { name: "Oct 1", value: 300 },
+        { name: "Oct 2", value: 12 },
+        { name: "Oct 3", value: 500 },
+        { name: "Oct 4", value: 345 },
+        { name: "Oct 5", value: 120 },
+      ],
+    },
+  ];
 
   colorScheme = {
     domain: ["#f8da50"],
@@ -32,5 +54,7 @@ export class OrderStatusTotalsComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("-----------data", this.data);
+  }
 }

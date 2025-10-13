@@ -1,23 +1,21 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 418px;
   overflow-y: scroll;
-  padding: 0px 0px 0px 0px;
-  // margin: 3px 0px;
+  // padding: 0px 0px 0px 0px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  height: calc(100dvh - 57px - 116px - 66.8px - 23px);
 }
 
 .container-seller {
   display: flex;
   flex-direction: column;
-  // display: grid;
-  // grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-  // gap: 7px; /* Space between cards */
-
-  min-height: 42.7dvh;
   overflow-y: scroll;
-  padding: 0px 0px 100px 0px;
-  margin-top: 3px;
+  // margin: 0px 0px 100px 0px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  height: calc(100dvh - 57px - 116px - 66.8px - 23px);
 }
 
 /* Each card stretches based on screen size */

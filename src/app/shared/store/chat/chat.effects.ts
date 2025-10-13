@@ -7,9 +7,14 @@ import { Chatroom, Message, SpoonwiseAI } from "./chat.state";
 import * as ChatroomAction from "./chat.actions";
 import { environment } from "../../../../environments/environment";
 import { base64ToBlob, blobToBase64 } from "base64-blob";
+import { Router } from "@angular/router";
 @Injectable()
 export class ChatroomEffects {
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   setPastChatrooms$ = createEffect(() =>
     this.actions$.pipe(
@@ -259,7 +264,12 @@ export class ChatroomEffects {
           )
           .pipe(
             map((data: any) => {
+              console.log("===========chatrooms", data);
               let chatroom: Chatroom = data.data;
+
+              this.router.navigate([`/chats/${chatroom._id}`], {
+                queryParams: { isSpoonwiseAI: false },
+              });
 
               return ChatroomAction.chatSellerSuccess({
                 chatroom,

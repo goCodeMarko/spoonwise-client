@@ -59,14 +59,7 @@
     </div>
   </ng-container>
   <ng-template #shopContainer>
-    <div
-      class="container-seller"
-      [ngStyle]="{
-        'min-height': this.route.snapshot.paramMap.get('shopId')
-          ? '72dvh'
-          : '42.7dvh'
-      }"
-    >
+    <div class="container-seller">
       <ng-container *ngTemplateOutlet="productList"></ng-container>
     </div>
   </ng-template>
