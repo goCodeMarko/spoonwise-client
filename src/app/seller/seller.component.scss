@@ -2,6 +2,6 @@
   margin: 0px 8px 0px 8px !important;
 }
 ::ng-deep #map {
-  height: 826px;
+  height: calc(100dvh - 56.1px - 84px);
   z-index: 1;
 }

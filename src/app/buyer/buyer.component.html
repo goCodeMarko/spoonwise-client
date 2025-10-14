@@ -8,7 +8,6 @@
     <div *ngIf="!isMapLoading; else loading">
       <app-map
         *ngIf="!isShopViewing"
-        class="buyer-component"
         [shops]="this.shops"
         [detectCurrentLocation]="true"
         [checkDBLocation]="true"

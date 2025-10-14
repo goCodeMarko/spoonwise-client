@@ -144,7 +144,6 @@ export class BuyerComponent implements OnInit, OnDestroy {
       });
 
     this.route.queryParams.subscribe((params) => {
-      console.log("params------", params.shop);
       if (params["shop"]) {
         this.isShopViewing = true;
       } else {

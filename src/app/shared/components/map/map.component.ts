@@ -120,7 +120,7 @@ export class MapComponent
         lng: data.coordinates.lng.toString(),
       },
     };
-    this.dragend.emit(this.subject.coordinates);
+    // this.dragend.emit(this.subject.coordinates);
   }
 
   private async getShopCoordinates() {
@@ -168,9 +168,8 @@ export class MapComponent
     }
 
     if (!this.isShop) {
-      // if (this.detectCurrentLocation && !this.checkDBLocation)
-      await this.getCurrentPosition();
       if (this.checkDBLocation) await this.getPositionFromDB();
+      else await this.getCurrentPosition();
     } else if (this.isShop) {
       await this.getShopCoordinates();
     }
