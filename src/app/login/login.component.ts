@@ -53,6 +53,7 @@ interface OtpSheetProps {
   ],
 })
 export class LoginComponent implements OnInit {
+  static componentName = "LoginComponent";
   message: string = "";
   loginForm: FormGroup;
   currentDisplay = "login-form";

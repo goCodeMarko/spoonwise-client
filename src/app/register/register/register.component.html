@@ -1,8 +1,14 @@
 <div style="padding: 7px">
-  <form [formGroup]="registrationForm" style="padding: 57px 30px">
+  <form
+    [formGroup]="registrationForm"
+    style="width: min(90vw, 400px); margin: auto"
+  >
     <div style="display: flex; flex-direction: column">
       <ng-container *ngIf="currentDisplay === 'seller-form'">
         <app-map
+          [height]="'200px'"
+          [zIndex]="'0'"
+          [borderRadius]="'10px'"
           (dragend)="onDragend($event)"
           [detectCurrentLocation]="detectCurrentLocation"
           [checkDBLocation]="false"

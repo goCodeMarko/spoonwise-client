@@ -3,6 +3,7 @@ import {
   Component,
   DoCheck,
   EventEmitter,
+  HostBinding,
   Input,
   OnChanges,
   OnDestroy,
@@ -40,6 +41,12 @@ export class MapComponent
   @Input() checkDBLocation = false;
   @Input() disabled = true;
   @Input() isShop = false;
+
+  @HostBinding("style.height") @Input() height = "calc(100dvh - 56.1px - 84px)";
+  @HostBinding("style.z-index") @Input() zIndex = "1";
+  @HostBinding("style.border-radius") @Input() borderRadius = "0px";
+  @HostBinding("style.display") display = "block";
+  @HostBinding("style.overflow") overflow = "hidden";
 
   @Output() dragend = new EventEmitter<any>();
 

@@ -2,7 +2,13 @@
   <span style="text-align: center">{{ responseMsg }}</span>
 </ng-template>
 <ng-template #mapTemplate>
-  <app-map (dragend)="onDragend($event)" [subject]="subject"></app-map>
+  <app-map
+    [height]="'200px'"
+    [zIndex]="'0'"
+    [borderRadius]="'10px'"
+    (dragend)="onDragend($event)"
+    [subject]="subject"
+  ></app-map>
 </ng-template>
 <div
   style="
@@ -367,6 +373,9 @@
       <!-- Use ngIf to only create map when this step is selected -->
       <ng-container *ngIf="isMapStepVisible">
         <app-map
+          [height]="'200px'"
+          [zIndex]="'0'"
+          [borderRadius]="'10px'"
           #mapRef
           [detectCurrentLocation]="detectCurrentLocation"
           [subject]="subject"

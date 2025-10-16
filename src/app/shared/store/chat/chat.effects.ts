@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
-import { catchError, map, mergeMap } from "rxjs/operators";
+import { catchError, exhaustMap, map, mergeMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import { Chatroom, Message, SpoonwiseAI } from "./chat.state";
 import * as ChatroomAction from "./chat.actions";
@@ -48,7 +48,7 @@ export class ChatroomEffects {
   setPastMessages$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ChatroomAction.setPastMessages),
-      mergeMap(({ chatroomId, lastMessageDate }) =>
+      exhaustMap(({ chatroomId, lastMessageDate }) =>
         this.http
           .get(
             `${environment.SERVER_URL_CLUSTERS}message/getPastMessages/${chatroomId}?lastMessageDate=${lastMessageDate}`

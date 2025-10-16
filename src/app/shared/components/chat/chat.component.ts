@@ -18,6 +18,7 @@ import {
   sendingToSentMessage,
   sendMessage,
   sendMessageFailure,
+  setPastChatroomsFailure,
   setPastMessages,
   setPastMessagesSuccess,
   setSendingMessage,
@@ -120,6 +121,12 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.onLoad = false;
       });
 
+    this.actions$
+      .pipe(ofType(setPastMessagesSuccess), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.onLoad = false;
+      });
+
     this.markSenderMessagesAsSeen();
   }
 
@@ -139,7 +146,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const container = this.chatContainer.nativeElement as HTMLElement;
     const isAtTop =
       Math.ceil(Math.abs(container.scrollTop) + container.clientHeight) ===
-      container.scrollHeight;
+      container.scrollHeight - 1;
 
     console.log(
       "-----------  Math.ceil(Math.abs(container.scrollTop) + container.clientHeight)",

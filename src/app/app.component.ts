@@ -50,6 +50,13 @@ export class AppComponent implements OnInit {
       "assets/images/logo/lalamove-whole-logo.png",
       "assets/icons/check.png",
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "assets/images/1.png",
+      "assets/images/2.png",
+      "assets/images/3.png",
+      "assets/images/4.png",
+      "assets/images/5.png",
+      "assets/images/6.png",
+      "assets/images/7.png",
     ];
     // Preload the listed images
     imagePreloadService.preload(imagesToPreload);

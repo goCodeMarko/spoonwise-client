@@ -5,7 +5,14 @@
 <div style="position: relative">
   <div *ngIf="routerOutletComponent == 'ProductListPageComponent'">
     <div *ngIf="!isMapLoading; else loading">
-      <app-map [isShop]="true" [disabled]="true" [buyers]="buyers"></app-map>
+      <app-map
+        [height]="'calc(100dvh - 56.1px - 84px)'"
+        [zIndex]="'1'"
+        [borderRadius]="'0px'"
+        [isShop]="true"
+        [disabled]="true"
+        [buyers]="buyers"
+      ></app-map>
     </div>
     <ng-template #loading>
       <div

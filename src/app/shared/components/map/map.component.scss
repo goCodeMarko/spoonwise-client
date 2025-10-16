@@ -1,7 +1,7 @@
-// :host {
-//   height: 100%;
-// }
-
-// .map-container {
-//   height: 100%;
-// }
+:host .map-container,
+:host #map {
+  height: 100%;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+}

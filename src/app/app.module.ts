@@ -57,6 +57,7 @@ import { SelectAudienceModalComponent } from "./modals/select-audience-modal/sel
 import { blogReducer } from "./shared/store/blog/blog.reducer";
 import { BlogEffects } from "./shared/store/blog/blog.effects";
 import { PipesPipe } from "./line-clamp/shared/pipes.pipe";
+import { SwiperModule } from "swiper/angular";
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { PipesPipe } from "./line-clamp/shared/pipes.pipe";
     MatInputModule,
     BuyerModule,
     SellerModule,
+    SwiperModule,
     // WebcamModule,
     RouterModule.forRoot(AppRoutes),
     ServiceWorkerModule.register("ngsw-worker.js", {

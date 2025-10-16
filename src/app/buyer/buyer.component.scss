@@ -1,20 +1,15 @@
 .content-with-map {
-  margin: 0px 8px 0px 8px !important;
+  // margin: 0px 8px 0px 8px !important;
   z-index: 2;
 }
 .content-without-map {
-  margin: 8px 8px 0px 8px !important;
+  // margin: 8px 8px 0px 8px !important;
 }
 
 .contentProfile {
-  margin: 0px 8px 0px 8px !important;
+  // margin: 0px 8px 0px 8px !important;
 }
 
 .shopping-cart {
   text-align: center;
-}
-
-::ng-deep #map {
-  height: calc(100dvh - 56.1px - 84px);
-  z-index: 1;
 }
