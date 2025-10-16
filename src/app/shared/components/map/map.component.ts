@@ -330,6 +330,10 @@ export class MapComponent
       bottom: 7px;
       right: 7px;
     }
+
+    .leaflet-bar a {
+      border-bottom: 0px;
+      }
   </style>
 `;
 

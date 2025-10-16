@@ -1,6 +1,6 @@
 .position {
   position: absolute;
-  z-index: 2;
+  z-index: 99999;
   top: 395px;
   left: 0;
   right: 0;
@@ -11,8 +11,7 @@
 
 .side-button {
   position: absolute;
-  z-index: 2;
-
+  z-index: 99999;
   background: white;
   border-radius: 10px;
   color: #f8da50;
