@@ -45,6 +45,15 @@
         "maxAge": "1d",
         "timeout": "5s"
       }
+    },
+    {
+      "name": "socket",
+      "urls": ["https://api-2.spoonwise.space/socket.io/**"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 0,
+        "maxAge": "0u"
+      }
     }
   ]
 }
