@@ -7,6 +7,7 @@ $max-mobile: 590px;
   background-size: cover;
   height: 100vh !important;
   background-color: #f8da50;
+  padding: min(2vw, 32px);
 
   & .container {
     display: flex;
@@ -47,7 +48,6 @@ $max-mobile: 590px;
 
 .swiper-container {
   width: 100vw;
-  // height: 500px;
 }
 
 .swiper-slide {
@@ -60,7 +60,6 @@ $max-mobile: 590px;
 /* Ensure the Swiper container takes the desired space */
 .custom-swiper {
   width: 100%;
-  max-width: 800px;
   height: auto;
   display: flex;
   justify-content: center;
@@ -69,10 +68,14 @@ $max-mobile: 590px;
 
 /* Image styling for responsiveness and object-fit */
 .swiper-image {
-  width: min(75vw, 400px);
-  height: min(87vw, 440px);
+  width: min(75vw, 300px);
+  height: min(95vw, 360px);
   object-fit: contain;
   border-radius: 8px;
   display: block;
   margin: 0 auto; /* fallback centering */
+}
+
+.swiper-pagination-horizontal {
+  bottom: 0px !important;
 }

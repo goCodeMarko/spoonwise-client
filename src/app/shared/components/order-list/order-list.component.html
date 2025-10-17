@@ -82,7 +82,7 @@
         >
           <div>
             <img
-              [src]="lineItem.images[0]"
+              [src]="lineItem?.images[0]"
               alt=""
               style="
                 width: 110px;
@@ -461,12 +461,12 @@
               <div>
                 {{ lalamoveQoutationData.serviceType }}
               </div>
-              <div>{{ lalamoveQoutationData.stops[0].address }}</div>
-              <div>{{ lalamoveQoutationData.stops[1].address }}</div>
+              <div>{{ lalamoveQoutationData?.stops[0]?.address }}</div>
+              <div>{{ lalamoveQoutationData?.stops[1]?.address }}</div>
               <div>
                 {{
-                  lalamoveQoutationData.distance.value +
-                    lalamoveQoutationData.distance.unit
+                  lalamoveQoutationData?.distance?.value +
+                    lalamoveQoutationData?.distance?.unit
                 }}
               </div>
             </div>
@@ -545,10 +545,12 @@
                 }}
               </div>
 
-              <div>{{ lalamoveOrder.stops[0].address }}</div>
-              <div>{{ lalamoveOrder.stops[1].address }}</div>
+              <div>{{ lalamoveOrder?.stops[0]?.address }}</div>
+              <div>{{ lalamoveOrder?.stops[1]?.address }}</div>
               <div>
-                {{ lalamoveOrder.distance.value + lalamoveOrder.distance.unit }}
+                {{
+                  lalamoveOrder?.distance.value + lalamoveOrder?.distance.unit
+                }}
               </div>
               <div>
                 {{ lalamoveDriver.phone }}
