@@ -1,0 +1,50 @@
+<ul class="sheet-list">
+  <div style="justify-items: center; margin-bottom: 7px">
+    <div
+      style="
+        margin-top: 7px;
+        width: 40px;
+        height: 5px;
+        background-color: #7f7f7f1a;
+        border-radius: 20px;
+        z-index: 99999;
+      "
+    ></div>
+  </div>
+
+  <div style="margin: 7px">
+    <div>
+      <section
+        style="
+          background: white;
+          padding: 7px;
+          border-radius: 15px;
+          margin-bottom: 7px;
+        "
+      >
+        <mat-radio-group
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          [(ngModel)]="selectedLanguage"
+        >
+          <div
+            *ngFor="let language of languages"
+            class="radio-button-custom"
+            [ngClass]="{ selected: selectedLanguage === language }"
+            (click)="setLanguage(language)"
+          >
+            <div>{{ LanguageUI[language] }}</div>
+            <div>
+              <mat-radio-button
+                class="example-radio-button"
+                style="display: block; margin-bottom: 10px"
+                [value]="language"
+              >
+              </mat-radio-button>
+            </div>
+          </div>
+        </mat-radio-group>
+      </section>
+    </div>
+  </div>
+</ul>

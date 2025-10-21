@@ -1,4 +1,4 @@
-import { Component, OnInit, isDevMode } from "@angular/core";
+import { Component, OnInit, ViewContainerRef, isDevMode } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { InternetConnectionService } from "./shared/internet-connection/internet-connection.service";
 import { ImagePreloadService } from "./shared/services/image-preload.service";
@@ -10,6 +10,7 @@ import { setCart } from "./shared/store/cart/cart.actions";
 import { setToPay } from "./shared/store/order/order.actions";
 import { setChatrooms } from "./shared/store/chat/chat.actions";
 import { GeolocationService } from "./shared/services/geolocation/geolocation.service";
+import { BottomSheetProvider } from "swipe-bottom-sheet/angular";
 
 @Component({
   selector: "app-root",
@@ -23,8 +24,13 @@ export class AppComponent implements OnInit {
     internetConnection: InternetConnectionService,
     imagePreloadService: ImagePreloadService,
     private store: Store,
-    private geolocationService: GeolocationService
+    private geolocationService: GeolocationService,
+    private bottomSheet: BottomSheetProvider,
+    private vcRef: ViewContainerRef
   ) {
+    // only set this once and do so in the app component's constructor
+    bottomSheet.rootVcRef = vcRef;
+
     // Subscribe to the internet connection status
     internetConnection.getConnectionStatus().subscribe((status) => {
       this.isOnline = status; // Update the isOnline property with the current status

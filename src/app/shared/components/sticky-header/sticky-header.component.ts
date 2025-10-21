@@ -23,9 +23,10 @@ import {
   BottomSheetProvider,
   BottomSheetContent,
 } from "swipe-bottom-sheet/angular";
-import { Language, LanguageUI, SpoonwiseAI } from "../../store/chat/chat.state";
+import { Language, SpoonwiseAI } from "../../store/chat/chat.state";
 import { selectSpoonwiseAI } from "../../store/chat/chat.selectors";
 import { setSendingMessage, setLanguage } from "../../store/chat/chat.actions";
+import { ChatSettingsComponent } from "src/app/bottom-sheets/chat-settings/chat-settings/chat-settings.component";
 
 @Component({
   selector: "app-sticky-header",
@@ -39,23 +40,10 @@ export class StickyHeaderComponent implements OnInit, OnChanges, OnDestroy {
   orderQtyCount: number = 0;
   chatroomId: string;
 
-  spoonwise!: SpoonwiseAI;
-  spoonwise$!: Observable<SpoonwiseAI>;
   @Input() routerOutletComponent = "";
   @Input() showCart = true;
   @Output() onSearch = new EventEmitter<string | null>();
 
-  LanguageUI = LanguageUI;
-  selectedLanguage: Language = Language.English;
-  languages: Language[] = [
-    Language.English,
-    Language.Cebuano,
-    Language.Hiligaynon,
-    Language.Ilocano,
-    Language.Kapampangan,
-    Language.Tagalog,
-    Language.Waray,
-  ];
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -63,19 +51,13 @@ export class StickyHeaderComponent implements OnInit, OnChanges, OnDestroy {
     private store: Store,
     private router: ActivatedRoute,
     private bottomSheet: MatBottomSheet,
-    private sheet: BottomSheetProvider,
-    private vcRef: ViewContainerRef
+    private swipeSheet: BottomSheetProvider
   ) {
-    sheet.rootVcRef = vcRef;
     this.chatroomId = this.router.snapshot.paramMap.get("id")!;
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);
     this.orderQtyCount$.subscribe((data) => {
       this.orderQtyCount = data;
     });
-
-    this.spoonwise$ = this.store
-      .select(selectSpoonwiseAI)
-      .pipe(takeUntil(this.destroy$));
   }
   isSpoonwiseAI: boolean = false;
   ngOnInit(): void {
@@ -86,12 +68,6 @@ export class StickyHeaderComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         this.isShopViewing = false;
       }
-    });
-
-    this.spoonwise$.subscribe((data: SpoonwiseAI) => {
-      console.log("this.spoonwise = data;", data);
-      this.selectedLanguage = data.settings!.language;
-      this.spoonwise = data;
     });
   }
 
@@ -120,26 +96,13 @@ export class StickyHeaderComponent implements OnInit, OnChanges, OnDestroy {
     this.bottomSheet.open(BottomSheetComponent);
   }
 
-  output = "";
-  async setting<T>(content: BottomSheetContent<T>) {
-    this.output = "";
-
-    const value = await this.sheet.show(content, {
+  async setting() {
+    const value = await this.swipeSheet.show(ChatSettingsComponent, {
       title: "",
+      props: {
+        chatroomId: "XXX",
+      },
       stops: [3500, 500],
     });
-
-    this.output = value;
-  }
-
-  setLanguage(language: Language) {
-    this.store.dispatch(
-      setLanguage({
-        language: language,
-        chatroomId: this.spoonwise._id,
-      })
-    );
-
-    this.selectedLanguage = language;
   }
 }

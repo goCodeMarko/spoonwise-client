@@ -146,11 +146,9 @@ export class ProductViewComponent implements OnInit, OnDestroy {
     private hrs: HttpRequestService,
     private route: ActivatedRoute,
     private sheet: BottomSheetProvider,
-    private vcRef: ViewContainerRef,
     private store: Store,
     private _snackBar: MatSnackBar
   ) {
-    sheet.rootVcRef = vcRef;
     this.productId = this.route.snapshot.paramMap.get("id");
 
     this.cartItems$ = this.store

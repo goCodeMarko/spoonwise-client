@@ -1,0 +1,12 @@
+.radio-button-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+
+  &.selected {
+    background-color: #f6f6f6;
+
+    border-radius: 20px;
+  }
+}

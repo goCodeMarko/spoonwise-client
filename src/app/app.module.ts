@@ -58,6 +58,7 @@ import { blogReducer } from "./shared/store/blog/blog.reducer";
 import { BlogEffects } from "./shared/store/blog/blog.effects";
 import { PipesPipe } from "./line-clamp/shared/pipes.pipe";
 import { SwiperModule } from "swiper/angular";
+import { ChatSettingsComponent } from './bottom-sheets/chat-settings/chat-settings/chat-settings.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { SwiperModule } from "swiper/angular";
     ViewShopModalComponent,
     SelectAudienceModalComponent,
     PipesPipe,
+    ChatSettingsComponent,
   ],
   imports: [
     BrowserModule,
