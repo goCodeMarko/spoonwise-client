@@ -58,7 +58,8 @@ import { blogReducer } from "./shared/store/blog/blog.reducer";
 import { BlogEffects } from "./shared/store/blog/blog.effects";
 import { PipesPipe } from "./line-clamp/shared/pipes.pipe";
 import { SwiperModule } from "swiper/angular";
-import { ChatSettingsComponent } from './bottom-sheets/chat-settings/chat-settings/chat-settings.component';
+import { ChatSettingsComponent } from "./bottom-sheets/chat-settings/chat-settings/chat-settings.component";
+import { BottomSheetModule } from "swipe-bottom-sheet/angular";
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { ChatSettingsComponent } from './bottom-sheets/chat-settings/chat-settin
     ChatSettingsComponent,
   ],
   imports: [
+    BottomSheetModule,
     BrowserModule,
     BrowserAnimationsModule,
     DemoMaterialModule,
