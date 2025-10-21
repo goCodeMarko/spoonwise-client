@@ -64,10 +64,8 @@ export class LoginComponent implements OnInit {
     private hrs: HttpRequestService,
     private auth: AuthService,
     private store: Store,
-    private sheet: BottomSheetProvider,
-    private vcRef: ViewContainerRef
+    private sheet: BottomSheetProvider
   ) {
-    sheet.rootVcRef = vcRef;
     this.loginForm = this.fb.group({
       email: [""],
       password: [""],
