@@ -104,6 +104,7 @@ import SwiperCore, {
   Controller,
 } from "swiper";
 import { takeUntil } from "rxjs/operators";
+import { ShopReviewsComponent } from "src/app/bottom-sheets/shop-reviews/shop-reviews.component";
 
 // install Swiper components
 SwiperCore.use([
@@ -145,9 +146,9 @@ export class ProductViewComponent implements OnInit, OnDestroy {
   constructor(
     private hrs: HttpRequestService,
     private route: ActivatedRoute,
-    private sheet: BottomSheetProvider,
     private store: Store,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private swipeSheet: BottomSheetProvider
   ) {
     this.productId = this.route.snapshot.paramMap.get("id");
 
@@ -236,7 +237,6 @@ export class ProductViewComponent implements OnInit, OnDestroy {
         if (res.success && _.has(res, "data")) {
           this.product = res.data;
           this.images = res.data.images;
-          this.getReviews(res.data.shopId);
           this.productQtyInTheCart();
         } else {
         }
@@ -258,39 +258,14 @@ export class ProductViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  async openSheet<T>(content: BottomSheetContent<T>) {
-    this.output = "";
-
-    const value = await this.sheet.show(content, {
+  async openShopReviewsSheet(shopId: string) {
+    const value = await this.swipeSheet.show(ShopReviewsComponent, {
       title: "",
+      props: {
+        shopId: shopId,
+      },
       stops: [3500, 500],
     });
-
-    this.output = value;
-  }
-
-  async openReviews<T>(content: BottomSheetContent<T>, shopId: string) {
-    this.output = "";
-
-    const value = await this.sheet.show(content, {
-      title: "",
-      stops: [3500, 500],
-    });
-
-    this.output = value;
-  }
-  async getReviews(shopId: string) {
-    this.hrs.request(
-      "get",
-      `order/getShopReviews/${shopId}`,
-      {},
-      async (res: { data: object[]; success: boolean }) => {
-        if (res.success && _.has(res, "data")) {
-          this.reviews = res.data;
-        }
-        this.reviewSheetLoad = false;
-      }
-    );
   }
 
   onQtyChange(qty: any) {

@@ -1,0 +1,53 @@
+<ul class="sheet-list">
+  <div style="justify-items: center; margin-bottom: 7px">
+    <div
+      style="
+        margin-top: 14px;
+        width: 10%;
+        height: 5px;
+        background-color: #f7d94f;
+        border-radius: 20px;
+      "
+    ></div>
+  </div>
+
+  <div style="margin: 7px">
+    <div *ngIf="reviewSheetLoad">
+      <div style="display: flex; align-items: center; justify-content: center">
+        Loading...
+      </div>
+    </div>
+
+    <ng-container *ngIf="reviews$ | async as reviews">
+      <section
+        style="
+          background: white;
+          padding: 7px;
+          border-radius: 15px;
+          margin-bottom: 7px;
+        "
+        *ngFor="let review of reviews; let i = index"
+      >
+        <div style="display: flex; justify-content: space-between">
+          <div>
+            <div>{{ review?.buyer }}</div>
+            <div>
+              <ngx-star-rating
+                [(ngModel)]="review.rate"
+                disabled="true"
+              ></ngx-star-rating>
+            </div>
+          </div>
+          <div>
+            <div>
+              {{ review?.date | date : "MMMM d, y h:mm a" }}
+            </div>
+          </div>
+        </div>
+        <div>
+          {{ review?.comment }}
+        </div>
+      </section>
+    </ng-container>
+  </div>
+</ul>

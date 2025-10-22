@@ -42,7 +42,7 @@
 
   <div
     matRipple
-    (click)="openReviews(reviewSheet, product.shopId)"
+    (click)="openShopReviewsSheet(product.shopId)"
     style="
       background-color: #f6f6f6;
       color: black;
@@ -90,7 +90,7 @@
 
         <ng-container>
           <div class="ms-icon-container">
-            <button mat-icon-button (click)="openSheet(mySheet)">
+            <button mat-icon-button (click)="openReviews()">
               <mat-icon style="font-size: x-large">shopping_cart</mat-icon>
             </button>
             <div class="ms-icon-text">Add to Cart</div>
@@ -99,141 +99,4 @@
       </div>
     </div>
   </ng-container>
-
-  <ng-template #mySheet let-context>
-    <ul class="sheet-list">
-      <div style="justify-items: center; margin-bottom: 7px">
-        <div
-          style="
-            margin-top: 7px;
-            width: 40px;
-            height: 7px;
-            background-color: #7f7f7f1a;
-            border-radius: 20px;
-          "
-        ></div>
-      </div>
-
-      <div style="margin: 0px 20px 20px 20px">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
-          <div>
-            <img [src]="images[0]" alt="Product Image" width="200px" />
-          </div>
-          <div
-            style="
-              display: flex;
-              justify-content: flex-start;
-              align-items: flex-end;
-            "
-          >
-            <div>
-              <b
-                style="color: #fb5630; font-size: larger; font-weight: bolder"
-                >{{ product.price | currency : "PHP" : "symbol" }}</b
-              >
-              <p>Stock: {{ product.qty }}</p>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div style="display: flex; justify-content: space-between">
-          <div>Quantity</div>
-          <div>
-            <app-counter
-              [value]="orderQty"
-              [step]="1"
-              [min]="1"
-              [max]="product.qty"
-              [wrap]="false"
-              (onQtyChange)="onQtyChange($event)"
-            ></app-counter>
-          </div>
-        </div>
-      </div>
-
-      <div
-        style="
-          background-color: #7f7f7f1a;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 30px 5vw;
-        "
-      >
-        <div style="width: 550px">
-          <button
-            (click)="addToCart()"
-            mat-flat-button
-            color="main-green"
-            class="btn-block fw-bold"
-          >
-            <ng-container *ngIf="!sendRequestBtnOnLoad; else loadupdate">
-              Add to Cart
-            </ng-container>
-            <ng-template #loadupdate>
-              <i class="fas fa-circle-notch fa-spin"></i>
-            </ng-template>
-          </button>
-        </div>
-      </div>
-    </ul>
-  </ng-template>
-
-  <ng-template #reviewSheet let-context>
-    <ul class="sheet-list">
-      <div style="justify-items: center; margin-bottom: 7px">
-        <div
-          style="
-            margin-top: 7px;
-            width: 40px;
-            height: 5px;
-            background-color: #7f7f7f1a;
-            border-radius: 20px;
-          "
-        ></div>
-      </div>
-
-      <div style="margin: 7px">
-        <div *ngIf="reviewSheetLoad">
-          <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
-            Loading...
-          </div>
-        </div>
-
-        <div *ngIf="!reviewSheetLoad">
-          <section
-            style="
-              background: white;
-              padding: 7px;
-              border-radius: 15px;
-              margin-bottom: 7px;
-            "
-            *ngFor="let review of reviews; let i = index"
-          >
-            <div style="display: flex; justify-content: space-between">
-              <div>
-                <div>{{ review?.buyer }}</div>
-                <div>
-                  <ngx-star-rating
-                    [(ngModel)]="review.rate"
-                    disabled="true"
-                  ></ngx-star-rating>
-                </div>
-              </div>
-              <div>
-                <div>
-                  {{ review?.date | date : "MMMM d, y h:mm a" }}
-                </div>
-              </div>
-            </div>
-            <div>
-              {{ review?.comment }}
-            </div>
-          </section>
-        </div>
-      </div>
-    </ul>
-  </ng-template>
 </div>

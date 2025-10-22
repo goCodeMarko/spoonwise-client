@@ -26,7 +26,7 @@ import {
 import { Language, SpoonwiseAI } from "../../store/chat/chat.state";
 import { selectSpoonwiseAI } from "../../store/chat/chat.selectors";
 import { setSendingMessage, setLanguage } from "../../store/chat/chat.actions";
-import { ChatSettingsComponent } from "src/app/bottom-sheets/chat-settings/chat-settings/chat-settings.component";
+import { ChatSettingsComponent } from "src/app/bottom-sheets/chat-settings/chat-settings.component";
 
 @Component({
   selector: "app-sticky-header",
@@ -96,7 +96,7 @@ export class StickyHeaderComponent implements OnInit, OnChanges, OnDestroy {
     this.bottomSheet.open(BottomSheetComponent);
   }
 
-  async setting() {
+  async openSettingSheet() {
     const value = await this.swipeSheet.show(ChatSettingsComponent, {
       title: "",
       props: {
