@@ -1,28 +1,13 @@
-import {
-  Component,
-  OnInit,
-  Output,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  ChangeDetectorRef,
-  SimpleChange,
-  SimpleChanges,
-} from "@angular/core";
-import { HttpRequestService } from "src/app/http-request/http-request.service";
-import * as _ from "lodash";
-import { ActivatedRoute, Route, Router } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { Observable, Subject, takeUntil } from "rxjs";
-import {
-  ProductCategory,
-  ProductCategoryLabels,
-  SpecialOffer,
-  SpecialOfferLabels,
-} from "../../enums/index";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { SpecialOffer, SpecialOfferLabels } from "../../shared/enums/index";
+import { Subject, takeUntil } from "rxjs";
+import { HttpRequestService } from "src/app/http-request/http-request.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Store } from "@ngrx/store";
 import { MatSlideToggleChange } from "@angular/material/slide-toggle";
-import { I } from "@angular/cdk/keycodes";
+import _ from "lodash";
+import { BottomSheetProvider } from "swipe-bottom-sheet/angular";
 import { AuthService } from "src/app/authorization/auth.service";
 
 interface params {
@@ -41,6 +26,7 @@ interface Meta {
   pages: number;
   total: number;
 }
+
 @Component({
   selector: "app-product-list",
   templateUrl: "./product-list.component.html",
@@ -54,24 +40,31 @@ export class ProductListComponent implements OnInit, OnDestroy {
   meta: Meta = { limit: 0, page: 0, pages: 0, total: 0 };
   specialOfferIds = Object.values(SpecialOffer);
   specialOfferLabels = SpecialOfferLabels;
-  public account = {};
-  @Input() showPublishSlider = false;
-  @Input() isShop = false;
-  @Input() visibility = false;
+  showPublishSlider = false;
+  isShop = false;
+  public account: any = {};
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private hrs: HttpRequestService,
     private route: ActivatedRoute,
     private router: Router,
-    private auth: AuthService,
-    private store: Store
+    private store: Store,
+    private provider: BottomSheetProvider,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
     this.account = JSON.parse(this.auth.getUserData());
 
     console.log("------------account", this.account);
+
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        if (params.sort) this.selectControl.setValue(params.sort);
+      });
 
     this.selectControl.valueChanges.subscribe((value) => {
       this.router.navigate([], {
@@ -81,18 +74,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       });
     });
     this.listenToQueryParams();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["visibility"]) {
-      const currentVisibility = changes["visibility"].currentValue;
-
-      if (!currentVisibility) {
-        this.destroy$.next();
-      } else {
-        this.listenToQueryParams();
-      }
-    }
+    this.getProducts();
   }
 
   ngOnDestroy(): void {
@@ -174,7 +156,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   private listenToQueryParams() {
-    if (!this.visibility) return;
+    // if (!this.visibility) return;
 
     this.route.queryParams
       .pipe(takeUntil(this.destroy$))

@@ -3,58 +3,16 @@
   (onSearch)="search($event)"
 ></app-sticky-header>
 
-<div>
-  <div *ngIf="routerOutletComponent == 'ProductListPageComponent'">
-    <div *ngIf="!isMapLoading; else loading">
-      <app-map
-        [height]="'calc(100dvh - 56.1px - 84px)'"
-        [zIndex]="'1'"
-        [borderRadius]="'0px'"
-        *ngIf="!isShopViewing"
-        [shops]="this.shops"
-        [detectCurrentLocation]="true"
-        [checkDBLocation]="true"
-        [disabled]="false"
-        [radius]="3000"
-        (dragend)="onMapDragend($event)"
-      ></app-map>
-    </div>
-    <ng-template #loading>
-      <div
-        class="loader"
-        style="
-          padding: 88px 7px 3px 7px;
-          height: 100vh;
-          z-index: 0;
-          border-radius: 10px;
-        "
-      ></div>
-    </ng-template>
-  </div>
+<router-outlet (activate)="fromRouterOutlet($event)"> </router-outlet>
 
-  <div
-    [ngClass]="
-      routerOutletComponent == 'ProfilePageComponent' ||
-      routerOutletComponent == 'ChatListPageComponent' ||
-      routerOutletComponent == 'CartComponent' ||
-      routerOutletComponent == 'CheckoutComponent' ||
-      routerOutletComponent == 'HomePageComponent'
-        ? 'contentProfile'
-        : !isShopViewing && routerOutletComponent == 'ProductListPageComponent'
-        ? 'content-with-map'
-        : 'content-without-map'
-    "
-  >
-    <router-outlet (activate)="fromRouterOutlet($event)"> </router-outlet>
-  </div>
-</div>
-
-<app-sticky-footer
+<ng-container
   *ngIf="
-    routerOutletComponent == 'ProductListPageComponent' ||
+    routerOutletComponent == 'DealsPageComponent' ||
     routerOutletComponent == 'HomePageComponent' ||
     routerOutletComponent == 'ChatListPageComponent' ||
     routerOutletComponent == 'ProfilePageComponent' ||
     routerOutletComponent == 'CartComponent'
   "
-></app-sticky-footer>
+>
+  <app-sticky-footer></app-sticky-footer>
+</ng-container>

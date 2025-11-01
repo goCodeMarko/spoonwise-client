@@ -35,6 +35,7 @@
     "@swimlane/ngx-charts": "^20.1.2",
     "base64-blob": "^1.4.1",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.13.1",
     "browser-image-compression": "^2.0.2",
     "bson": "^4.7.2",
     "chartist": "^0.11.4",

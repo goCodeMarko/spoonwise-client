@@ -1,6 +1,9 @@
 @import "~swipe-bottom-sheet/style";
 
-/* Remove or lighten the dark backdrop for swipe-bottom-sheet */
 .sheet-backdrop {
   opacity: 0 !important;
+}
+
+.cdk-overlay-container {
+  z-index: 999999 !important;
 }

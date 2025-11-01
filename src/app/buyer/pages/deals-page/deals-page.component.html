@@ -1,0 +1,27 @@
+<div *ngIf="!isMapLoading; else loading">
+  <app-map
+    [height]="'calc(100dvh - 56.1px - 84px)'"
+    [zIndex]="'1'"
+    [borderRadius]="'0px'"
+    *ngIf="!isShopViewing"
+    [shops]="this.shops"
+    [detectCurrentLocation]="true"
+    [checkDBLocation]="true"
+    [disabled]="false"
+    [radius]="3000"
+    [nearestShopButton]="true"
+    [topRatedShopButton]="true"
+    (dragend)="onMapDragend($event)"
+  ></app-map>
+</div>
+<ng-template #loading>
+  <div
+    class="loader"
+    style="
+      padding: 88px 7px 3px 7px;
+      height: 100vh;
+      z-index: 0;
+      border-radius: 10px;
+    "
+  ></div>
+</ng-template>

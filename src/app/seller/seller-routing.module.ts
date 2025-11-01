@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { SellerComponent } from "./seller.component";
 import { AddProductComponent } from "./pages/add-product/add-product.component";
-import { ProductListPageComponent } from "./pages/product-list-page/product-list-page.component";
+import { DealsPageComponent } from "./pages/deals-page/deals-page.component";
 import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
 import { SecurityGuard } from "../guards/security.guard";
@@ -20,7 +20,7 @@ const SellerRoutes: Routes = [
     children: [
       {
         path: "deals",
-        component: ProductListPageComponent,
+        component: DealsPageComponent,
       },
       {
         path: "home",

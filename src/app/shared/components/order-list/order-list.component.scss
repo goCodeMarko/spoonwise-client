@@ -1,3 +1,9 @@
 ::ng-deep .mat-ripple {
   z-index: auto;
 }
+
+/* restore default interactivity and backdrop */
+
+::ng-deep html body .sheet-container {
+  pointer-events: auto !important;
+}

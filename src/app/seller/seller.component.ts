@@ -31,8 +31,6 @@ export class SellerComponent implements OnInit, OnDestroy {
   onUpdateChatroomsMsgStatusToDelivered: Subscription;
   onUpdateChatroomsMsgStatusToSeen: Subscription;
   onReceivedChunksFromAI: Subscription;
-  isMapLoading: boolean = true;
-  buyers: any[] = [];
 
   constructor(
     private socket: SocketService,
@@ -98,7 +96,6 @@ export class SellerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getBuyers();
     this.markSenderMessagesAsDelivered();
 
     this.store.dispatch(setToPay());
@@ -117,17 +114,6 @@ export class SellerComponent implements OnInit, OnDestroy {
   fromRouterOutlet(component: any) {
     const name = component.constructor["componentName"] || "unknown";
     this.routerOutletComponent = name;
-  }
-
-  getBuyers() {
-    console.log("-------------------x");
-    this.hrs
-      .request("getV2", "user/getBuyers", {})
-      .pipe(finalize(() => (this.isMapLoading = false)))
-      .subscribe((res: any) => {
-        console.log("----", res);
-        this.buyers = res.data;
-      });
   }
 
   markSenderMessagesAsDelivered() {

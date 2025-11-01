@@ -47,7 +47,6 @@ import { LineClampPipe } from "./pipes/line-clamp/line-clamp.pipe";
 import { BlogListComponent } from "./components/blog-list/blog-list/blog-list.component";
 import { ViewBlogComponent } from "./components/view-blog/view-blog.component";
 import { HomeListComponent } from "./components/home-list/home-list.component";
-import { ShopListComponent } from "./components/shop-list/shop-list.component";
 import { CountDown2Pipe } from "./pipes/count-down2.pipe";
 import { DashboardComponent } from "./components/dashboard/dashboard/dashboard.component";
 import { OrderStatusTotalsComponent } from "./components/order-status-totals/order-status-totals/order-status-totals.component";
@@ -80,8 +79,6 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
     BlogListComponent,
     ViewBlogComponent,
     HomeListComponent,
-    ShopListComponent,
-    CountDown2Pipe,
     OrderStatusPipe,
     OrderStatusTotalsComponent,
     DashboardComponent,
@@ -134,7 +131,6 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
     BlogListComponent,
     ViewBlogComponent,
     HomeListComponent,
-    ShopListComponent,
     OrderStatusTotalsComponent,
     DashboardComponent,
   ],

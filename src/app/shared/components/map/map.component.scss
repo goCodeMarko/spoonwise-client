@@ -5,3 +5,30 @@
   display: block;
   overflow: hidden;
 }
+
+.side-button {
+  background: white;
+  border-radius: 10px;
+  color: #f8da50;
+  padding: 4px;
+  border: none;
+  width: 38px;
+}
+
+::ng-deep .leaflet-control-attribution {
+  bottom: 7px !important;
+  right: 7px !important;
+}
+
+::ng-deep .leaflet-bar a {
+  border-bottom: 0px !important;
+}
+
+::ng-deep .sheet-container {
+  background: transparent !important; /* remove dark overlay */
+  pointer-events: none !important; /* disables backdrop clicks */
+}
+
+::ng-deep .sheet {
+  pointer-events: auto !important; /* keeps sheet content clickable */
+}

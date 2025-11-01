@@ -48,6 +48,8 @@ import {
   ShippingOptionValue,
 } from "./../../../shared/enums/index";
 import { SocketService } from "../../socket/socket.service";
+import { LalamoveRequestDetailsComponent } from "src/app/bottom-sheets/lalamove-request-details/lalamove-request-details.component";
+import { RateShopComponent } from "src/app/bottom-sheets/rate-shop/rate-shop.component";
 
 @Component({
   selector: "app-order-list",
@@ -56,44 +58,31 @@ import { SocketService } from "../../socket/socket.service";
   encapsulation: ViewEncapsulation.None, // Disable view encapsulation
 })
 export class OrderListComponent implements OnInit, OnDestroy {
-  orderItems!: Order[];
-  orderItems$!: Observable<Order[]>;
-
   @Input() type!: string;
   @Input() isShop = false;
+
+  public orderItems!: Order[];
+  public orderItems$!: Observable<Order[]>;
   private destroy$ = new Subject<void>();
-  account = {};
-  output = "";
-  storeRating = 5;
-  storeComment = "";
-  ratingForm: FormGroup;
-  orderValue = Object.values(OrderStatusValue);
-  orderLabels = OrderStatusLabels;
-  paymentValue = Object.values(PaymentValue);
-  paymentLabels = PaymentLabels;
-  shippingOptionValue = Object.values(ShippingOptionValue);
-  shippingOptionLabels = ShippingOptionLabels;
-  onLalamoveStatusChangeSubscriber: Subscription;
-  lalamoveShareLink: SafeResourceUrl = "";
+  public account = {};
+  public orderValue = Object.values(OrderStatusValue);
+  public orderLabels = OrderStatusLabels;
+  public paymentValue = Object.values(PaymentValue);
+  public paymentLabels = PaymentLabels;
+  public shippingOptionValue = Object.values(ShippingOptionValue);
+  public shippingOptionLabels = ShippingOptionLabels;
+  public onLalamoveStatusChangeSubscriber: Subscription;
+
   constructor(
     private store: Store,
     private auth: AuthService,
-    private sheet: BottomSheetProvider,
-    private vcRef: ViewContainerRef,
+    private swipeSheet: BottomSheetProvider,
     private hrs: HttpRequestService,
-    private sanitizer: DomSanitizer,
-    private fb: FormBuilder,
     private dialog: MatDialog,
     private actions$: Actions,
     private socket: SocketService
   ) {
     this.account = JSON.parse(this.auth.getUserData());
-    sheet.rootVcRef = vcRef;
-
-    this.ratingForm = fb.group({
-      rating: [this.storeRating, Validators.required],
-      comment: [this.storeComment],
-    });
 
     this.onLalamoveStatusChangeSubscriber = this.socket
       .onLalamoveStatusChange()
@@ -157,7 +146,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$));
         break;
       case "for_pickup":
-        this.onBottomSheetClosed();
+        // this.onBottomSheetClosed();
         this.orderItems$ = this.store
           .select(selectForPickup)
           .pipe(takeUntil(this.destroy$));
@@ -187,68 +176,20 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   isLalamoveLoad = true;
-  shopId = "";
-  orderId = "";
   lalamoveQoutationData: any = {};
   lalamoveStatus = "";
   lalamoveDriver = {};
   lalamoveOrder = {};
 
-  async openSheet<T>(
-    content: BottomSheetContent<T>,
-    shopId: string,
-    orderId: string
-  ) {
-    this.output = "";
-    this.shopId = shopId;
-    this.orderId = orderId;
-
-    this.isLalamoveLoad = true;
-
-    this.lalamoveQoutationData = {};
-    this.lalamoveStatus = "";
-    this.lalamoveDriver = {};
-    this.lalamoveOrder = {};
-
-    this.hrs.request(
-      "get",
-      "order/lalamove/getQuotation",
-      { shopId: shopId, orderId: orderId },
-      async (data: any) => {
-        if (data.success) {
-          this.lalamoveQoutationData = data.data.quotation;
-          this.lalamoveStatus = data.data.lalamoveStatus;
-          this.isLalamoveLoad = false;
-        }
-
-        if (
-          ["ASSIGNING_DRIVER", "PICKED_UP", "ON_GOING", "COMPLETED"].includes(
-            data.data.lalamoveStatus
-          )
-        ) {
-          this.lalamoveOrder = {
-            ...data.data.latestLalamoveOrder,
-          };
-          (this.lalamoveShareLink =
-            this.sanitizer.bypassSecurityTrustResourceUrl(
-              data.data.latestLalamoveOrder.shareLink
-            )),
-            (this.lalamoveDriver = data.data.latestLalamoveDriver);
-
-          console.log("==", this.lalamoveOrder);
-          console.log("==", this.lalamoveDriver);
-        }
-      }
-    );
-
-    const value = await this.sheet.show(content, {
+  async openLalamoveRequestDetailsSheet(shopId: string, orderId: string) {
+    const value = await this.swipeSheet.show(LalamoveRequestDetailsComponent, {
       title: "",
-      stops: [3500, 1000],
+      props: {
+        shopId,
+        orderId,
+      },
+      stops: [window.innerHeight, 500],
     });
-
-    this.output = value;
-
-    this.onBottomSheetClosed();
   }
 
   trackByOrderId(index: number, order: any): string {
@@ -257,60 +198,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   trackByLineItemId(index: number, item: any): string {
     return item.productId;
-  }
-
-  findDriver() {
-    this.isLalamoveLoad = true;
-    this.hrs.request(
-      "post",
-      "order/lalamove/createOrder",
-      {
-        shopId: this.shopId,
-        quotation: this.lalamoveQoutationData,
-        orderId: this.orderId,
-      },
-      async (data: any) => {
-        if (data.success) {
-          this.lalamoveStatus = data.data.status;
-
-          this.lalamoveOrder = {
-            ...data.data,
-          };
-
-          this.lalamoveShareLink =
-            this.sanitizer.bypassSecurityTrustResourceUrl(data.data.shareLink);
-        }
-
-        this.isLalamoveLoad = false;
-      }
-    );
-  }
-
-  stopFinding(lalamoveOrder: object) {
-    this.isLalamoveLoad = true;
-    this.hrs.request(
-      "put",
-      "order/lalamove/stopFindingDrivers",
-      {
-        lalamoveOrder,
-      },
-      async (data: any) => {
-        if (data.success) {
-        }
-
-        this.isLalamoveLoad = false;
-      }
-    );
-  }
-
-  onBottomSheetClosed() {
-    this.isLalamoveLoad = true;
-    this.shopId = "";
-    this.orderId = "";
-    this.lalamoveQoutationData = {};
-    this.lalamoveStatus = "";
-    this.lalamoveDriver = {};
-    this.lalamoveOrder = {};
   }
 
   pickUpMeetUp(orderId: string, shopId: string) {
@@ -390,45 +277,14 @@ export class OrderListComponent implements OnInit, OnDestroy {
     });
   }
 
-  storeRateBtnOnLoad = false;
-  storeRateOrderId: string = "";
-  storeRateShopId: string = "";
-  storeRate(orderId: string, shopId: string) {
-    const rating = this.ratingForm.get("rating")?.value;
-    const comment = this.ratingForm.get("comment")?.value;
-
-    this.storeRateBtnOnLoad = true;
-    this.store.dispatch(
-      setReviews({
-        orderId: this.storeRateOrderId,
-        shopId: this.storeRateShopId,
-        rating,
-        comment,
-      })
-    );
-    this.storeRatingSheetClosed();
-    this.storeRateBtnOnLoad = false;
-  }
-
-  async openStoreRatingSheet<T>(
-    content: BottomSheetContent<T>,
-    orderId: string,
-    shopId: string
-  ) {
-    this.storeRateBtnOnLoad = false;
-    this.storeRateOrderId = orderId;
-    this.storeRateShopId = shopId;
-    const value = await this.sheet.show(content, {
+  async openStoreRatingSheet(orderId: string, shopId: string) {
+    const value = await this.swipeSheet.show(RateShopComponent, {
       title: "",
-      stops: [3500, 1000],
+      props: {
+        shopId,
+        orderId,
+      },
+      stops: [1500, 1000],
     });
-
-    this.output = value;
-
-    this.storeRatingSheetClosed();
-  }
-
-  storeRatingSheetClosed() {
-    this.storeRateBtnOnLoad = false;
   }
 }

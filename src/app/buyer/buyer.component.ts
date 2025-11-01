@@ -37,7 +37,7 @@ import { getSavedBlogs } from "../shared/store/blog/blog.actions";
 export class BuyerComponent implements OnInit, OnDestroy {
   selectControl = new FormControl("latest"); // Default value
   routerOutletComponent: any;
-  shops: any[] = [];
+
   subject: object = {};
   radius: number = 3000;
   isMapLoading: boolean = true;
@@ -132,7 +132,6 @@ export class BuyerComponent implements OnInit, OnDestroy {
     this.markSenderMessagesAsDelivered();
 
     // this.subject = JSON.parse(this.auth.getUserData());
-    this.getShops();
     this.getCategories();
     this.getSpecialOffers();
 
@@ -173,50 +172,6 @@ export class BuyerComponent implements OnInit, OnDestroy {
       if (res.success && _.has(res, "data")) {
         localStorage.setItem("categories", JSON.stringify(res.data));
       }
-    });
-  }
-
-  async onMapDragend(e: any) {
-    console.log("Buyer::onMapDragend", e);
-    try {
-      await this.updatedCoordinates(e);
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: {
-          lat: e.lat,
-          lng: e.lng,
-        },
-        queryParamsHandling: "merge",
-      });
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  updatedCoordinates(coordinates: { lat: string; lng: string }) {
-    return new Promise((resolve, reject) => {
-      this.hrs.request(
-        "put",
-        `user/updateBuyerLocation`,
-        {
-          coordinates,
-        },
-        async (res: any) => {
-          if (res.success) resolve(res);
-          else reject(res);
-        }
-      );
-    });
-  }
-
-  getShops() {
-    this.hrs.request("get", "shop/getShops", {}, async (res: any) => {
-      console.log("----shop/getShops", res);
-      if (res.success && _.has(res, "data")) {
-        this.shops = res.data;
-      }
-
-      this.isMapLoading = false;
     });
   }
 

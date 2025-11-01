@@ -1,0 +1,79 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  height: 50dvh;
+}
+
+.container-seller {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  //   height: calc(100dvh - 57px - 116px - 66.8px - 23px);
+}
+
+/* Each card stretches based on screen size */
+.card {
+  background: white;
+  text-align: left;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: none;
+  padding: 3px;
+
+  &:first-child {
+    border-radius: 7px 7px 0px 0px;
+  }
+
+  &:last-child {
+    border-radius: 0px 0px 7px 7px;
+  }
+
+  &:only-child {
+    border-radius: 7px;
+  }
+}
+
+/* Image takes full width */
+.card .prod-img {
+  width: 100px;
+  object-fit: cover;
+  border-radius: 7px;
+}
+
+/* Content area */
+.card-content {
+  flex-grow: 1; /* Makes the content fill the available space */
+  // background-color: #00c6c8;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  height: 35px;
+}
+
+.price-color {
+  color: #ee4d2d;
+}
+
+mat-button-toggle {
+  min-width: 10em;
+}
+
+/* 📌 Mobile: Change to one column */
+// @media (max-width: 768px) {
+//   .container {
+//     grid-template-columns: 1fr; /* Single column on small screens */
+//   }
+// }

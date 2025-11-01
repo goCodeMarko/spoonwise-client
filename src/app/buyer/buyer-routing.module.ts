@@ -7,7 +7,7 @@ import { SecurityGuard } from "../guards/security.guard";
 import { CartComponent } from "./pages/cart/cart.component";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
 import { ProfileComponent } from "../shared/components/profile/profile.component";
-import { ProductListPageComponent } from "./pages/product-list-page/product-list-page.component";
+import { DealsPageComponent } from "./pages/deals-page/deals-page.component";
 import { ProfilePageComponent } from "./pages/profile-page/profile-page.component";
 import { ProductViewPageComponent } from "./pages/product-view-page/product-view-page.component";
 import { ChatListPageComponent } from "./pages/chat-list-page/chat-list-page.component";
@@ -22,7 +22,7 @@ const BuyerRoutes: Routes = [
     component: BuyerComponent,
     canActivate: [SecurityGuard],
     children: [
-      { path: "deals", component: ProductListPageComponent },
+      { path: "deals", component: DealsPageComponent },
       {
         path: "home",
         component: HomePageComponent,

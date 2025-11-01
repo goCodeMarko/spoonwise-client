@@ -14,11 +14,15 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { size } from "lodash";
-import { firstValueFrom, Observable, Subscriber } from "rxjs";
+import { firstValueFrom, Observable, Subscriber, takeUntil } from "rxjs";
 import { AuthService } from "src/app/authorization/auth.service";
 import { GeolocationService } from "../../services/geolocation/geolocation.service";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { style } from "@angular/animations";
+import { ProductListComponent } from "src/app/bottom-sheets/product-list/product-list.component";
+import { BottomSheetProvider } from "swipe-bottom-sheet/angular";
+import Swiper from "swiper";
+import { ShopListComponent } from "src/app/bottom-sheets/shop-list/shop-list.component";
 declare let L: any; // Declare Leaflet from the global scope
 
 @Component({
@@ -41,6 +45,8 @@ export class MapComponent
   @Input() checkDBLocation = false;
   @Input() disabled = true;
   @Input() isShop = false;
+  @Input() nearestShopButton = false;
+  @Input() topRatedShopButton = false;
 
   @HostBinding("style.height") @Input() height = "calc(100dvh - 56.1px - 84px)";
   @HostBinding("style.z-index") @Input() zIndex = "1";
@@ -49,18 +55,102 @@ export class MapComponent
   @HostBinding("style.overflow") overflow = "hidden";
 
   @Output() dragend = new EventEmitter<any>();
+  destroy$ = new EventEmitter<void>();
+
+  productListSheet: any;
+  topRatedShopsSheet: any;
+  nearShopsSheet: any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private hrs: HttpRequestService,
-    private geolocationService: GeolocationService
+    private geolocationService: GeolocationService,
+    private swipeSheet: BottomSheetProvider
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      if (params.radius) this.radius = params.radius * 1000;
-    });
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (params) => {
+        if (params.radius) this.radius = params.radius * 1000;
+
+        if (params.view === "products" && !this.productListSheet) {
+          this.productListSheet = await this.swipeSheet.show(
+            ProductListComponent,
+            {
+              title: "",
+              props: {
+                showPublishSlider: false,
+                isShop: false,
+              },
+              stops: [200, 800],
+            }
+          );
+
+          this.productListSheet = null;
+          this.nearShopsSheet = null;
+          this.topRatedShopsSheet = null;
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { view: null },
+            queryParamsHandling: "merge",
+          });
+        } else {
+          this.productVisibility = false;
+        }
+
+        if (params.view === "topNearShops" && !this.nearShopsSheet) {
+          this.productListSheet = await this.swipeSheet.show(
+            ShopListComponent,
+            {
+              title: "",
+              props: {
+                sortBy: "distance",
+              },
+              stops: [200, 800],
+            }
+          );
+
+          this.productListSheet = null;
+          this.nearShopsSheet = null;
+          this.topRatedShopsSheet = null;
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { view: null },
+            queryParamsHandling: "merge",
+          });
+          this.distanceVisibility = true;
+        } else {
+          this.distanceVisibility = false;
+        }
+
+        if (params.view === "topRatedShops" && !this.topRatedShopsSheet) {
+          this.productListSheet = await this.swipeSheet.show(
+            ShopListComponent,
+            {
+              title: "",
+              props: {
+                sortBy: "rating",
+              },
+              stops: [200, 800],
+            }
+          );
+
+          this.productListSheet = null;
+          this.nearShopsSheet = null;
+          this.topRatedShopsSheet = null;
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { view: null },
+            queryParamsHandling: "merge",
+          });
+
+          this.ratingVisibility = true;
+        } else {
+          this.ratingVisibility = false;
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -83,6 +173,9 @@ export class MapComponent
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
     if (this.map) {
       this.map.off(); // Remove all event listeners
       this.map.remove(); // Completely removes the map and its layers from the DOM
@@ -326,14 +419,6 @@ export class MapComponent
       cursor: pointer;
     }
 
-    .leaflet-control-attribution {
-      bottom: 7px;
-      right: 7px;
-    }
-
-    .leaflet-bar a {
-      border-bottom: 0px;
-      }
   </style>
 `;
 
@@ -494,5 +579,38 @@ export class MapComponent
       this.dragend.emit(position);
     });
     // });
+  }
+
+  public productVisibility = false;
+  public distanceVisibility = false;
+  public ratingVisibility = false;
+  public async toggleProductVisibility() {
+    if (this.productListSheet) return;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { view: "products" },
+      queryParamsHandling: "merge",
+    });
+  }
+
+  toggleTopRatedShopsVisibility() {
+    if (this.topRatedShopsSheet) return;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { view: "topRatedShops" },
+      queryParamsHandling: "merge",
+    });
+  }
+
+  toggleNearShopsVisibility() {
+    if (this.nearShopsSheet) return;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { view: "topNearShops" },
+      queryParamsHandling: "merge",
+    });
   }
 }

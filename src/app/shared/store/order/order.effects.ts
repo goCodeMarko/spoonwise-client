@@ -6,10 +6,16 @@ import { of } from "rxjs";
 import { Order } from "./order.state";
 import * as OrderActions from "./order.actions";
 import { environment } from "../../../../environments/environment";
+import { MatDialog } from "@angular/material/dialog";
+import { PopUpModalComponent } from "src/app/modals/pop-up-modal/pop-up-modal.component";
 
 @Injectable()
 export class OrderEffects {
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private dialog: MatDialog
+  ) {}
 
   setToPay$ = createEffect(() =>
     this.actions$.pipe(
@@ -210,6 +216,20 @@ export class OrderEffects {
           .pipe(
             map((data: any) => {
               let order: Order = data.data;
+
+              this.dialog.open(PopUpModalComponent, {
+                width: "500px",
+                data: {
+                  deletebutton: false,
+                  okaybutton: false,
+                  title: "Thank You!",
+                  message:
+                    "You have <b>successfully rated</b> the store. <br>" +
+                    "Your feedback helps us improve and serve you better!",
+                  file: "assets/icons/badge.png",
+                },
+              });
+
               return OrderActions.setReviewsSuccess({
                 order,
                 orderId,

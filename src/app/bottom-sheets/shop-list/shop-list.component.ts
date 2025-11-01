@@ -1,34 +1,23 @@
 import {
   Component,
-  ElementRef,
   Input,
+  OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
-  ViewChild,
 } from "@angular/core";
-import { Audience, BlogStatus, IBlog } from "../../store/blog/blog.state";
+import { ActivatedRoute, Params, Router } from "@angular/router";
+import { Actions } from "@ngrx/effects";
+import { Store } from "@ngrx/store";
 import {
   distinctUntilChanged,
   filter,
-  Observable,
   Subject,
   Subscription,
   takeUntil,
 } from "rxjs";
-import { Actions, ofType } from "@ngrx/effects";
-import {
-  getBlogs,
-  getPastBlogs,
-  getPastBlogsFailure,
-  getPastBlogsSuccess,
-} from "../../store/blog/blog.actions";
-import { selectBlogs } from "../../store/blog/blog.selector";
-import { Store } from "@ngrx/store";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { INearestShops } from "src/app/models/nearest-shops.model";
-import { chatSeller, chatSellerSuccess } from "../../store/chat/chat.actions";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { chatSeller } from "src/app/shared/store/chat/chat.actions";
 
 @Component({
   selector: "app-shop-list",
@@ -38,9 +27,8 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 export class ShopListComponent implements OnInit {
   nearestShops: INearestShops[] = [];
   destroy$ = new Subject<void>();
-  @Input() ratingVisibility = false;
-  @Input() distanceVisibility = false;
-  @Input() sortBy = "distance";
+
+  sortBy = "distance";
   queryParams = {};
   private queryParamsSub?: Subscription;
 
@@ -53,31 +41,8 @@ export class ShopListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // console.log("ddddddd");
-    // this.actions$
-    //   .pipe(ofType(chatSellerSuccess), takeUntil(this.destroy$))
-    //   .subscribe((action) => {
-    //     const chatroom = action.chatroom;
-    //     console.log("===============");
-    //     this.router.navigate([`/chats/${chatroom._id}`], {
-    //       queryParams: { isSpoonwiseAI: false },
-    //     });
-    //   });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["distanceVisibility"] || changes["ratingVisibility"]) {
-      const currentdistanceVisibility =
-        changes["distanceVisibility"]?.currentValue;
-      const currentratingVisibility = changes["ratingVisibility"]?.currentValue;
-
-      if (!currentdistanceVisibility && !currentratingVisibility) {
-        console.log("----destroy");
-        this.destroy$.next();
-      } else {
-        this.listenToQueryParams();
-      }
-    }
+    this.listenToQueryParams();
+    this.getNearShops();
   }
 
   ngOnDestroy(): void {
@@ -89,7 +54,7 @@ export class ShopListComponent implements OnInit {
     this.hrs
       .request("getV2", "shop/getNearestShops", {
         ...this.queryParams,
-        sortBy: this.ratingVisibility ? "rating" : "distance",
+        sortBy: this.sortBy,
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe(async (res: any) => {
@@ -103,14 +68,7 @@ export class ShopListComponent implements OnInit {
     this.store.dispatch(chatSeller({ shopId }));
   }
 
-  @ViewChild("blogListContainer", { static: false })
-  blogListContainer!: ElementRef;
-  allChatsHasBeenDisplayed = false;
-  onLoad = false;
-
   listenToQueryParams(): void {
-    if (!this.ratingVisibility && !this.distanceVisibility) return;
-
     this.queryParamsSub?.unsubscribe();
     this.queryParamsSub = this.route.queryParams
       .pipe(

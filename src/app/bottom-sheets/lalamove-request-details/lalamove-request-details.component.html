@@ -1,0 +1,232 @@
+<ng-container (closed)="onBottomSheetClosed()">
+  <ul class="sheet-list">
+    <div style="display: flex; justify-content: center; margin-bottom: 15px">
+      <div
+        style="
+          margin-top: 8px;
+          width: 40px;
+          height: 5px;
+          background-color: #f7d94f;
+          border-radius: 20px;
+        "
+      ></div>
+    </div>
+
+    <div
+      *ngIf="isLalamoveLoad; else contentLalamove"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
+      "
+    >
+      <div>Loading...</div>
+    </div>
+
+    <!-- CONTENT -->
+    <ng-template #contentLalamove>
+      <ng-container *ngIf="this.lalamoveStatus; else noContent">
+        <div
+          *ngIf="
+            lalamoveStatus == 'NONE' ||
+            lalamoveStatus == 'EXPIRED_CANCELED_REJECTED'
+          "
+        >
+          <div
+            style="display: flex; align-items: center; justify-content: center"
+          >
+            <div>
+              <img
+                src="../../assets/images/logo/lalamove-whole-logo.png"
+                width="250"
+              />
+            </div>
+          </div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 150px 1fr;
+              row-gap: 10px;
+              padding: 0px 7px 0px 7px;
+            "
+          >
+            <div style="grid-column: 1; grid-row: 1; font-weight: bolder">
+              Price
+            </div>
+            <div style="grid-column: 2; grid-row: 1">
+              {{
+                lalamoveQoutationData.priceBreakdown.total
+                  | currency : "PHP" : "symbol"
+              }}
+            </div>
+
+            <div style="grid-column: 1; grid-row: 2; font-weight: bolder">
+              Service Type
+            </div>
+            <div style="grid-column: 2; grid-row: 2">
+              {{ lalamoveQoutationData.serviceType }}
+            </div>
+
+            <div style="grid-column: 1; grid-row: 3; font-weight: bolder">
+              Pick-up
+            </div>
+            <div style="grid-column: 2; grid-row: 3">
+              {{ lalamoveQoutationData?.stops?.[0]?.address }}
+            </div>
+
+            <div style="grid-column: 1; grid-row: 4; font-weight: bolder">
+              Drop
+            </div>
+            <div style="grid-column: 2; grid-row: 4">
+              {{ lalamoveQoutationData?.stops?.[1]?.address }}
+            </div>
+
+            <div style="grid-column: 1; grid-row: 5; font-weight: bolder">
+              Distance
+            </div>
+            <div style="grid-column: 2; grid-row: 5">
+              {{
+                lalamoveQoutationData?.distance?.value +
+                  lalamoveQoutationData?.distance?.unit
+              }}
+            </div>
+          </div>
+
+          <div
+            style="
+              background-color: #f9f9f9;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: 7px;
+            "
+          >
+            <div style="width: 550px">
+              <button
+                mat-flat-button
+                color="main-green"
+                class="btn-block fw-bold"
+                (click)="findDriver()"
+              >
+                <ng-container> Find Driver </ng-container>
+                <ng-template #loadupdate>
+                  <i class="fas fa-circle-notch fa-spin"></i>
+                </ng-template>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            ['ASSIGNING_DRIVER', 'PICKED_UP', 'ON_GOING', 'COMPLETED'].includes(
+              lalamoveStatus
+            )
+          "
+        >
+          <div>
+            <iframe
+              [src]="lalamoveShareLink"
+              width="100%"
+              height="650px"
+              frameborder="0"
+            ></iframe>
+          </div>
+
+          <ng-container
+            *ngIf="
+              ['PICKED_UP', 'ON_GOING', 'COMPLETED', CANCELLED].includes(
+                this.lalamoveOrder.status
+              )
+            "
+          >
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 150px 1fr;
+                row-gap: 3.5px;
+                padding: 7px;
+              "
+            >
+              <div style="grid-column: 1; grid-row: 1; font-weight: bolder">
+                Price
+              </div>
+              <div style="grid-column: 2; grid-row: 1">
+                {{
+                  lalamoveOrder.priceBreakdown.total
+                    | currency : "PHP" : "symbol"
+                }}
+              </div>
+
+              <div style="grid-column: 1; grid-row: 3; font-weight: bolder">
+                Pick-up
+              </div>
+              <div style="grid-column: 2; grid-row: 3">
+                {{ lalamoveOrder?.stops?.[0]?.address }}
+              </div>
+
+              <div style="grid-column: 1; grid-row: 4; font-weight: bolder">
+                Drop
+              </div>
+              <div style="grid-column: 2; grid-row: 4">
+                {{ lalamoveOrder?.stops?.[1]?.address }}
+              </div>
+
+              <div style="grid-column: 1; grid-row: 5; font-weight: bolder">
+                Distance
+              </div>
+              <div style="grid-column: 2; grid-row: 5">
+                {{ lalamoveOrder?.distance.value | number }}
+                {{ lalamoveOrder?.distance.unit }}
+              </div>
+
+              <div style="grid-column: 1; grid-row: 6; font-weight: bolder">
+                Driver Contact No.
+              </div>
+              <div style="grid-column: 2; grid-row: 6">
+                {{ lalamoveDriver.phone }}
+              </div>
+            </div>
+          </ng-container>
+
+          <div
+            *ngIf="lalamoveStatus == 'ASSIGNING_DRIVER'"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: 7px;
+            "
+          >
+            <div style="width: 550px">
+              <button
+                mat-flat-button
+                color="main-green"
+                class="btn-block fw-bold"
+                (click)="stopFinding(lalamoveOrder)"
+              >
+                <ng-container> Stop Finding </ng-container>
+                <ng-template #loadupdate>
+                  <i class="fas fa-circle-notch fa-spin"></i>
+                </ng-template>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noContent>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+          "
+        >
+          <div>No Lalamove Quotation Data Found.</div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </ul>
+</ng-container>

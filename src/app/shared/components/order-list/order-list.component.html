@@ -206,13 +206,7 @@
             <button
               mat-flat-button
               *ngIf="order.reviews.rate == 0"
-              (click)="
-                openStoreRatingSheet(
-                  storeRatingSheet,
-                  order.orderId,
-                  order.shop._id
-                )
-              "
+              (click)="openStoreRatingSheet(order.orderId, order.shop._id)"
             >
               Rate Store
             </button>
@@ -276,11 +270,11 @@
               </div>
             </div>
 
-            <div
+            <ng-container
               *ngIf="
                 order.latestStatus.status == 'TO_PAY' &&
                 order.paymentMethod == 'ONLINE' &&
-                order?.invoice?.url &&
+                order.invoice.status == 'PENDING' &&
                 !isShop
               "
             >
@@ -291,7 +285,7 @@
               >
                 Pay Now ({{ order?.invoice.expiryDate | countdown2 }})
               </button>
-            </div>
+            </ng-container>
 
             <div>
               <div *ngIf="order.latestStatus.status == 'FOR_REVIEW' && isShop">
@@ -358,7 +352,12 @@
               >
                 <button
                   mat-flat-button
-                  (click)="openSheet(mySheet, order.shop._id, order.orderId)"
+                  (click)="
+                    openLalamoveRequestDetailsSheet(
+                      order.shop._id,
+                      order.orderId
+                    )
+                  "
                 >
                   <img
                     src="../../assets/images/logo/lalamove-icon.webp"
@@ -389,276 +388,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #mySheet let-context (closed)="onBottomSheetClosed()">
-  <ul class="sheet-list">
-    <div style="justify-items: center; margin-bottom: 15px">
-      <div
-        style="
-          margin-top: 8px;
-          width: 40px;
-          height: 5px;
-          background-color: #7f7f7f1a;
-          border-radius: 20px;
-        "
-      ></div>
-    </div>
-
-    <div
-      *ngIf="isLalamoveLoad; else contentLalamove"
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 200px;
-      "
-    >
-      <div>Loading...</div>
-    </div>
-
-    <!-- CONTENT -->
-    <ng-template #contentLalamove>
-      <div>
-        <div
-          *ngIf="
-            lalamoveStatus == 'NONE' ||
-            lalamoveStatus == 'EXPIRED_CANCELED_REJECTED'
-          "
-        >
-          <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
-            <div>
-              <img
-                src="../../assets/images/logo/lalamove-whole-logo.png"
-                width="250"
-              />
-            </div>
-          </div>
-          <div
-            style="
-              display: flex;
-              gap: 3em;
-              margin: 0px 7px 20px 7px;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div>
-              <div><b>Price</b></div>
-              <div><b>Service Type</b></div>
-              <div><b>Pick-up</b></div>
-              <div><b>Drop</b></div>
-              <div><b>Distance</b></div>
-            </div>
-            <div>
-              <div>
-                {{
-                  lalamoveQoutationData.priceBreakdown.total
-                    | currency : "PHP" : "symbol"
-                }}
-              </div>
-              <div>
-                {{ lalamoveQoutationData.serviceType }}
-              </div>
-              <div>{{ lalamoveQoutationData?.stops?.[0]?.address }}</div>
-              <div>{{ lalamoveQoutationData?.stops?.[1]?.address }}</div>
-              <div>
-                {{
-                  lalamoveQoutationData?.distance?.value +
-                    lalamoveQoutationData?.distance?.unit
-                }}
-              </div>
-            </div>
-          </div>
-
-          <div
-            style="
-              background-color: #f9f9f9;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              margin: 7px;
-            "
-          >
-            <div style="width: 550px">
-              <button
-                mat-flat-button
-                color="main-green"
-                class="btn-block fw-bold"
-                (click)="findDriver()"
-              >
-                <ng-container> Find Driver </ng-container>
-                <ng-template #loadupdate>
-                  <i class="fas fa-circle-notch fa-spin"></i>
-                </ng-template>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          *ngIf="
-            ['ASSIGNING_DRIVER', 'PICKED_UP', 'ON_GOING', 'COMPLETED'].includes(
-              lalamoveStatus
-            )
-          "
-        >
-          <div>
-            <iframe
-              [src]="lalamoveShareLink"
-              width="100%"
-              height="650px"
-              frameborder="0"
-            ></iframe>
-          </div>
-
-          <div
-            *ngIf="
-              ['PICKED_UP', 'ON_GOING', 'COMPLETED', CANCELLED].includes(
-                this.lalamoveOrder.status
-              )
-            "
-            style="
-              display: flex;
-              gap: 3em;
-              margin-top: 0px;
-              padding: 7px;
-              border-radius: 0px 0px 10px 10px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div>
-              <div><b>Price</b></div>
-              <div><b>Pick-up</b></div>
-              <div><b>Drop</b></div>
-              <div><b>Distance</b></div>
-
-              <div><b>Driver Contact No.</b></div>
-            </div>
-            <div>
-              <div>
-                {{
-                  lalamoveOrder.priceBreakdown.total
-                    | currency : "PHP" : "symbol"
-                }}
-              </div>
-
-              <div>{{ lalamoveOrder?.stops?.[0]?.address }}</div>
-              <div>{{ lalamoveOrder?.stops?.[1]?.address }}</div>
-              <div>
-                {{
-                  lalamoveOrder?.distance.value + lalamoveOrder?.distance.unit
-                }}
-              </div>
-              <div>
-                {{ lalamoveDriver.phone }}
-              </div>
-            </div>
-          </div>
-
-          <div
-            *ngIf="this.lalamoveOrder.status == 'ASSIGNING_DRIVER'"
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              margin: 7px;
-            "
-          >
-            <div style="width: 550px">
-              <button
-                mat-flat-button
-                color="main-green"
-                class="btn-block fw-bold"
-                (click)="stopFinding(lalamoveOrder)"
-              >
-                <ng-container> Stop Finding </ng-container>
-                <ng-template #loadupdate>
-                  <i class="fas fa-circle-notch fa-spin"></i>
-                </ng-template>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-  </ul>
-</ng-template>
-
-<ng-template #storeRatingSheet let-context>
-  <ul class="sheet-list">
-    <div style="justify-items: center; margin-bottom: 15px">
-      <div
-        style="
-          margin-top: 8px;
-          width: 40px;
-          height: 5px;
-          background-color: #7f7f7f1a;
-          border-radius: 20px;
-        "
-      ></div>
-    </div>
-
-    <div style="margin: 0px 20px 20px 20px">
-      <form
-        [formGroup]="ratingForm"
-        style="
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        "
-      >
-        <div>
-          <ngx-star-rating
-            formControlName="rating"
-            [id]="'rating'"
-          ></ngx-star-rating>
-        </div>
-        <div>
-          <textarea
-            matInput
-            formControlName="comment"
-            rows="5"
-            maxlength="400"
-            placeholder="Write your review or comments..."
-            style="
-              border: 3px solid #f9f9f9;
-              border-radius: 15px;
-              padding: 15px;
-              resize: none;
-              width: 80vw;
-            "
-          ></textarea>
-        </div>
-      </form>
-    </div>
-
-    <div
-      style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 30px 5vw;
-      "
-    >
-      <div style="width: 550px">
-        <button
-          (click)="storeRate()"
-          mat-flat-button
-          color="main-green"
-          class="btn-block fw-bold"
-        >
-          <ng-container *ngIf="!storeRateBtnOnLoad; else storeRateLoad">
-            Rate
-          </ng-container>
-          <ng-template #storeRateLoad>
-            <i class="fas fa-circle-notch fa-spin"></i>
-          </ng-template>
-        </button>
-      </div>
-    </div>
-  </ul>
-</ng-template>
