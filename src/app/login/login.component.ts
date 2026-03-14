@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
     private hrs: HttpRequestService,
     private auth: AuthService,
     private store: Store,
-    private sheet: BottomSheetProvider
+    private sheet: BottomSheetProvider,
   ) {
     this.loginForm = this.fb.group({
       email: [""],
@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
     userId: string,
     role: string,
     expiresAt: number,
-    account: object
+    account: object,
   ) {
     this.output = "";
 
@@ -106,15 +106,18 @@ export class LoginComponent implements OnInit {
       "post",
       "user/authenticate",
       this.loginForm.value,
-      async (data: IResponse) => {
+      async (data: any) => {
+        console.log("Login response:", data);
         if (data.success) {
           try {
-            if (data.success && data.data.token) {
-              console.log("----data.data.account.role", data.data);
+            if (data.success && data.account) {
+              console.log("----data.data.account.role", data.account);
               this.generateOTP(
-                data.data.account._id,
-                data.data.account.role,
-                data.data
+                data.account?._id,
+                data.account?.role,
+                data.account,
+                data.expiresAt,
+                data.status,
               );
             }
           } catch (error) {
@@ -124,38 +127,62 @@ export class LoginComponent implements OnInit {
         } else if (!data.success) {
           this.message = data.error?.message ?? "";
         }
-      }
+      },
     );
   }
 
-  generateOTP(userId: string, role: string, account: object) {
-    this.hrs.request(
-      "put",
-      `user/generateOTP?userId=${userId}`,
-      {},
-      async (data: IResponse) => {
-        if (data.success) {
-          await this.openSheet(
-            OtpBottomSheetComponent,
-            userId,
-            role,
-            data.data.expiresAt,
-            account
-          );
-        } else if (
-          !data.success &&
-          data.error?.data.errorType == "OTP_NOT_EXPIRED"
-        ) {
-          await this.openSheet(
-            OtpBottomSheetComponent,
-            userId,
-            role,
-            data.error?.data.expiresAt,
-            account
-          );
-        }
-      }
-    );
+  async generateOTP(
+    userId: string,
+    role: string,
+    account: object,
+    expiresAt: number,
+    OTP_status: string,
+  ) {
+    if (OTP_status == "OTP_SUCCESS") {
+      await this.openSheet(
+        OtpBottomSheetComponent,
+        userId,
+        role,
+        expiresAt,
+        account,
+      );
+    } else if (OTP_status == "OTP_NOT_EXPIRED") {
+      await this.openSheet(
+        OtpBottomSheetComponent,
+        userId,
+        role,
+        expiresAt,
+        account,
+      );
+    }
+
+    // this.hrs.request(
+    //   "put",
+    //   `user/generateOTP?userId=${userId}`,
+    //   {},
+    //   async (data: IResponse) => {
+    //     if (data.success) {
+    //       await this.openSheet(
+    //         OtpBottomSheetComponent,
+    //         userId,
+    //         role,
+    //         data.data.expiresAt,
+    //         account,
+    //       );
+    //     } else if (
+    //       !data.success &&
+    //       data.error?.data.errorType == "OTP_NOT_EXPIRED"
+    //     ) {
+    //       await this.openSheet(
+    //         OtpBottomSheetComponent,
+    //         userId,
+    //         role,
+    //         data.error?.data.expiresAt,
+    //         account,
+    //       );
+    //     }
+    //   },
+    // );
   }
 
   updateCurrentDisplay(display: string) {

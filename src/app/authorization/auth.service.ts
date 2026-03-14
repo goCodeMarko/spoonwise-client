@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpRequestService } from "../http-request/http-request.service";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, map } from "rxjs";
+import { environment } from "src/environments/environment";
+import { HttpClient } from "@angular/common/http";
 
 interface IResponse {
   success: string;
@@ -74,7 +76,11 @@ export class AuthService {
     _id: "",
   });
 
-  constructor(private router: Router, private hrs: HttpRequestService) {
+  constructor(
+    private router: Router,
+    private hrs: HttpRequestService,
+    private http: HttpClient,
+  ) {
     console.log("AuthService instantiated");
     const accountData = localStorage.getItem("account")!;
     const data = JSON.parse(accountData);
@@ -91,7 +97,8 @@ export class AuthService {
       try {
         const account = JSON.stringify(data.account);
         const token = data.token;
-
+        console.log("Setting token:", token);
+        console.log("Setting account:", account);
         localStorage.removeItem("account");
         localStorage.removeItem("token");
         localStorage.setItem("account", account);
@@ -106,6 +113,20 @@ export class AuthService {
         resolve(true);
       }
     });
+  }
+
+  rotateAccessToken$() {
+    return this.http
+      .put(`${environment.SERVER_URL_CLUSTERS}user/rotateAccessToken`, {
+        withCredentials: true,
+      })
+      .pipe(
+        map((response: any) => ({
+          status: response.status,
+          data: response.body,
+          headers: response.headers,
+        })),
+      );
   }
 
   async checkRole(): Promise<string> {

@@ -40,7 +40,7 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
     private _snackBar: MatSnackBar,
     private store: Store,
     private auth: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {}
@@ -65,9 +65,15 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
       `user/checkOTP?userId=${this.userId}&otp=${otp}`,
       {},
       async (data: any) => {
-        if (data.success && data.data.message == "OTP_SUCCESS") {
-          const user = await this.auth.setToken(this.account);
-
+        console.log("data", data);
+        console.log("this.role", this.role);
+        console.log("this.account", this.account);
+        if (data.success && data.data.status == "OTP_CORRECT") {
+          const user = await this.auth.setToken({
+            account: this.account,
+            token: data.data.token,
+          });
+          console.log("user", user);
           if (this.role == "buyer") {
             this.auth.navigate("/home", "");
           } else if (this.role == "seller") {
@@ -109,7 +115,7 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
 
         if (this.otpInput) this.otpInput.nativeElement.disabled = false;
         this.otpInput?.nativeElement.focus();
-      }
+      },
     );
   }
 
@@ -153,7 +159,7 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
 
         this.otpInput.nativeElement.value = "";
         this.otpInput?.nativeElement.focus();
-      }
+      },
     );
   }
 }

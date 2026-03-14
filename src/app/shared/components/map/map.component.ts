@@ -76,75 +76,71 @@ export class MapComponent
         if (params.radius) this.radius = params.radius * 1000;
 
         if (params.view === "products" && !this.productListSheet) {
-          this.productListSheet = await this.swipeSheet.show(
-            ProductListComponent,
-            {
+          console.log("-----x");
+          this.productListSheet = this.swipeSheet
+            .show(ProductListComponent, {
               title: "",
-              props: {
-                showPublishSlider: false,
-                isShop: false,
-              },
+              props: {},
               stops: [200, 800],
-            }
-          );
-
-          this.productListSheet = null;
-          this.nearShopsSheet = null;
-          this.topRatedShopsSheet = null;
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { view: null },
-            queryParamsHandling: "merge",
-          });
+            })
+            .then(() => {
+              this.productListSheet = null;
+              this.nearShopsSheet = null;
+              this.topRatedShopsSheet = null;
+              this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { view: null },
+                queryParamsHandling: "merge",
+              });
+            });
+          this.productVisibility = true;
         } else {
           this.productVisibility = false;
         }
 
         if (params.view === "topNearShops" && !this.nearShopsSheet) {
-          this.productListSheet = await this.swipeSheet.show(
-            ShopListComponent,
-            {
+          this.nearShopsSheet = this.swipeSheet
+            .show(ShopListComponent, {
               title: "",
               props: {
                 sortBy: "distance",
               },
               stops: [200, 800],
-            }
-          );
-
-          this.productListSheet = null;
-          this.nearShopsSheet = null;
-          this.topRatedShopsSheet = null;
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { view: null },
-            queryParamsHandling: "merge",
-          });
+            })
+            .then(() => {
+              this.productListSheet = null;
+              this.nearShopsSheet = null;
+              this.topRatedShopsSheet = null;
+              this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { view: null },
+                queryParamsHandling: "merge",
+              });
+            });
           this.distanceVisibility = true;
         } else {
           this.distanceVisibility = false;
         }
 
         if (params.view === "topRatedShops" && !this.topRatedShopsSheet) {
-          this.productListSheet = await this.swipeSheet.show(
-            ShopListComponent,
-            {
+          this.topRatedShopsSheet = await this.swipeSheet
+            .show(ShopListComponent, {
               title: "",
               props: {
                 sortBy: "rating",
               },
               stops: [200, 800],
-            }
-          );
-
-          this.productListSheet = null;
-          this.nearShopsSheet = null;
-          this.topRatedShopsSheet = null;
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { view: null },
-            queryParamsHandling: "merge",
-          });
+            })
+            .then(() => {
+              this.productListSheet = null;
+              this.nearShopsSheet = null;
+              this.topRatedShopsSheet = null;
+              this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { view: null },
+                queryParamsHandling: "merge",
+              });
+            });
 
           this.ratingVisibility = true;
         } else {

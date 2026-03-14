@@ -14,7 +14,7 @@ export class HttpRequestService {
     method: string,
     endpoint: string,
     payload: any,
-    callback?: any
+    callback?: any,
   ): Observable<any> | any {
     let URL;
 
@@ -22,6 +22,7 @@ export class HttpRequestService {
       case "getV2":
         return this.http.get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
           params: payload,
+          withCredentials: true,
         });
       case "postV2":
         URL = [
@@ -32,12 +33,14 @@ export class HttpRequestService {
           ? environment.SERVER_URL_MAIN
           : environment.SERVER_URL_CLUSTERS;
 
-        return this.http.post(`${URL}${endpoint}`, payload).pipe(
-          catchError((error) => {
-            console.error("HTTP error:", error); // Optionally log to monitoring
-            throw error; // Re-throw so component can handle it
-          })
-        );
+        return this.http
+          .post(`${URL}${endpoint}`, payload, { withCredentials: true })
+          .pipe(
+            catchError((error) => {
+              console.error("HTTP error:", error); // Optionally log to monitoring
+              throw error; // Re-throw so component can handle it
+            }),
+          );
       case "download":
         return this.http
           .get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
@@ -45,6 +48,7 @@ export class HttpRequestService {
             observe: "events",
             responseType: "blob",
             reportProgress: true,
+            withCredentials: true,
           })
           .subscribe(
             (response) => {
@@ -52,12 +56,13 @@ export class HttpRequestService {
             },
             (error) => {
               return callback(error.error);
-            }
+            },
           );
       case "get":
         return this.http
           .get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
             params: payload,
+            withCredentials: true,
           })
           .subscribe(
             (response) => {
@@ -65,7 +70,7 @@ export class HttpRequestService {
             },
             (error) => {
               return callback(error.error);
-            }
+            },
           );
 
       case "post":
@@ -77,14 +82,16 @@ export class HttpRequestService {
           ? environment.SERVER_URL_MAIN
           : environment.SERVER_URL_CLUSTERS;
         console.log("----URL", URL);
-        return this.http.post(`${URL}${endpoint}`, payload).subscribe(
-          (response) => {
-            return callback(response);
-          },
-          (error) => {
-            return callback(error.error);
-          }
-        );
+        return this.http
+          .post(`${URL}${endpoint}`, payload, { withCredentials: true })
+          .subscribe(
+            (response) => {
+              return callback(response);
+            },
+            (error) => {
+              return callback(error.error);
+            },
+          );
 
       case "put":
         URL =
@@ -95,18 +102,21 @@ export class HttpRequestService {
           endpoint.startsWith("message/updateChatroomsMsgStatusToSeen/")
             ? environment.SERVER_URL_MAIN
             : environment.SERVER_URL_CLUSTERS;
-        return this.http.put(`${URL}${endpoint}`, payload).subscribe(
-          (response) => {
-            return callback(response);
-          },
-          (error) => {
-            return callback(error.error);
-          }
-        );
+        return this.http
+          .put(`${URL}${endpoint}`, payload, { withCredentials: true })
+          .subscribe(
+            (response) => {
+              return callback(response);
+            },
+            (error) => {
+              return callback(error.error);
+            },
+          );
 
       default:
         return this.http.get(`${environment.SERVER_URL_CLUSTERS}${endpoint}`, {
           params: payload,
+          withCredentials: true,
         });
     }
   }

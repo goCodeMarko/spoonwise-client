@@ -96,7 +96,7 @@
             {{ prod.expiryDate | countdown2 }}
           </div>
 
-          <div (click)="viewProduct(prod._id)" style="display: flex; gap: 3px">
+          <div style="display: flex; gap: 3px">
             <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
             <div class="card-content">
               <b>
@@ -157,6 +157,8 @@
                       style="vertical-align: sub"
                     />
                   </p>
+
+                  <div (click)="viewProduct(prod._id)">View</div>
 
                   <ng-container *ngIf="account.role === 'seller'">
                     <div
