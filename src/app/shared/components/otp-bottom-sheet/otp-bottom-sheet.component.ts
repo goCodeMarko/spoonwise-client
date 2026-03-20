@@ -34,6 +34,7 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
   @Input() role!: string;
   @Input() expiresAt!: number;
   @Input() account!: any;
+  @Input() loginForm!: { username: string; password: string };
   constructor(
     public context: BottomSheetContext<OtpSheetProps>,
     public hrs: HttpRequestService,
@@ -68,12 +69,13 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
         console.log("data", data);
         console.log("this.role", this.role);
         console.log("this.account", this.account);
-        if (data.success && data.data.status == "OTP_CORRECT") {
+        if (data.success && data.data?.status == "OTP_CORRECT") {
           const user = await this.auth.setToken({
             account: this.account,
             token: data.data.token,
           });
           console.log("user", user);
+          this.context.dismiss();
           if (this.role == "buyer") {
             this.auth.navigate("/home", "");
           } else if (this.role == "seller") {
@@ -81,9 +83,16 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
           } else if (this.role == "admin") {
             this.auth.navigate("/admin/shops", "");
           }
+        } else if (!data.success && data.error?.data?.status == "OTP_EXPIRED") {
+          this._snackBar.openFromTemplate(this.snackBarTemplate, {
+            duration: 5000,
+            horizontalPosition: "center",
+            verticalPosition: "top",
+          });
+          this.responseMsg = data.error.message;
         } else if (
           !data.success &&
-          data.error?.data.errorType == "OTP_EXPIRED"
+          data.error?.data?.status == "OTP_CONSUMED"
         ) {
           this._snackBar.openFromTemplate(this.snackBarTemplate, {
             duration: 5000,
@@ -93,17 +102,7 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
           this.responseMsg = data.error.message;
         } else if (
           !data.success &&
-          data.error?.data.errorType == "OTP_CONSUMED"
-        ) {
-          this._snackBar.openFromTemplate(this.snackBarTemplate, {
-            duration: 5000,
-            horizontalPosition: "center",
-            verticalPosition: "top",
-          });
-          this.responseMsg = data.error.message;
-        } else if (
-          !data.success &&
-          data.error?.data.errorType == "OTP_INCORRECT"
+          data.error?.data?.status == "OTP_INCORRECT"
         ) {
           this._snackBar.openFromTemplate(this.snackBarTemplate, {
             duration: 5000,
@@ -125,6 +124,41 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
   updateCountdown(val: string) {
     this.countdownValue = val;
     this.isExpired = val === "00:00";
+  }
+
+  resendOTP2() {
+    this.hrs.request(
+      "post",
+      "user/authenticate",
+      this.loginForm,
+      async (data: any) => {
+        if (data.success) {
+          this._snackBar.openFromTemplate(this.snackBarTemplate, {
+            duration: 5000,
+            horizontalPosition: "center",
+            verticalPosition: "top",
+          });
+          this.responseMsg = "OTP resent successfully.";
+
+          this.expiresAt = data?.data?.expiresAt;
+          this.isExpired = false;
+        } else if (
+          !data.success &&
+          data.error?.data.errorType == "OTP_NOT_EXPIRED"
+        ) {
+          this._snackBar.openFromTemplate(this.snackBarTemplate, {
+            duration: 5000,
+            horizontalPosition: "center",
+            verticalPosition: "top",
+          });
+          this.responseMsg =
+            "Wait for the OTP to expire before requesting a new one.";
+        }
+
+        this.otpInput.nativeElement.value = "";
+        this.otpInput?.nativeElement.focus();
+      },
+    );
   }
 
   resendOTP() {

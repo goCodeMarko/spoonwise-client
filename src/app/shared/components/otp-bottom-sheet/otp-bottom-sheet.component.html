@@ -11,9 +11,10 @@
     ></div>
   </div>
   <div class="input-group search">
-    <button mat-flat-button style="height: 70px; text-align: center" disabled>
+    <!-- <button mat-flat-button style="height: 70px; text-align: center" disabled>
       <img src="assets/icons/password.png" width="50" />
-    </button>
+    </button> -->
+
     <input
       #otpInput
       type="text"
@@ -27,7 +28,7 @@
     <ng-container *ngIf="!isExpired; else expired">
       <button mat-flat-button style="height: 70px; text-align: center" disabled>
         <b style="color: black">{{
-          expiresAt | countDown : updateCountdown.bind(this)
+          expiresAt | countDown: updateCountdown.bind(this)
         }}</b>
       </button>
     </ng-container>
@@ -35,7 +36,7 @@
       <button
         mat-flat-button
         style="height: 70px; text-align: center"
-        (click)="resendOTP()"
+        (click)="resendOTP2()"
       >
         <b style="color: black">Resend OTP</b>
       </button>

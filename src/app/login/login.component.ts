@@ -38,6 +38,7 @@ interface OtpSheetProps {
   role: string;
   expiresAt: number;
   account: object;
+  loginForm: { username: string; password: string };
 }
 @Component({
   selector: "app-login",
@@ -80,6 +81,7 @@ export class LoginComponent implements OnInit {
     role: string,
     expiresAt: number,
     account: object,
+    loginForm: { username: string; password: string },
   ) {
     this.output = "";
 
@@ -91,6 +93,7 @@ export class LoginComponent implements OnInit {
         expiresAt,
         role,
         account,
+        loginForm,
       },
     });
 
@@ -145,6 +148,7 @@ export class LoginComponent implements OnInit {
         role,
         expiresAt,
         account,
+        this.loginForm.value,
       );
     } else if (OTP_status == "OTP_NOT_EXPIRED") {
       await this.openSheet(
@@ -153,6 +157,7 @@ export class LoginComponent implements OnInit {
         role,
         expiresAt,
         account,
+        this.loginForm.value,
       );
     }
 
