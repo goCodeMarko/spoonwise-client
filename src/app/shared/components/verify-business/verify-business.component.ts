@@ -38,9 +38,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { PopUpModalComponent } from "src/app/modals/pop-up-modal/pop-up-modal.component";
 import { MatStepper } from "@angular/material/stepper";
 import { Router } from "@angular/router";
-(
-  pdfjsLib as any
-).GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.1.81/pdf.worker.min.js`;
+const pdfjsVersion = (pdfjsLib as any).version;
+(pdfjsLib as any).GlobalWorkerOptions.workerSrc =
+  `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsVersion}/pdf.worker.min.js`;
 import { firstValueFrom } from "rxjs";
 export interface IShop {
   _id: string;

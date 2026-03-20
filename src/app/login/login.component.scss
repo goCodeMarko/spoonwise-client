@@ -54,7 +54,7 @@ $max-mobile: 590px;
   display: flex; /* center content inside slide */
   justify-content: center;
   align-items: center;
-  background: transparent; /* remove gray background */
+  background: transparent !important; /* remove gray background */
 }
 
 /* Ensure the Swiper container takes the desired space */

@@ -66,7 +66,7 @@ export class MapComponent
     private route: ActivatedRoute,
     private hrs: HttpRequestService,
     private geolocationService: GeolocationService,
-    private swipeSheet: BottomSheetProvider
+    private swipeSheet: BottomSheetProvider,
   ) {}
 
   ngOnInit(): void {
@@ -207,7 +207,7 @@ export class MapComponent
 
   private async getPositionFromDB() {
     const { data } = (await firstValueFrom(
-      this.hrs.request("getV2", `user/getAuthUser`, {})
+      this.hrs.request("getV2", `user/getAuthUser`, {}),
     )) as any;
 
     this.subject = {
@@ -221,7 +221,7 @@ export class MapComponent
 
   private async getShopCoordinates() {
     const { data } = (await firstValueFrom(
-      this.hrs.request("getV2", `shop/getShop`, {})
+      this.hrs.request("getV2", `shop/getShop`, {}),
     )) as any;
 
     this.subject = {
@@ -354,7 +354,7 @@ export class MapComponent
       `;
 
       const gpsButton = container.querySelector(
-        "#gpsButton"
+        "#gpsButton",
       ) as HTMLLabelElement;
 
       gpsButton.addEventListener("click", async (event) => {
@@ -442,10 +442,10 @@ export class MapComponent
 
         // Handle slider input
         let slider = container.querySelector(
-          "#radius-slider"
+          "#radius-slider",
         ) as HTMLInputElement;
         const label = container.querySelector(
-          "#radius-value"
+          "#radius-value",
         ) as HTMLLabelElement;
         slider.value = this.radius.toString();
 
@@ -493,9 +493,8 @@ export class MapComponent
         L.marker([SHOP.lat, SHOP.lng], {
           draggable: false,
           icon: SHOPIcon,
-        })
-          .bindPopup("Angular Leaflet")
-          .addTo(this.map);
+        }).addTo(this.map);
+        // .bindPopup("Angular Leaflet")
       });
     }
     //END
@@ -532,7 +531,7 @@ export class MapComponent
           fillOpacity: 0.3,
           stroke: false,
           radius: this.radius, // 1km in meters
-        }
+        },
       ).addTo(this.map);
     }
     //END
@@ -541,7 +540,7 @@ export class MapComponent
     this.map.flyTo(
       [this.subject.coordinates.lat, this.subject.coordinates.lng],
       12,
-      { animate: true }
+      { animate: true },
     );
 
     const iconUrl =
@@ -560,10 +559,9 @@ export class MapComponent
       {
         draggable: !this.disabled,
         icon: userLoc,
-      }
-    )
-      .bindPopup("Angular Leaflet")
-      .addTo(this.map);
+      },
+    ).addTo(this.map);
+    // .bindPopup("Angular Leaflet")
 
     // Listen for drag events
     this.marker.on("dragend", (event: any) => {
