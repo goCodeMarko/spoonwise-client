@@ -1,5 +1,5 @@
-<div class="sheet-list">
-  <div style="justify-items: center; margin-bottom: 15px">
+<div class="sheet-list" style="margin-bottom: 160px">
+  <!-- <div style="justify-items: center; margin-bottom: 15px">
     <div
       style="
         margin-top: 8px;
@@ -9,8 +9,11 @@
         border-radius: 20px;
       "
     ></div>
-  </div>
-  <div class="input-group search">
+  </div> -->
+  <div
+    class="input-group search"
+    style="gap: 7px; align-items: center; flex-direction: column"
+  >
     <!-- <button mat-flat-button style="height: 70px; text-align: center" disabled>
       <img src="assets/icons/password.png" width="50" />
     </button> -->
@@ -23,24 +26,32 @@
       (input)="checkCharCount($event)"
       [(ngModel)]="otp"
       maxlength="4"
-      style="text-align: center; font-size: xxx-large"
+      placeholder="0000"
+      style="text-align: center; font-size: xxx-large; width: 100%"
     />
-    <ng-container *ngIf="!isExpired; else expired">
-      <button mat-flat-button style="height: 70px; text-align: center" disabled>
-        <b style="color: black">{{
-          expiresAt | countDown: updateCountdown.bind(this)
-        }}</b>
-      </button>
-    </ng-container>
-    <ng-template #expired>
-      <button
-        mat-flat-button
-        style="height: 70px; text-align: center"
-        (click)="resendOTP2()"
-      >
-        <b style="color: black">Resend OTP</b>
-      </button>
-    </ng-template>
+
+    <div>
+      <ng-container *ngIf="!isExpired; else expired">
+        <button
+          mat-flat-button
+          style="height: 70px; text-align: center"
+          disabled
+        >
+          <b style="color: black">{{
+            expiresAt | countDown: updateCountdown.bind(this)
+          }}</b>
+        </button>
+      </ng-container>
+      <ng-template #expired>
+        <button
+          mat-flat-button
+          style="height: 70px; text-align: center"
+          (click)="resendOTP2()"
+        >
+          <b style="color: black">Resend OTP</b>
+        </button>
+      </ng-template>
+    </div>
   </div>
 </div>
 
