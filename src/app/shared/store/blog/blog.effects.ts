@@ -9,14 +9,19 @@ import { environment } from "../../../../environments/environment";
 
 @Injectable()
 export class BlogEffects {
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+  ) {}
 
   setNewBlog$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BlogAction.setNewBlog),
       mergeMap((blog) =>
         this.http
-          .post(`${environment.SERVER_URL_MAIN}blog/createBlog`, blog)
+          .post(`${environment.SERVER_URL_MAIN}blog/createBlog`, blog, {
+            withCredentials: true,
+          })
           .pipe(
             tap((data: any) => {
               console.log("Blog:", data);
@@ -37,12 +42,12 @@ export class BlogEffects {
               return of(
                 BlogAction.setNewBlogFailure({
                   error: error.message,
-                })
+                }),
               );
-            })
-          )
-      )
-    )
+            }),
+          ),
+      ),
+    ),
   );
 
   updateBlog$ = createEffect(() =>
@@ -50,7 +55,11 @@ export class BlogEffects {
       ofType(BlogAction.updateBlog),
       mergeMap(({ blogId, blog }) =>
         this.http
-          .put(`${environment.SERVER_URL_MAIN}blog/updateBlog/${blogId}`, blog)
+          .put(
+            `${environment.SERVER_URL_MAIN}blog/updateBlog/${blogId}`,
+            blog,
+            { withCredentials: true },
+          )
           .pipe(
             tap((data: any) => {
               console.log("Blog:", data);
@@ -71,12 +80,12 @@ export class BlogEffects {
               return of(
                 BlogAction.updateBlogFailure({
                   error: error.message,
-                })
+                }),
               );
-            })
-          )
-      )
-    )
+            }),
+          ),
+      ),
+    ),
   );
 
   getBlogs$ = createEffect(() =>
@@ -84,7 +93,9 @@ export class BlogEffects {
       ofType(BlogAction.getBlogs),
       mergeMap(({}) => {
         return this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}blog/getBlogs`, {})
+          .get(`${environment.SERVER_URL_CLUSTERS}blog/getBlogs`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let blogs: IBlog[] = data.data;
@@ -96,12 +107,12 @@ export class BlogEffects {
               of(
                 BlogAction.getBlogsFailure({
                   error: error.message,
-                })
-              )
-            )
+                }),
+              ),
+            ),
           );
-      })
-    )
+      }),
+    ),
   );
 
   getPastBlogs$ = createEffect(() =>
@@ -112,10 +123,9 @@ export class BlogEffects {
         if (lastBlogDate) query = `?lastBlogDate=${lastBlogDate}`;
 
         return this.http
-          .get(
-            `${environment.SERVER_URL_CLUSTERS}blog/getPastBlogs${query}`,
-            {}
-          )
+          .get(`${environment.SERVER_URL_CLUSTERS}blog/getPastBlogs${query}`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let blogs: IBlog[] = data.data;
@@ -127,12 +137,12 @@ export class BlogEffects {
               of(
                 BlogAction.getPastBlogsFailure({
                   error: error.message,
-                })
-              )
-            )
+                }),
+              ),
+            ),
           );
-      })
-    )
+      }),
+    ),
   );
 
   getSavedBlogs$ = createEffect(() =>
@@ -140,7 +150,9 @@ export class BlogEffects {
       ofType(BlogAction.getSavedBlogs),
       mergeMap(({}) => {
         return this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}user/getSavedBlogs`, {})
+          .get(`${environment.SERVER_URL_CLUSTERS}user/getSavedBlogs`, {
+            withCredentials: true,
+          })
           .pipe(
             map((response: any) => {
               console.log("response", response);
@@ -153,12 +165,12 @@ export class BlogEffects {
               of(
                 BlogAction.getSavedBlogsFailure({
                   error: error.message,
-                })
-              )
-            )
+                }),
+              ),
+            ),
           );
-      })
-    )
+      }),
+    ),
   );
 
   saveBlog$ = createEffect(() =>
@@ -167,7 +179,11 @@ export class BlogEffects {
       mergeMap(({ blog }) => {
         console.log("------------------blog", blog);
         return this.http
-          .post(`${environment.SERVER_URL_MAIN}user/saveBlog/${blog._id}`, {})
+          .post(
+            `${environment.SERVER_URL_MAIN}user/saveBlog/${blog._id}`,
+            {},
+            { withCredentials: true },
+          )
           .pipe(
             tap((data: any) => {
               console.log("Blog:", data);
@@ -187,12 +203,12 @@ export class BlogEffects {
               return of(
                 BlogAction.saveBlogFailure({
                   error: error.message,
-                })
+                }),
               );
-            })
+            }),
           );
-      })
-    )
+      }),
+    ),
   );
 
   unsaveBlog$ = createEffect(() =>
@@ -200,7 +216,11 @@ export class BlogEffects {
       ofType(BlogAction.unsaveBlog),
       mergeMap(({ id }) => {
         return this.http
-          .put(`${environment.SERVER_URL_MAIN}user/unsaveBlog/${id}`, {})
+          .put(
+            `${environment.SERVER_URL_MAIN}user/unsaveBlog/${id}`,
+            {},
+            { withCredentials: true },
+          )
           .pipe(
             tap((data: any) => {
               console.log("--------------unsaveBlog");
@@ -220,11 +240,11 @@ export class BlogEffects {
               return of(
                 BlogAction.unsaveBlogFailure({
                   error: error.message,
-                })
+                }),
               );
-            })
+            }),
           );
-      })
-    )
+      }),
+    ),
   );
 }

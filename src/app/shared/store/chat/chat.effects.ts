@@ -13,7 +13,7 @@ export class ChatroomEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) {}
 
   setPastChatrooms$ = createEffect(() =>
@@ -23,7 +23,7 @@ export class ChatroomEffects {
         this.http
           .get(
             `${environment.SERVER_URL_CLUSTERS}chatroom/getPastChatrooms?lastChatroomDate=${lastChatroomDate}`,
-            {}
+            { withCredentials: true },
           )
           .pipe(
             map((data: any) => {
@@ -37,12 +37,12 @@ export class ChatroomEffects {
               of(
                 ChatroomAction.setPastChatroomsFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
-    )
+                }),
+              ),
+            ),
+          ),
+      ),
+    ),
   );
 
   setPastMessages$ = createEffect(() =>
@@ -51,7 +51,8 @@ export class ChatroomEffects {
       exhaustMap(({ chatroomId, lastMessageDate }) =>
         this.http
           .get(
-            `${environment.SERVER_URL_CLUSTERS}message/getPastMessages/${chatroomId}?lastMessageDate=${lastMessageDate}`
+            `${environment.SERVER_URL_CLUSTERS}message/getPastMessages/${chatroomId}?lastMessageDate=${lastMessageDate}`,
+            { withCredentials: true },
           )
           .pipe(
             map((data: any) => {
@@ -68,12 +69,12 @@ export class ChatroomEffects {
               of(
                 ChatroomAction.setPastMessagesFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
-    )
+                }),
+              ),
+            ),
+          ),
+      ),
+    ),
   );
 
   setChatrooms$ = createEffect(() =>
@@ -81,7 +82,9 @@ export class ChatroomEffects {
       ofType(ChatroomAction.setChatrooms),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}chatroom/getChatrooms`, {})
+          .get(`${environment.SERVER_URL_CLUSTERS}chatroom/getChatrooms`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               console.log("===========chatrooms", data);
@@ -96,12 +99,12 @@ export class ChatroomEffects {
               of(
                 ChatroomAction.setChatroomsFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
-    )
+                }),
+              ),
+            ),
+          ),
+      ),
+    ),
   );
 
   setTotalCountSentDeliveredMessages$ = createEffect(() =>
@@ -111,7 +114,7 @@ export class ChatroomEffects {
         this.http
           .get(
             `${environment.SERVER_URL_CLUSTERS}message/totalCountSentMessages`,
-            {}
+            { withCredentials: true },
           )
           .pipe(
             map((data: any) => {
@@ -125,12 +128,12 @@ export class ChatroomEffects {
               of(
                 ChatroomAction.setTotalCountSentDeliveredMessagesFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
-    )
+                }),
+              ),
+            ),
+          ),
+      ),
+    ),
   );
 
   sendMessage$ = createEffect(() =>
@@ -156,7 +159,8 @@ export class ChatroomEffects {
               return this.http
                 .post(
                   `${environment.SERVER_URL_MAIN}message/sendMessage/${message.chatroomId}`,
-                  formData
+                  formData,
+                  { withCredentials: true },
                 )
                 .pipe(
                   map((data: any) => {
@@ -178,18 +182,19 @@ export class ChatroomEffects {
                     of(
                       ChatroomAction.sendMessageFailure({
                         error: error.message,
-                      })
-                    )
-                  )
+                      }),
+                    ),
+                  ),
                 );
-            })
+            }),
           );
         }
 
         return this.http
           .post(
             `${environment.SERVER_URL_MAIN}message/sendMessage/${message.chatroomId}`,
-            body
+            body,
+            { withCredentials: true },
           )
           .pipe(
             map((data: any) => {
@@ -211,12 +216,12 @@ export class ChatroomEffects {
               of(
                 ChatroomAction.sendMessageFailure({
                   error: error.message,
-                })
-              )
-            )
+                }),
+              ),
+            ),
           );
-      })
-    )
+      }),
+    ),
   );
 
   setLanguage$ = createEffect(() =>
@@ -228,7 +233,8 @@ export class ChatroomEffects {
             `${environment.SERVER_URL_MAIN}chatroom/updateLanguage/${chatroomId}`,
             {
               language,
-            }
+            },
+            { withCredentials: true },
           )
           .pipe(
             map((data: any) => {
@@ -245,12 +251,12 @@ export class ChatroomEffects {
               of(
                 ChatroomAction.setLanguageFailure({
                   error: error.message,
-                })
-              )
-            )
+                }),
+              ),
+            ),
           );
-      })
-    )
+      }),
+    ),
   );
 
   chatSeller$ = createEffect(() =>
@@ -260,7 +266,7 @@ export class ChatroomEffects {
         this.http
           .get(
             `${environment.SERVER_URL_CLUSTERS}chatroom/chatSeller?shopId=${shopId}`,
-            {}
+            { withCredentials: true },
           )
           .pipe(
             map((data: any) => {
@@ -279,11 +285,11 @@ export class ChatroomEffects {
               of(
                 ChatroomAction.chatSellerFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
-    )
+                }),
+              ),
+            ),
+          ),
+      ),
+    ),
   );
 }

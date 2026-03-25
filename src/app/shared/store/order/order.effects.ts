@@ -14,7 +14,7 @@ export class OrderEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   setToPay$ = createEffect(() =>
@@ -22,18 +22,20 @@ export class OrderEffects {
       ofType(OrderActions.setToPay),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_pay`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_pay`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
               return OrderActions.setToPaySuccess({ order });
             }),
             catchError((error: any) =>
-              of(OrderActions.setToPayFailure({ error: error.message }))
-            )
-          )
-      )
-    )
+              of(OrderActions.setToPayFailure({ error: error.message })),
+            ),
+          ),
+      ),
+    ),
   );
 
   setForReview$ = createEffect(() =>
@@ -41,18 +43,20 @@ export class OrderEffects {
       ofType(OrderActions.setForReview),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/for_review`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/for_review`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
               return OrderActions.setForReviewSuccess({ order });
             }),
             catchError((error: any) =>
-              of(OrderActions.setForReviewFailure({ error: error.message }))
-            )
-          )
-      )
-    )
+              of(OrderActions.setForReviewFailure({ error: error.message })),
+            ),
+          ),
+      ),
+    ),
   );
 
   setToPack$ = createEffect(() =>
@@ -60,18 +64,20 @@ export class OrderEffects {
       ofType(OrderActions.setToPack),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_pack`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_pack`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
               return OrderActions.setToPackSuccess({ order });
             }),
             catchError((error: any) =>
-              of(OrderActions.setToPackFailure({ error: error.message }))
-            )
-          )
-      )
-    )
+              of(OrderActions.setToPackFailure({ error: error.message })),
+            ),
+          ),
+      ),
+    ),
   );
 
   setForPickup$ = createEffect(() =>
@@ -79,18 +85,20 @@ export class OrderEffects {
       ofType(OrderActions.setForPickup),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/for_pickup`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/for_pickup`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
               return OrderActions.setForPickupSuccess({ order });
             }),
             catchError((error: any) =>
-              of(OrderActions.setForPickupFailure({ error: error.message }))
-            )
-          )
-      )
-    )
+              of(OrderActions.setForPickupFailure({ error: error.message })),
+            ),
+          ),
+      ),
+    ),
   );
 
   setToReceive$ = createEffect(() =>
@@ -98,7 +106,9 @@ export class OrderEffects {
       ofType(OrderActions.setToReceive),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_receive`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/to_receive`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
@@ -106,11 +116,11 @@ export class OrderEffects {
               return OrderActions.setToReceiveSuccess({ order });
             }),
             catchError((error: any) =>
-              of(OrderActions.setToReceiveFailure({ error: error.message }))
-            )
-          )
-      )
-    )
+              of(OrderActions.setToReceiveFailure({ error: error.message })),
+            ),
+          ),
+      ),
+    ),
   );
 
   setCancelled$ = createEffect(() =>
@@ -118,18 +128,20 @@ export class OrderEffects {
       ofType(OrderActions.setCancelled),
       mergeMap(() =>
         this.http
-          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/cancelled`)
+          .get(`${environment.SERVER_URL_CLUSTERS}order/getOrders/cancelled`, {
+            withCredentials: true,
+          })
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
               return OrderActions.setCancelledSuccess({ order });
             }),
             catchError((error: any) =>
-              of(OrderActions.setCancelledFailure({ error: error.message }))
-            )
-          )
-      )
-    )
+              of(OrderActions.setCancelledFailure({ error: error.message })),
+            ),
+          ),
+      ),
+    ),
   );
 
   setLineItemOrderReceived$ = createEffect(() => {
@@ -144,7 +156,8 @@ export class OrderEffects {
               shopId,
               lineItemId,
               status: "ORDER_RECEIVED",
-            }
+            },
+            { withCredentials: true },
           )
           .pipe(
             map((data: any) => {
@@ -161,11 +174,11 @@ export class OrderEffects {
               of(
                 OrderActions.setLineItemOrderReceivedFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
+                }),
+              ),
+            ),
+          ),
+      ),
     );
   });
 
@@ -174,11 +187,15 @@ export class OrderEffects {
       ofType(OrderActions.setOrderStatus),
       mergeMap(({ orderId, shopId, status }) =>
         this.http
-          .put(`${environment.SERVER_URL_MAIN}order/updateOrderStatus`, {
-            orderId,
-            shopId,
-            status,
-          })
+          .put(
+            `${environment.SERVER_URL_MAIN}order/updateOrderStatus`,
+            {
+              orderId,
+              shopId,
+              status,
+            },
+            { withCredentials: true },
+          )
           .pipe(
             map((data: any) => {
               let order: Order[] = data.data;
@@ -194,11 +211,11 @@ export class OrderEffects {
               of(
                 OrderActions.setOrderStatusFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
+                }),
+              ),
+            ),
+          ),
+      ),
     );
   });
 
@@ -207,12 +224,16 @@ export class OrderEffects {
       ofType(OrderActions.setReviews),
       mergeMap(({ orderId, shopId, rating, comment }) =>
         this.http
-          .put(`${environment.SERVER_URL_CLUSTERS}order/updateStoreReviews`, {
-            orderId,
-            shopId,
-            rating,
-            comment,
-          })
+          .put(
+            `${environment.SERVER_URL_CLUSTERS}order/updateStoreReviews`,
+            {
+              orderId,
+              shopId,
+              rating,
+              comment,
+            },
+            { withCredentials: true },
+          )
           .pipe(
             map((data: any) => {
               let order: Order = data.data;
@@ -242,11 +263,11 @@ export class OrderEffects {
               of(
                 OrderActions.setReviewsFailure({
                   error: error.message,
-                })
-              )
-            )
-          )
-      )
-    )
+                }),
+              ),
+            ),
+          ),
+      ),
+    ),
   );
 }

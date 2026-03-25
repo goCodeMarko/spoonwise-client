@@ -41,24 +41,31 @@ export interface CartItem {
 
 @Injectable()
 export class CartEffects {
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+  ) {}
 
   // set cart from backend
   setCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CartActions.setCart),
       mergeMap(() =>
-        this.http.get(`${environment.SERVER_URL_CLUSTERS}user/getCart`).pipe(
-          map((data: any) => {
-            let cart: CartItem[] = data.data;
-            return CartActions.setCartSuccess({ cart });
-          }),
-          catchError((error: any) =>
-            of(CartActions.setCartFailure({ error: error.message }))
-          )
-        )
-      )
-    )
+        this.http
+          .get(`${environment.SERVER_URL_CLUSTERS}user/getCart`, {
+            withCredentials: true,
+          })
+          .pipe(
+            map((data: any) => {
+              let cart: CartItem[] = data.data;
+              return CartActions.setCartSuccess({ cart });
+            }),
+            catchError((error: any) =>
+              of(CartActions.setCartFailure({ error: error.message })),
+            ),
+          ),
+      ),
+    ),
   );
 
   addToCart$ = createEffect(() =>
@@ -66,17 +73,21 @@ export class CartEffects {
       ofType(CartActions.addToCart),
       mergeMap(({ shop, lineItem }) =>
         this.http
-          .post(`${environment.SERVER_URL_CLUSTERS}user/addToCart`, {
-            shop,
-            lineItem,
-          })
+          .post(
+            `${environment.SERVER_URL_CLUSTERS}user/addToCart`,
+            {
+              shop,
+              lineItem,
+            },
+            { withCredentials: true },
+          )
           .pipe(
             map(() => CartActions.addToCartSuccess({ shop, lineItem })),
             catchError((error) => {
               return of(CartActions.addToCartFailure({ error }));
-            })
-          )
-      )
-    )
+            }),
+          ),
+      ),
+    ),
   );
 }
