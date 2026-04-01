@@ -117,9 +117,11 @@ export class AuthService {
 
   rotateAccessToken$() {
     return this.http
-      .put(`${environment.SERVER_URL_CLUSTERS}user/rotateAccessToken`, {
-        withCredentials: true,
-      })
+      .put(
+        `${environment.SERVER_URL_CLUSTERS}user/rotateAccessToken`,
+        {},
+        { withCredentials: true },
+      )
       .pipe(
         map((response: any) => ({
           status: response.status,

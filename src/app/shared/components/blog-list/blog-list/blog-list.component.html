@@ -8,8 +8,7 @@
       gap: 7px;
       overflow-y: scroll;
 
-      padding-top: 7px;
-      padding-bottom: 7px;
+      padding: 7px 14px 7px 14px;
     "
     [ngStyle]="
       savedBlogsOnly
@@ -32,7 +31,7 @@
     >
       <div style="display: flex; flex-direction: column">
         <div>
-          <h4>{{ blog.title | lineClamp : 200 }}</h4>
+          <h4>{{ blog.title | lineClamp: 200 }}</h4>
         </div>
         <div style="display: flex; justify-content: space-between">
           <div>{{ blog.createdAt | timeAgo }}</div>
@@ -42,7 +41,7 @@
       <div>
         <div
           class="blog-content"
-          [innerHTML]="blog.content | lineClamp : 270"
+          [innerHTML]="blog.content | lineClamp: 270"
         ></div>
       </div>
       <div style="display: flex; gap: 7px; flex-direction: row">
@@ -105,7 +104,7 @@
     >
       <div style="display: flex; flex-direction: column">
         <div>
-          <h3>{{ blog.title | lineClamp : 200 }}</h3>
+          <h3>{{ blog.title | lineClamp: 200 }}</h3>
         </div>
         <div style="display: flex; justify-content: space-between">
           <div>{{ blog.createdAt | timeAgo }}</div>
@@ -115,7 +114,7 @@
       <div>
         <div
           class="blog-content"
-          [innerHTML]="blog.content | lineClamp : 270"
+          [innerHTML]="blog.content | lineClamp: 270"
         ></div>
       </div>
       <div style="display: flex; gap: 7px; flex-direction: column">

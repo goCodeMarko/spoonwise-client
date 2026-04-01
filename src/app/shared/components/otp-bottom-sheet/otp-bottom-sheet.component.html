@@ -1,5 +1,5 @@
 <div class="sheet-list" style="margin-bottom: 160px">
-  <!-- <div style="justify-items: center; margin-bottom: 15px">
+  <div style="justify-items: center; margin-bottom: 15px">
     <div
       style="
         margin-top: 8px;
@@ -9,7 +9,7 @@
         border-radius: 20px;
       "
     ></div>
-  </div> -->
+  </div>
   <div
     class="input-group search"
     style="gap: 7px; align-items: center; flex-direction: column"
@@ -27,16 +27,12 @@
       [(ngModel)]="otp"
       maxlength="4"
       placeholder="0000"
-      style="text-align: center; font-size: xxx-large; width: 100%"
+      style="text-align: center; font-size: xxx-large; width: 80%"
     />
 
     <div>
       <ng-container *ngIf="!isExpired; else expired">
-        <button
-          mat-flat-button
-          style="height: 70px; text-align: center"
-          disabled
-        >
+        <button mat-flat-button style="text-align: center" disabled>
           <b style="color: black">{{
             expiresAt | countDown: updateCountdown.bind(this)
           }}</b>

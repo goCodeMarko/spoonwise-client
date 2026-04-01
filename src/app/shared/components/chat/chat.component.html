@@ -9,6 +9,7 @@
     z-index: -2 !important;
     height: calc(100dvh - 56.1px - 85px);
     margin: 0px;
+    padding: 7px 14px 7px 14px;
   "
 >
   <div
@@ -125,7 +126,9 @@
         mat-icon-button
         (click)="removeForUpload()"
       >
-        <mat-icon style="font-size: 25px; color: '#f8da50'">close</mat-icon>
+        <mat-icon style="font-size: 25px; color: &quot;#f8da50&quot;"
+          >close</mat-icon
+        >
       </button>
     </div>
     <img [src]="forUploadImage" alt="" style="width: 70vw" />
@@ -156,14 +159,16 @@
       />
       <div>
         <button mat-icon-button (click)="openCamera()">
-          <mat-icon style="font-size: 45px; color: '#f8da50'"
+          <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;"
             >camera_alt</mat-icon
           >
         </button>
       </div>
       <div>
         <button mat-icon-button (click)="openGallery()">
-          <mat-icon style="font-size: 45px; color: '#f8da50'">image</mat-icon>
+          <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;"
+            >image</mat-icon
+          >
         </button>
       </div>
     </div>
@@ -178,7 +183,9 @@
     </div>
     <div style="flex: 1">
       <button mat-icon-button (click)="sendMessage()">
-        <mat-icon style="font-size: 45px; color: '#f8da50'">send</mat-icon>
+        <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;"
+          >send</mat-icon
+        >
       </button>
     </div>
   </div>

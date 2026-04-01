@@ -11,12 +11,14 @@
     ></div>
   </div>
 
-  <section style="background-color: white; color: black; border-radius: 7px">
+  <section
+    style="background-color: transparent; color: black; border-radius: 7px"
+  >
     <div
       style="
         flex: 1;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         width: 100%;
         gap: 7px;
       "
@@ -100,7 +102,7 @@
             <img [src]="prod.images[0]" alt="Product Image" class="prod-img" />
             <div class="card-content">
               <b>
-                {{ prod.name | lineClamp : 25 }}
+                {{ prod.name | lineClamp: 25 }}
               </b>
               <div
                 style="display: flex; gap: 7px; height: 20px; margin-top: 7px"
@@ -127,7 +129,7 @@
                   "
                 >
                   <p class="price-color">
-                    {{ prod.price | currency : "PHP" : "symbol" }}
+                    {{ prod.price | currency: "PHP" : "symbol" }}
                   </p>
 
                   <p *ngIf="account.role === 'buyer'">
@@ -150,7 +152,7 @@
                     {{ prod.shop.businessName }}
                   </p>
                   <p *ngIf="account.role === 'buyer'">
-                    {{ prod.rating | number : "1.1-1" }}
+                    {{ prod.rating | number: "1.1-1" }}
                     <img
                       src="assets/icons/star.png"
                       width="20"

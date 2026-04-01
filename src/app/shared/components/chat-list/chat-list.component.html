@@ -1,23 +1,21 @@
 <div
   style="
-    background-color: white;
+    background: white;
     color: black;
-    padding: 7px;
+
     border-radius: 8px;
-    margin-top: 7px;
-    margin-bottom: 7px;
+    margin: 7px 14px 7px 14px;
   "
   (click)="viewChatroom(spoonwise._id, true)"
 >
   <div style="display: flex; justify-content: space-between">
-    <div>
+    <div style="flex: 1; min-width: 0">
       <div style="display: flex; flex-direction: column">
-        <div style="display: flex; gap: 14px">
+        <div style="display: flex; gap: 14px; padding: 7px">
           <div>
             <div>
               <img
-                src="
-                        https://shiftart.com/wp-content/uploads/2017/04/RC-Profile-Square.jpg"
+                [src]="'assets/images/logo/AI.png'"
                 alt=""
                 width="65"
                 style="border-radius: 50%"
@@ -29,37 +27,52 @@
               display: flex;
               flex-direction: column;
               justify-content: center;
+              flex: 1;
+              min-width: 0;
             "
           >
-            <div>
-              <b>Spoonwise AI</b>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+              "
+            >
+              <div><b>Spoonwise AI</b></div>
+
+              <div>
+                {{ spoonwise.latestMessages[0].createdAt | timeAgo }}
+              </div>
             </div>
 
-            <div style="display: flex; gap: 7px">
+            <div style="display: flex; flex-direction: column; gap: 7px">
               <ng-container *ngIf="spoonwise.latestMessages.length > 0">
-                <div style="display: flex">
-                  <div
-                    *ngIf="
-                      [this.authUser._id, this.authUser.shop?._id].includes(
-                        spoonwise.latestMessages[0].senderId
-                      )
-                    "
-                    style="margin-right: 7px"
-                  >
-                    You:
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    gap: 3px;
+                  "
+                >
+                  <div style="display: flex; flex: 1; min-width: 0">
+                    <div
+                      *ngIf="
+                        [this.authUser._id, this.authUser.shop?._id].includes(
+                          spoonwise.latestMessages[0].senderId
+                        )
+                      "
+                      style="margin-right: 7px"
+                    >
+                      You:
+                    </div>
+                    <div
+                      [innerHTML]="
+                        spoonwise.latestMessages[0].content.message
+                          | lineClamp: 60
+                      "
+                    ></div>
                   </div>
-                  <div
-                    [innerHTML]="
-                      spoonwise.latestMessages[0].content.message
-                        | lineClamp : 20
-                    "
-                  ></div>
-                </div>
-                <span><b>·</b></span>
-                <div>
-                  <p>
-                    {{ spoonwise.latestMessages[0].createdAt | timeAgo }}
-                  </p>
                 </div>
               </ng-container>
             </div>
@@ -97,7 +110,7 @@
     flex-direction: column;
     gap: 7px;
     height: calc(100dvh - 56.1px - 84px - 79px - 7px - 7px);
-    padding-bottom: 7px;
+    padding: 0px 14px 7px 14px;
   "
 >
   <div
@@ -115,14 +128,17 @@
     (click)="viewChatroom(chatroom._id)"
   >
     <div style="display: flex; justify-content: space-between">
-      <div>
+      <div style="flex: 1; min-width: 0">
         <div style="display: flex; flex-direction: column">
           <div style="display: flex; gap: 14px">
             <div>
               <div>
                 <img
-                  src="
-                        https://shiftart.com/wp-content/uploads/2017/04/RC-Profile-Square.jpg"
+                  [src]="
+                    isShop
+                      ? chatroom.users.buyer.profile_picture
+                      : chatroom.users.shop.profile_picture
+                  "
                   alt=""
                   width="65"
                   style="border-radius: 50%"
@@ -133,40 +149,62 @@
               style="
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+
+                flex: 1;
+                min-width: 0;
               "
             >
-              <div>
-                <b>{{
-                  isShop ? chatroom.users.buyer.name : chatroom.users.shop.name
-                }}</b>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: space-between;
+                "
+              >
+                <div>
+                  <b>{{
+                    isShop
+                      ? chatroom.users.buyer.name
+                      : chatroom.users.shop.name
+                  }}</b>
+                </div>
+                <div>{{ chatroom.latestMessages[0].createdAt | timeAgo }}</div>
               </div>
 
-              <div style="display: flex; gap: 7px">
+              <div style="display: flex; flex-direction: column; gap: 7px">
                 <ng-container *ngIf="chatroom.latestMessages.length > 0">
-                  <div style="display: flex">
-                    <div
-                      *ngIf="
-                        [this.authUser._id, this.authUser.shop?._id].includes(
-                          chatroom.latestMessages[0].senderId
-                        )
-                      "
-                      style="margin-right: 7px"
-                    >
-                      You:
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: space-between;
+                      gap: 3px;
+                    "
+                  >
+                    <div style="display: flex; flex: 1; min-width: 0">
+                      <div
+                        *ngIf="
+                          [this.authUser._id, this.authUser.shop?._id].includes(
+                            chatroom.latestMessages[0].senderId
+                          )
+                        "
+                        style="margin-right: 7px"
+                      >
+                        You:
+                      </div>
+                      <div
+                        style="
+                          white-space: nowrap;
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          min-width: 0;
+                        "
+                        [innerHTML]="
+                          chatroom.latestMessages[0].content.message
+                            | lineClamp: 20
+                        "
+                      ></div>
                     </div>
-                    <div
-                      [innerHTML]="
-                        chatroom.latestMessages[0].content.message
-                          | lineClamp : 20
-                      "
-                    ></div>
-                  </div>
-                  <span><b>·</b></span>
-                  <div>
-                    <p>
-                      {{ chatroom.latestMessages[0].createdAt | timeAgo }}
-                    </p>
                   </div>
                 </ng-container>
               </div>

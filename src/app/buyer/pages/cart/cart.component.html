@@ -2,7 +2,8 @@
   style="
     height: calc(100dvh - 56.11px - 84px - 81px);
     overflow-y: scroll;
-    padding-bottom: 7px;
+
+    padding: 7px 14px 7px 14px;
   "
 >
   <div
@@ -103,7 +104,7 @@
                 <div>Stocks: {{ lineItem.qty }}</div>
 
                 <b style="color: #fb5630">{{
-                  lineItem.price | currency : "PHP" : "symbol"
+                  lineItem.price | currency: "PHP" : "symbol"
                 }}</b>
               </div>
               <div>
@@ -131,7 +132,7 @@
       <div>
         Total
         <b>
-          {{ lineItemTotal | currency : "PHP" : "symbol" }}
+          {{ lineItemTotal | currency: "PHP" : "symbol" }}
         </b>
       </div>
       <div>

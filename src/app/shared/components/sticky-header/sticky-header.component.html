@@ -1,14 +1,20 @@
 <section
-  [ngStyle]="{
-    'justify-content':
+  [ngClass]="{
+    'justify-center':
+      routerOutletComponent === 'HomePageComponent' ||
+      routerOutletComponent === 'ChatListPageComponent' ||
+      routerOutletComponent === 'ProfilePageComponent' ||
+      routerOutletComponent === 'CartComponent' ||
+      routerOutletComponent === 'AddProductComponent' ||
+      routerOutletComponent === 'LoginComponent',
+    'justify-between': !(
       routerOutletComponent === 'HomePageComponent' ||
       routerOutletComponent === 'ChatListPageComponent' ||
       routerOutletComponent === 'ProfilePageComponent' ||
       routerOutletComponent === 'CartComponent' ||
       routerOutletComponent === 'AddProductComponent' ||
       routerOutletComponent === 'LoginComponent'
-        ? 'center'
-        : 'space-between'
+    )
   }"
   class="sticky-header"
 >
@@ -32,7 +38,7 @@
     >
       <img
         src="../../assets/images/logo/spoonwise-logo-full.png"
-        style="width: 130px"
+        style="width: clamp(100px, 25vw, 150px)"
       />
     </ng-container>
 
