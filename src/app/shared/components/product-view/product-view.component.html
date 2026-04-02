@@ -88,39 +88,42 @@
         <div><mat-icon style="font-size: x-large">chevron_right</mat-icon></div>
       </div>
     </div>
-    <div
-      style="
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        background-color: #f8da50;
-        color: black;
-        padding: 14px 7px;
-        border-radius: 8px;
 
-        cursor: pointer;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -webkit-user-drag: none;
-        -webkit-tap-highlight-color: transparent;
-      "
-    >
-      <div class="ms-icon-container" style="color: black">
-        <button mat-icon-button>
-          <mat-icon>chat_bubble</mat-icon>
-        </button>
-        <div class="ms-icon-text">Chat</div>
-      </div>
+    <ng-template *ngIf="!isShop">
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 14px;
+          background-color: #f8da50;
+          color: black;
+          padding: 14px 7px;
+          border-radius: 8px;
 
-      <div class="ms-icon-container">
-        <button mat-icon-button (click)="addToCart()">
-          <mat-icon>add_box</mat-icon>
-        </button>
-        <div class="ms-icon-text">Cart</div>
+          cursor: pointer;
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -webkit-user-drag: none;
+          -webkit-tap-highlight-color: transparent;
+        "
+      >
+        <div class="ms-icon-container" style="color: black">
+          <button mat-icon-button>
+            <mat-icon>chat_bubble</mat-icon>
+          </button>
+          <div class="ms-icon-text">Chat</div>
+        </div>
+
+        <div class="ms-icon-container">
+          <button mat-icon-button (click)="addToCart()">
+            <mat-icon>add_box</mat-icon>
+          </button>
+          <div class="ms-icon-text">Cart</div>
+        </div>
       </div>
-    </div>
+    </ng-template>
   </div>
 </div>

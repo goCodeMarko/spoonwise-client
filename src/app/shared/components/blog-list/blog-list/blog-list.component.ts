@@ -73,6 +73,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log("BlogListComponent Initiated!", this.savedBlogsOnly);
+    this.onLoad = true;
     this.selectBlogs$ = this.store
       .select(this.savedBlogsOnly ? selectSavedBlogs : selectBlogs)
       .pipe(takeUntil(this.destroy$));
@@ -80,6 +81,12 @@ export class BlogListComponent implements OnInit, OnDestroy {
     this.selectBlogs$.subscribe((data) => {
       this.blogs = data;
     });
+
+    if (this.savedBlogsOnly) {
+      this.store.dispatch(getSavedBlogs());
+    } else {
+      this.store.dispatch(getBlogs());
+    }
 
     this.actions$
       .pipe(
