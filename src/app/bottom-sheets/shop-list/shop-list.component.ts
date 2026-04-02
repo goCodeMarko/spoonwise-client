@@ -8,6 +8,7 @@ import {
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Actions } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
+import { BottomSheetContext } from "swipe-bottom-sheet/angular";
 import {
   distinctUntilChanged,
   filter,
@@ -37,7 +38,8 @@ export class ShopListComponent implements OnInit {
     private actions$: Actions,
     private hrs: HttpRequestService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private context: BottomSheetContext<ShopListComponent>
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +68,12 @@ export class ShopListComponent implements OnInit {
 
   chatSeller(shopId: string) {
     this.store.dispatch(chatSeller({ shopId }));
+    this.context.dismiss();
+  }
+
+  viewShop(shopId: string) {
+    this.router.navigate(["/deals/shop", shopId]);
+    this.context.dismiss();
   }
 
   listenToQueryParams(): void {

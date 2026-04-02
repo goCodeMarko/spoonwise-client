@@ -578,8 +578,30 @@ export class MapComponent
   public productVisibility = false;
   public distanceVisibility = false;
   public ratingVisibility = false;
+
+  private resetSheetRefs() {
+    this.productListSheet = null;
+    this.nearShopsSheet = null;
+    this.topRatedShopsSheet = null;
+  }
+
+  private async closeOpenSheets() {
+    if (
+      !this.productListSheet &&
+      !this.nearShopsSheet &&
+      !this.topRatedShopsSheet
+    ) {
+      return;
+    }
+
+    // await this.swipeSheet.dismiss();
+    this.resetSheetRefs();
+  }
+
   public async toggleProductVisibility() {
     if (this.productListSheet) return;
+
+    await this.closeOpenSheets();
 
     this.router.navigate([], {
       relativeTo: this.route,
@@ -588,8 +610,10 @@ export class MapComponent
     });
   }
 
-  toggleTopRatedShopsVisibility() {
+  async toggleTopRatedShopsVisibility() {
     if (this.topRatedShopsSheet) return;
+
+    await this.closeOpenSheets();
 
     this.router.navigate([], {
       relativeTo: this.route,
@@ -598,8 +622,10 @@ export class MapComponent
     });
   }
 
-  toggleNearShopsVisibility() {
+  async toggleNearShopsVisibility() {
     if (this.nearShopsSheet) return;
+
+    await this.closeOpenSheets();
 
     this.router.navigate([], {
       relativeTo: this.route,

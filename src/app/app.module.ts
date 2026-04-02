@@ -64,8 +64,6 @@ import { ShopReviewsComponent } from "./bottom-sheets/shop-reviews/shop-reviews.
 import { LalamoveRequestDetailsComponent } from "./bottom-sheets/lalamove-request-details/lalamove-request-details.component";
 import { RateShopComponent } from "./bottom-sheets/rate-shop/rate-shop.component";
 import { ProductListComponent } from "./bottom-sheets/product-list/product-list.component";
-import { CountDownPipe } from "./shared/pipes/count-down.pipe";
-import { CountDown2Pipe } from "./shared/pipes/count-down2.pipe";
 import { ShopListComponent } from "./bottom-sheets/shop-list/shop-list.component";
 
 @NgModule({
@@ -84,7 +82,6 @@ import { ShopListComponent } from "./bottom-sheets/shop-list/shop-list.component
     ViewShopModalComponent,
     SelectAudienceModalComponent,
     PipesPipe,
-    CountDown2Pipe,
     ChatSettingsComponent,
     ShopReviewsComponent,
     LalamoveRequestDetailsComponent,

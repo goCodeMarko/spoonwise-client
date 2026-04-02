@@ -83,7 +83,16 @@
   <ng-template #productList>
     <ng-container *ngIf="!productListOnLoad; else productListLoader">
       <ng-container *ngFor="let prod of products; let i = index">
-        <div class="card">
+        <div
+          (click)="viewProduct(prod._id)"
+          class="card"
+          style="
+            background-color: #f6f6f6;
+            border-radius: 8px;
+            padding: 14px 7px;
+            gap: 7px;
+          "
+        >
           <div
             style="
               position: absolute;
@@ -159,8 +168,6 @@
                       style="vertical-align: sub"
                     />
                   </p>
-
-                  <div (click)="viewProduct(prod._id)">View</div>
 
                   <ng-container *ngIf="account.role === 'seller'">
                     <div

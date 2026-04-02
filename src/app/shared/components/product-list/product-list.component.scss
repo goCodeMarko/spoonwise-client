@@ -3,8 +3,7 @@
   flex-direction: column;
   overflow-y: scroll;
   // padding: 0px 0px 0px 0px;
-  margin-top: 7px;
-  margin-bottom: 7px;
+  margin: 7px 14px 7px 14px;
   height: calc(100dvh - 57px - 116px - 66.8px - 23px);
 }
 
@@ -12,9 +11,8 @@
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  // margin: 0px 0px 100px 0px;
-  margin-top: 7px;
-  margin-bottom: 7px;
+  margin: 7px 14px 7px 14px;
+
   height: calc(100dvh - 57px - 116px - 66.8px - 23px);
 }
 

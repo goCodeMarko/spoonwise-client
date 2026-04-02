@@ -65,7 +65,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService,
-    private store: Store
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -110,13 +110,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
       { ...this.queryParams, shop },
       async (res: any) => {
         if (res.success && _.has(res, "data")) {
+          console.log("xxxxxxxxx", res.data);
           this.products = res.data.items;
           this.meta = res.data.meta;
         } else {
           this.products = [];
         }
         this.productListOnLoad = false;
-      }
+      },
     );
   }
 
@@ -169,7 +170,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         if (res.success) {
         } else {
         }
-      }
+      },
     );
   }
 

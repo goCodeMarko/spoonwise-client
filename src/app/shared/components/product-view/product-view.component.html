@@ -17,78 +17,110 @@
   </swiper>
 
   <div>{{ output }}</div>
-  <div class="prod-bar">
-    <div class="price">
-      <b>{{ product.price | currency : "PHP" : "symbol" }}</b>
-    </div>
-    <div>
-      {{ product.name }}
-    </div>
-  </div>
 
-  <div class="prod-desc">
-    <div>
-      {{ product.description }}
-    </div>
-  </div>
-
-  <div
-    matRipple
-    (click)="openShopReviewsSheet(product.shopId)"
-    style="
-      background-color: #f6f6f6;
-      color: black;
-      padding: 20px 7px;
-      border-radius: 8px;
-      margin-top: 7px;
-      margin-bottom: 1em;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-
-      -webkit-user-drag: none;
-      -webkit-tap-highlight-color: transparent;
-    "
-  >
+  <div style="display: flex; gap: 7px; flex-direction: column">
     <div
       style="
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 7px;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+
+        background-color: #f6f6f6;
+        color: black;
+        padding: 14px 7px;
+        border-radius: 8px;
+        margin-top: 7px;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-tap-highlight-color: transparent;
       "
     >
-      <div>
-        <b
-          >Shop Reviews <span>{{ product.totalReviews }}</span></b
-        >
+      <div class="prod-bar">
+        <div class="price">
+          <b>{{ product.price | currency: "PHP" : "symbol" }}</b>
+        </div>
+        <div>
+          {{ product.name }}
+        </div>
       </div>
-      <div><mat-icon style="font-size: x-large">chevron_right</mat-icon></div>
+
+      <div class="prod-desc">
+        <div>
+          {{ product.description }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      matRipple
+      (click)="openShopReviewsSheet(product.shopId)"
+      style="
+        background-color: #f6f6f6;
+        color: black;
+        padding: 14px 7px;
+        border-radius: 8px;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+
+        -webkit-user-drag: none;
+        -webkit-tap-highlight-color: transparent;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 7px;
+        "
+      >
+        <div>
+          <b
+            >Shop Reviews <span>{{ product.totalReviews }}</span></b
+          >
+        </div>
+        <div><mat-icon style="font-size: x-large">chevron_right</mat-icon></div>
+      </div>
+    </div>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        background-color: #f8da50;
+        color: black;
+        padding: 14px 7px;
+        border-radius: 8px;
+
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-tap-highlight-color: transparent;
+      "
+    >
+      <div class="ms-icon-container" style="color: black">
+        <button mat-icon-button>
+          <mat-icon>chat_bubble</mat-icon>
+        </button>
+        <div class="ms-icon-text">Chat</div>
+      </div>
+
+      <div class="ms-icon-container">
+        <button mat-icon-button (click)="addToCart()">
+          <mat-icon>add_box</mat-icon>
+        </button>
+        <div class="ms-icon-text">Cart</div>
+      </div>
     </div>
   </div>
-
-  <ng-container *ngIf="!isShop">
-    <div class="gs-main-button-group">
-      <div class="gs-main-button-group-horizontal">
-        <ng-container>
-          <div class="ms-icon-container">
-            <button mat-icon-button>
-              <mat-icon style="font-size: x-large">question_answer</mat-icon>
-            </button>
-            <div class="ms-icon-text">Chat Now</div>
-          </div>
-        </ng-container>
-
-        <ng-container>
-          <div class="ms-icon-container">
-            <button mat-icon-button (click)="addToCart()">
-              <mat-icon style="font-size: x-large">shopping_cart</mat-icon>
-            </button>
-            <div class="ms-icon-text">Add to Cart</div>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-  </ng-container>
 </div>

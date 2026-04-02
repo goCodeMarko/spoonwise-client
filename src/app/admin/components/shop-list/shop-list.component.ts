@@ -18,6 +18,8 @@ import { debounceTime, finalize, map, tap } from "rxjs/operators";
 import { fromEvent } from "rxjs";
 import { MatDialog } from "@angular/material/dialog";
 import { ViewShopModalComponent } from "src/app/modals/view-shop-modal/view-shop-modal.component";
+import { Store } from "@ngrx/store";
+import { chatSeller } from "src/app/shared/store/chat/chat.actions";
 
 interface params {
   skip: number;
@@ -102,7 +104,8 @@ export class ShopListComponent implements OnInit, AfterViewInit {
     private hrs: HttpRequestService,
     private route: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private store: Store,
   ) {
     // this.selectControl.valueChanges.subscribe((value) => {
     //   this.router.navigate([], {
@@ -141,9 +144,13 @@ export class ShopListComponent implements OnInit, AfterViewInit {
         debounceTime(500),
         tap((res: any) => {
           this.search(res.target.value);
-        })
+        }),
       )
       .subscribe();
+  }
+
+  chatSeller(shopId: string) {
+    this.store.dispatch(chatSeller({ shopId }));
   }
 
   getShopList() {
@@ -163,7 +170,7 @@ export class ShopListComponent implements OnInit, AfterViewInit {
             },
           };
         }),
-        finalize(() => (this.shopListOnLoad = false))
+        finalize(() => (this.shopListOnLoad = false)),
       )
       .subscribe({
         next: (res: any) => {

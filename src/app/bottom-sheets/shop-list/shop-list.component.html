@@ -18,26 +18,40 @@
       style="
         display: flex;
         flex-direction: column;
+        align-items: center;
         height: calc(50dvh - 56.11px);
         overflow-y: scroll;
         padding: 0px 0px 0px 0px;
+        gap: 7px;
       "
     >
-      <div *ngFor="let shop of nearestShops" class="card">
+      <div *ngFor="let shop of nearestShops" class="card" style="width: 93%">
         <div
           style="
             display: flex;
             flex-direction: row;
             gap: 7px;
             align-items: center;
+            justify-content: space-between;
             width: 100%;
+            background-color: #f6f6f6;
+            border-radius: 8px;
+            padding: 14px 7px;
           "
         >
-          <div style="display: flex; flex-direction: column; gap: 7px; flex: 2">
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: start;
+              gap: 7px;
+              flex: 2;
+            "
+          >
             <div style="display: flex; gap: 7px">
               <div>
                 <img
-                  [src]="'assets/images/logo/spoonwise-icon.png'"
+                  [src]="shop.logo"
                   alt=""
                   width="40"
                   style="border-radius: 50%"
@@ -54,16 +68,16 @@
                 display: flex;
                 flex: 1;
                 flex-direction: row;
-                gap: 7px;
+                gap: 21px;
                 width: 100%;
-                justify-content: space-evenly;
+                justify-content: start;
               "
             >
               <div
                 style="
                   display: flex;
                   flex-direction: column;
-                  gap: 7px;
+
                   align-items: center;
                 "
               >
@@ -74,7 +88,7 @@
                 style="
                   display: flex;
                   flex-direction: column;
-                  gap: 7px;
+
                   align-items: center;
                 "
               >
@@ -85,7 +99,7 @@
                 style="
                   display: flex;
                   flex-direction: column;
-                  gap: 7px;
+
                   align-items: center;
                 "
               >
@@ -94,20 +108,18 @@
               </div>
             </div>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 7px">
-            <a [routerLink]="['/deals/shop', shop._id]"
-              ><button mat-stroked-button style="width: 100%">
-                Visit Shop
-              </button></a
-            >
+          <div style="display: flex; flex-direction: column">
+            <div class="ms-icon-container" style="color: black">
+              <button mat-icon-button (click)="viewShop(shop._id)">
+                <mat-icon>store</mat-icon>
+              </button>
+            </div>
 
-            <button
-              (click)="chatSeller(shop._id)"
-              mat-stroked-button
-              style="width: 100%"
-            >
-              Chat Seller
-            </button>
+            <div class="ms-icon-container" style="color: black">
+              <button mat-icon-button (click)="chatSeller(shop._id)">
+                <mat-icon>chat_bubble</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>
