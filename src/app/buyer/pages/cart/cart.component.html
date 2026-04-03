@@ -103,9 +103,7 @@
               <div style="display: flex; flex-direction: column">
                 <div>Stocks: {{ lineItem.qty }}</div>
 
-                <b style="color: #fb5630">{{
-                  lineItem.price | currency: "PHP" : "symbol"
-                }}</b>
+                <b>{{ lineItem.price | currency: "PHP" : "symbol" }}</b>
               </div>
               <div>
                 <app-counter
