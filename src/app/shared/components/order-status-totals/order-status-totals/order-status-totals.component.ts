@@ -15,6 +15,8 @@ import { IOrderStatusTotals } from "src/app/shared/models/order-status-totals.mo
 export class OrderStatusTotalsComponent implements OnInit, OnChanges {
   @Input() data!: IOrderStatusTotals;
   @Input() onload: boolean = true;
+  chartData: any[] = [];
+  animationsEnabled = true;
   x = [
     {
       name: "Sales",
@@ -47,6 +49,7 @@ export class OrderStatusTotalsComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["data"]) {
       this.data = changes["data"].currentValue;
+      this.chartData = Array.isArray(this.data) ? [...this.data] : [];
     }
 
     if (changes["onload"]) {
@@ -55,6 +58,13 @@ export class OrderStatusTotalsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    if (typeof navigator !== "undefined") {
+      this.animationsEnabled = !/Android|iPhone|iPad|iPod|Mobile/i.test(
+        navigator.userAgent,
+      );
+    }
+
+    this.chartData = Array.isArray(this.data) ? [...this.data] : [];
     console.log("-----------data", this.data);
   }
 }

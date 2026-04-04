@@ -1,6 +1,7 @@
 <ng-container *ngIf="onload; else dataLoaded"> Loading... </ng-container>
 <ng-template #dataLoaded>
   <div style="display: flex; flex-direction: column; gap: 7px">
+    <ng-container *ngIf="chartData.length; else emptyState">
     <div
       style="
         overflow-x: scroll;
@@ -9,7 +10,7 @@
         border-radius: 8px;
       "
     >
-      <div style="height: 30vh">
+      <!-- <div style="height: 30vh">
         <ngx-charts-line-chart
           [results]="x"
           [scheme]="colorScheme"
@@ -25,19 +26,19 @@
           [roundDomains]="true"
         >
         </ngx-charts-line-chart>
-      </div>
+      </div> -->
     </div>
     <div
       style="overflow-x: scroll; background-color: white; border-radius: 8px"
     >
       <div style="height: 30vh">
         <ngx-charts-bar-horizontal
-          [results]="data"
+          [results]="chartData"
           [scheme]="colorScheme"
           [xAxis]="true"
           [yAxis]="true"
           [legend]="false"
-          [animations]="true"
+          [animations]="animationsEnabled"
           [showXAxisLabel]="false"
           [showYAxisLabel]="false"
           [showDataLabel]="true"
@@ -49,15 +50,28 @@
 
       <div style="height: 60vh">
         <ngx-charts-pie-grid
-          [results]="data"
+          [results]="chartData"
           [scheme]="colorScheme"
           [legend]="false"
-          [animations]="true"
+          [animations]="animationsEnabled"
           [tooltipDisabled]="false"
         >
         </ngx-charts-pie-grid>
       </div>
     </div>
+    </ng-container>
+    <ng-template #emptyState>
+      <div
+        style="
+          background-color: white;
+          border-radius: 8px;
+          padding: 14px;
+          margin-top: 7px;
+        "
+      >
+        No dashboard data available yet.
+      </div>
+    </ng-template>
     <!-- <div
     style="
       display: grid;
