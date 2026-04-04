@@ -14,6 +14,8 @@ export class AudioService {
   playSound(sound: string): void {
     this.audio.src = `${this.audioPath}${sound}`;
     this.audio.load();
-    this.audio.play();
+    this.audio.play().catch((error) => {
+      console.warn("Audio playback was blocked by the browser.", error);
+    });
   }
 }

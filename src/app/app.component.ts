@@ -65,7 +65,9 @@ export class AppComponent implements OnInit {
       "assets/images/7.png",
     ];
     // Preload the listed images
-    imagePreloadService.preload(imagesToPreload);
+    imagePreloadService.preload(imagesToPreload).catch((error) => {
+      console.warn("Image preloading failed.", error);
+    });
   }
 
   ngOnInit(): void {}

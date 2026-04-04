@@ -82,10 +82,14 @@ export class AuthService {
     private http: HttpClient,
   ) {
     console.log("AuthService instantiated");
-    const accountData = localStorage.getItem("account")!;
-    const data = JSON.parse(accountData);
+    try {
+      const accountData = localStorage.getItem("account");
+      const data = accountData ? JSON.parse(accountData) : null;
 
-    if (data) this.user$.next(data);
+      if (data) this.user$.next(data);
+    } catch (error) {
+      console.warn("Unable to read auth data from storage.", error);
+    }
   }
 
   getUserData$() {
@@ -146,20 +150,34 @@ export class AuthService {
   }
 
   getToken(): string {
-    let token = localStorage.getItem("token");
-    return token ? token : "";
+    try {
+      let token = localStorage.getItem("token");
+      return token ? token : "";
+    } catch (error) {
+      console.warn("Unable to access token from storage.", error);
+      return "";
+    }
   }
 
   getUserData(): string {
-    let account = localStorage.getItem("account");
-    return account ? account : "";
+    try {
+      let account = localStorage.getItem("account");
+      return account ? account : "";
+    } catch (error) {
+      console.warn("Unable to access account from storage.", error);
+      return "";
+    }
   }
 
   updateUserData() {
     return new Promise((resolve) => {
       this.hrs.request("get", "user/getUserAuth", {}, (response: IResponse) => {
-        const stringified = JSON.stringify(response.data);
-        localStorage.setItem("account", stringified);
+        try {
+          const stringified = JSON.stringify(response.data);
+          localStorage.setItem("account", stringified);
+        } catch (error) {
+          console.warn("Unable to persist updated auth data.", error);
+        }
         resolve(null);
       });
     });
@@ -176,9 +194,13 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("account");
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("account");
+    } catch (error) {
+      console.warn("Unable to clear auth data from storage.", error);
+    }
 
     this.router.navigate(["/login"]);
   }

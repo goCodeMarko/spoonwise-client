@@ -7,13 +7,18 @@ export class GeolocationService {
   constructor() {}
 
   async getCurrentPosition(): Promise<GeolocationPosition> {
-    // Check permission first
-    const permissionStatus = await navigator.permissions.query({
-      name: "geolocation" as PermissionName,
-    });
+    if (typeof navigator !== "undefined" && "permissions" in navigator) {
+      try {
+        const permissionStatus = await navigator.permissions.query({
+          name: "geolocation" as PermissionName,
+        });
 
-    if (permissionStatus.state === "denied") {
-      throw new Error("Location access has been denied by the user.");
+        if (permissionStatus.state === "denied") {
+          throw new Error("Location access has been denied by the user.");
+        }
+      } catch (error) {
+        console.warn("Geolocation permission query failed.", error);
+      }
     }
 
     return new Promise((resolve, reject) => {
