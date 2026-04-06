@@ -7,384 +7,398 @@
   "
 >
   <div style="display: flex; flex-direction: column; gap: 7px">
-    <div
-      *ngFor="let order of orderItems; let i = index; trackBy: trackByOrderId"
-      style="
-        background-color: white;
-        color: black;
-        padding: 7px 7px 0px 7px;
-        border-radius: 8px;
-      "
-    >
-      <div>
+    <ng-container *ngIf="orderItems.length; else emptyState">
+      <div
+        *ngFor="let order of orderItems; let i = index; trackBy: trackByOrderId"
+        style="
+          background-color: white;
+          color: black;
+          padding: 7px 7px 0px 7px;
+          border-radius: 8px;
+        "
+      >
         <div>
-          <div style="display: flex; flex-direction: column">
-            <div style="display: flex; justify-content: space-between">
-              <div>
-                <b style="font-weight: 700">{{ "#" + order.orderId }}</b>
+          <div>
+            <div style="display: flex; flex-direction: column">
+              <div style="display: flex; justify-content: space-between">
+                <div>
+                  <b style="font-weight: 700">{{ "#" + order.orderId }}</b>
+                </div>
+                <div style="color: #fb5630">
+                  <ng-container
+                    *ngIf="
+                      orderLabels[order.latestStatus.status] === 'To Pay';
+                      else otherStatus
+                    "
+                  >
+                    {{
+                      order.paymentMethod === "ONLINE" &&
+                      order?.invoice?.status == "PAID"
+                        ? "Paid"
+                        : orderLabels[order.latestStatus.status]
+                    }}
+                  </ng-container>
+                  <ng-template #otherStatus>
+                    {{ orderLabels[order.latestStatus.status] }}
+                  </ng-template>
+                </div>
               </div>
-              <div style="color: #fb5630">
-                <ng-container
-                  *ngIf="
-                    orderLabels[order.latestStatus.status] === 'To Pay';
-                    else otherStatus
-                  "
-                >
-                  {{
-                    order.paymentMethod === "ONLINE" &&
-                    order?.invoice?.status == "PAID"
-                      ? "Paid"
-                      : orderLabels[order.latestStatus.status]
-                  }}
-                </ng-container>
-                <ng-template #otherStatus>
-                  {{ orderLabels[order.latestStatus.status] }}
-                </ng-template>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <div>
+                  <b style="font-weight: 700">{{
+                    !isShop ? order.buyer.name : order?.shop?.businessName
+                  }}</b>
+                </div>
+                <div>
+                  <ngx-star-rating
+                    *ngIf="order.reviews.rate > 0"
+                    [(ngModel)]="order.reviews.rate"
+                    disabled="true"
+                  ></ngx-star-rating>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <hr style="border: none; height: 1px; background-color: #f6f6f6" />
+
+          <div
+            *ngFor="
+              let lineItem of order.cart;
+              let i = index;
+              trackBy: trackByLineItemId
+            "
+            style="
+              display: grid;
+              grid-template-columns: 1fr 2fr;
+              gap: 16px;
+              margin-bottom: 10px;
+            "
+          >
+            <div>
+              <img
+                [src]="lineItem?.images?.[0]"
+                alt=""
+                style="
+                  width: 110px;
+                  height: auto;
+                  object-fit: cover;
+                  border-radius: 15px;
+                "
+              />
             </div>
             <div
               style="
                 display: flex;
+                flex-direction: column;
                 justify-content: space-between;
-                align-items: center;
               "
             >
-              <div>
-                <b style="font-weight: 700">{{
-                  !isShop ? order.buyer.name : order?.shop?.businessName
-                }}</b>
+              <div class="line-clamp">
+                {{ lineItem.name }}
               </div>
-              <div>
-                <ngx-star-rating
-                  *ngIf="order.reviews.rate > 0"
-                  [(ngModel)]="order.reviews.rate"
-                  disabled="true"
-                ></ngx-star-rating>
+              <div style="display: flex; flex-direction: column; gap: 7px">
+                <div
+                  *ngFor="let offer of lineItem.specialOffers; let i = index"
+                >
+                  {{ offer.name }}
+                </div>
+                <div></div>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <div style="display: flex; flex-direction: column">
+                  <div>Stocks: {{ lineItem.qty }}</div>
+
+                  <b>{{ lineItem.price | currency: "PHP" : "symbol" }}</b>
+                </div>
+
+                <div>x{{ lineItem.orderQty }}</div>
+                <div *ngIf="order.latestStatus.status == 'TO_RECEIVE'">
+                  <ng-container
+                    *ngIf="
+                      lineItem.latestStatus.status == 'ORDER_RECEIVED';
+                      else orderReceiveBtn
+                    "
+                  >
+                    <mat-chip-list aria-label="Dog selection">
+                      <mat-chip style="background: #f6f6f6">
+                        <mat-chip-avatar>
+                          <img src="assets/icons/check.png" alt="" width="24" />
+                        </mat-chip-avatar>
+                        Received
+                      </mat-chip>
+                    </mat-chip-list>
+                  </ng-container>
+                  <ng-template #orderReceiveBtn>
+                    <ng-container *ngIf="!isShop">
+                      <button
+                        mat-button
+                        color="main-green"
+                        (click)="
+                          orderReceived(
+                            order.orderId,
+                            order.shop._id,
+                            lineItem._id,
+                            lineItem.points
+                          )
+                        "
+                      >
+                        Order Receive
+                      </button>
+                      <small
+                        style="
+                          display: block;
+                          background-color: #f6f6f6;
+                          /* border-radius: 0px 0px 15px 15px; */
+                          text-align: center;
+                        "
+                        >Earn {{ lineItem.points }} points</small
+                      >
+                    </ng-container>
+                  </ng-template>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <hr style="border: none; height: 1px; background-color: #f6f6f6" />
-
+        <hr style="margin: 0px" />
         <div
-          *ngFor="
-            let lineItem of order.cart;
-            let i = index;
-            trackBy: trackByLineItemId
-          "
           style="
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 16px;
-            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
           "
         >
+          <div>Total {{ order.totalItems }} Item(s)</div>
           <div>
-            <img
-              [src]="lineItem?.images?.[0]"
-              alt=""
-              style="
-                width: 110px;
-                height: auto;
-                object-fit: cover;
-                border-radius: 15px;
-              "
-            />
-          </div>
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-            "
-          >
-            <div class="line-clamp">
-              {{ lineItem.name }}
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 7px">
-              <div *ngFor="let offer of lineItem.specialOffers; let i = index">
-                {{ offer.name }}
-              </div>
-              <div></div>
-            </div>
-            <div style="display: flex; justify-content: space-between">
-              <div style="display: flex; flex-direction: column">
-                <div>Stocks: {{ lineItem.qty }}</div>
-
-                <b>{{ lineItem.price | currency : "PHP" : "symbol" }}</b>
-              </div>
-
-              <div>x{{ lineItem.orderQty }}</div>
-              <div *ngIf="order.latestStatus.status == 'TO_RECEIVE'">
-                <ng-container
-                  *ngIf="
-                    lineItem.latestStatus.status == 'ORDER_RECEIVED';
-                    else orderReceiveBtn
-                  "
-                >
-                  <mat-chip-list aria-label="Dog selection">
-                    <mat-chip style="background: #f6f6f6">
-                      <mat-chip-avatar>
-                        <img src="assets/icons/check.png" alt="" width="24" />
-                      </mat-chip-avatar>
-                      Received
-                    </mat-chip>
-                  </mat-chip-list>
-                </ng-container>
-                <ng-template #orderReceiveBtn>
-                  <ng-container *ngIf="!isShop">
-                    <button
-                      mat-button
-                      color="main-green"
-                      (click)="
-                        orderReceived(
-                          order.orderId,
-                          order.shop._id,
-                          lineItem._id,
-                          lineItem.points
-                        )
-                      "
-                    >
-                      Order Receive
-                    </button>
-                    <small
-                      style="
-                        display: block;
-                        background-color: #f6f6f6;
-                        /* border-radius: 0px 0px 15px 15px; */
-                        text-align: center;
-                      "
-                      >Earn {{ lineItem.points }} points</small
-                    >
-                  </ng-container>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr style="margin: 0px" />
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        "
-      >
-        <div>Total {{ order.totalItems }} Item(s)</div>
-        <div>
-          <b style="color: #fb5630">{{
-            order.subtotal | currency : "PHP" : "symbol"
-          }}</b>
-        </div>
-      </div>
-
-      <hr
-        style="
-          margin-top: 1em;
-          border: none;
-          height: 1px;
-          background-color: #f6f6f6;
-        "
-      />
-
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <div style="display: flex; flex-direction: column">
-          <div>{{ paymentLabels[order.paymentMethod] }}</div>
-          <div>{{ shippingOptionLabels[order.shippingOption] }}</div>
-        </div>
-        <div>
-          <div *ngIf="order.latestStatus.status == 'TO_RECEIVE' && !isShop">
-            <button
-              mat-flat-button
-              *ngIf="order.reviews.rate == 0"
-              (click)="openStoreRatingSheet(order.orderId, order.shop._id)"
-            >
-              Rate Store
-            </button>
+            <b style="color: #fb5630">{{
+              order.subtotal | currency: "PHP" : "symbol"
+            }}</b>
           </div>
         </div>
 
-        <div style="display: flex; flex-direction: row-reverse; gap: 7px">
-          <div
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: flex-end;
-            "
-          >
+        <hr
+          style="
+            margin-top: 1em;
+            border: none;
+            height: 1px;
+            background-color: #f6f6f6;
+          "
+        />
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div style="display: flex; flex-direction: column">
+            <div>{{ paymentLabels[order.paymentMethod] }}</div>
+            <div>{{ shippingOptionLabels[order.shippingOption] }}</div>
+          </div>
+          <div>
+            <div *ngIf="order.latestStatus.status == 'TO_RECEIVE' && !isShop">
+              <button
+                mat-flat-button
+                *ngIf="order.reviews.rate == 0"
+                (click)="openStoreRatingSheet(order.orderId, order.shop._id)"
+              >
+                Rate Store
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: row-reverse; gap: 7px">
             <div
-              *ngIf="
-                order.latestStatus.status == 'TO_PAY' ||
-                (order.latestStatus.status == 'FOR_REVIEW' && isShop)
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
               "
             >
-              <button
-                mat-flat-button
-                [disabled]="isCancelBtnLoad"
-                (click)="
-                  updateOrderStatus(
-                    order,
-                    order.orderId,
-                    order.shop._id,
-                    'CANCELED'
-                  )
-                "
-              >
-                Cancel
-              </button>
-            </div>
-
-            <div>
               <div
                 *ngIf="
-                  ((order.paymentMethod == 'ONLINE' &&
-                    order?.invoice?.status == 'PAID') ||
-                    order.paymentMethod == 'CASH') &&
+                  order.latestStatus.status == 'TO_PAY' ||
+                  (order.latestStatus.status == 'FOR_REVIEW' && isShop)
+                "
+              >
+                <button
+                  mat-flat-button
+                  [disabled]="isCancelBtnLoad"
+                  (click)="
+                    updateOrderStatus(
+                      order,
+                      order.orderId,
+                      order.shop._id,
+                      'CANCELED'
+                    )
+                  "
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <div>
+                <div
+                  *ngIf="
+                    ((order.paymentMethod == 'ONLINE' &&
+                      order?.invoice?.status == 'PAID') ||
+                      order.paymentMethod == 'CASH') &&
+                    order.latestStatus.status == 'TO_PAY' &&
+                    isShop
+                  "
+                >
+                  <button
+                    color="main-green"
+                    mat-flat-button
+                    (click)="
+                      updateOrderStatus(
+                        order,
+                        order.orderId,
+                        order.shop._id,
+                        'FOR_REVIEW'
+                      )
+                    "
+                  >
+                    For Review
+                  </button>
+                </div>
+              </div>
+
+              <ng-container
+                *ngIf="
                   order.latestStatus.status == 'TO_PAY' &&
-                  isShop
+                  order.paymentMethod == 'ONLINE' &&
+                  order.invoice.status == 'PENDING' &&
+                  !isShop
                 "
               >
                 <button
                   color="main-green"
                   mat-flat-button
-                  (click)="
-                    updateOrderStatus(
-                      order,
-                      order.orderId,
-                      order.shop._id,
-                      'FOR_REVIEW'
-                    )
-                  "
+                  (click)="payNow(order?.invoice?.url)"
                 >
-                  For Review
+                  Pay Now ({{ order?.invoice.expiryDate | countdown2 }})
                 </button>
-              </div>
-            </div>
+              </ng-container>
 
-            <ng-container
-              *ngIf="
-                order.latestStatus.status == 'TO_PAY' &&
-                order.paymentMethod == 'ONLINE' &&
-                order.invoice.status == 'PENDING' &&
-                !isShop
-              "
-            >
-              <button
-                color="main-green"
-                mat-flat-button
-                (click)="payNow(order?.invoice?.url)"
-              >
-                Pay Now ({{ order?.invoice.expiryDate | countdown2 }})
-              </button>
-            </ng-container>
-
-            <div>
-              <div *ngIf="order.latestStatus.status == 'FOR_REVIEW' && isShop">
-                <button
-                  color="main-green"
-                  mat-flat-button
-                  (click)="
-                    updateOrderStatus(
-                      order,
-                      order.orderId,
-                      order.shop._id,
-                      'TO_PACK'
-                    )
-                  "
+              <div>
+                <div
+                  *ngIf="order.latestStatus.status == 'FOR_REVIEW' && isShop"
                 >
-                  To Pack
-                </button>
+                  <button
+                    color="main-green"
+                    mat-flat-button
+                    (click)="
+                      updateOrderStatus(
+                        order,
+                        order.orderId,
+                        order.shop._id,
+                        'TO_PACK'
+                      )
+                    "
+                  >
+                    To Pack
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <div *ngIf="order.latestStatus.status == 'TO_PACK' && isShop">
-                <button
-                  color="main-green"
-                  mat-flat-button
-                  (click)="
-                    updateOrderStatus(
-                      order,
-                      order.orderId,
-                      order.shop._id,
-                      'FOR_PICKUP'
-                    )
-                  "
-                >
-                  FOR PICKUP
-                </button>
+              <div>
+                <div *ngIf="order.latestStatus.status == 'TO_PACK' && isShop">
+                  <button
+                    color="main-green"
+                    mat-flat-button
+                    (click)="
+                      updateOrderStatus(
+                        order,
+                        order.orderId,
+                        order.shop._id,
+                        'FOR_PICKUP'
+                      )
+                    "
+                  >
+                    FOR PICKUP
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <ng-container *ngIf="order?.latestLalamove || !isShop">
-              <div
-                *ngIf="
-                  (['FOR_PICKUP', 'TO_RECEIVE'].includes(
-                    order.latestStatus.status
-                  ) &&
-                    order.shippingOption == 'LALAMOVE' &&
-                    order.paymentMethod == 'ONLINE' &&
-                    order?.invoice?.status == 'PAID' &&
-                    !isShop) ||
-                  (isShop &&
-                    ['FOR_PICKUP', 'TO_RECEIVE'].includes(
+              <ng-container *ngIf="order?.latestLalamove || !isShop">
+                <div
+                  *ngIf="
+                    (['FOR_PICKUP', 'TO_RECEIVE'].includes(
                       order.latestStatus.status
                     ) &&
-                    order.shippingOption == 'LALAMOVE' &&
-                    order.paymentMethod == 'ONLINE' &&
-                    order?.invoice?.status == 'PAID' &&
-                    [
-                      'ON_GOING',
-                      'TO_RECEIVE',
-                      'COMPLETED',
-                      'PICKED_UP'
-                    ].includes(order?.latestLalamove.status))
-                "
-              >
-                <button
-                  mat-flat-button
-                  (click)="
-                    openLalamoveRequestDetailsSheet(
-                      order.shop._id,
-                      order.orderId
-                    )
+                      order.shippingOption == 'LALAMOVE' &&
+                      order.paymentMethod == 'ONLINE' &&
+                      order?.invoice?.status == 'PAID' &&
+                      !isShop) ||
+                    (isShop &&
+                      ['FOR_PICKUP', 'TO_RECEIVE'].includes(
+                        order.latestStatus.status
+                      ) &&
+                      order.shippingOption == 'LALAMOVE' &&
+                      order.paymentMethod == 'ONLINE' &&
+                      order?.invoice?.status == 'PAID' &&
+                      [
+                        'ON_GOING',
+                        'TO_RECEIVE',
+                        'COMPLETED',
+                        'PICKED_UP',
+                      ].includes(order?.latestLalamove.status))
                   "
                 >
-                  <img
-                    src="../../assets/images/logo/lalamove-icon.webp"
-                    width="30"
-                  />
-                  Lalamove
+                  <button
+                    mat-flat-button
+                    (click)="
+                      openLalamoveRequestDetailsSheet(
+                        order.shop._id,
+                        order.orderId
+                      )
+                    "
+                  >
+                    <img
+                      src="../../assets/images/logo/lalamove-icon.webp"
+                      width="30"
+                    />
+                    Lalamove
+                  </button>
+                </div>
+              </ng-container>
+
+              <div
+                *ngIf="
+                  ['FOR_PICKUP', 'TO_RECEIVE'].includes(
+                    order.latestStatus.status
+                  ) &&
+                  ['STORE_PICKUP', 'MEET_UP'].includes(order.shippingOption) &&
+                  order.buyer == account._id
+                "
+                (click)="pickUpMeetUp(order.orderId, order.shop._id)"
+              >
+                <button mat-flat-button>
+                  {{
+                    order.shippingOption == "PICK_UP" ? "PICK UP" : "MEET UP"
+                  }}
                 </button>
               </div>
-            </ng-container>
-
-            <div
-              *ngIf="
-                ['FOR_PICKUP', 'TO_RECEIVE'].includes(
-                  order.latestStatus.status
-                ) &&
-                ['STORE_PICKUP', 'MEET_UP'].includes(order.shippingOption) &&
-                order.buyer == account._id
-              "
-              (click)="pickUpMeetUp(order.orderId, order.shop._id)"
-            >
-              <button mat-flat-button>
-                {{ order.shippingOption == "PICK_UP" ? "PICK UP" : "MEET UP" }}
-              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div style="background-color: white; border-radius: 8px; padding: 14px">
+        No order available yet.
+      </div>
+    </ng-template>
   </div>
 </div>
