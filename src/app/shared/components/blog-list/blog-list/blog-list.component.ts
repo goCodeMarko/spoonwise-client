@@ -52,7 +52,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
     private store: Store,
     private actions$: Actions,
     private hrs: HttpRequestService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
     this.actions$
       .pipe(ofType(getSavedBlogsSuccess), takeUntil(this.destroy$))
@@ -64,7 +64,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
     this.actions$
       .pipe(
         ofType(getPastBlogsSuccess, getPastBlogsFailure),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe((action) => {
         this.onLoad = false;
@@ -82,11 +82,11 @@ export class BlogListComponent implements OnInit, OnDestroy {
       this.blogs = data;
     });
 
-    if (this.savedBlogsOnly) {
-      this.store.dispatch(getSavedBlogs());
-    } else {
-      this.store.dispatch(getBlogs());
-    }
+    // if (this.savedBlogsOnly) {
+    //   this.store.dispatch(getSavedBlogs());
+    // } else {
+    //   this.store.dispatch(getBlogs());
+    // }
 
     this.actions$
       .pipe(
@@ -94,9 +94,9 @@ export class BlogListComponent implements OnInit, OnDestroy {
           saveBlogSuccess,
           saveBlogFailure,
           unsaveBlogSuccess,
-          unsaveBlogFailure
+          unsaveBlogFailure,
         ),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe((res: any) => {
         const data = res.data;
@@ -173,7 +173,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
   onScroll(): void {
     const container = this.blogListContainer.nativeElement as HTMLElement;
     const userCurrentHeight = Math.ceil(
-      Math.abs(container.scrollTop) + container.clientHeight + 1
+      Math.abs(container.scrollTop) + container.clientHeight + 1,
     );
     const scrollHeight = container.scrollHeight;
     const isAtTop = userCurrentHeight >= scrollHeight;
@@ -185,7 +185,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
       this.store.dispatch(
         getPastBlogs({
           lastBlogDate: this.blogs[this.blogs.length - 1]?.updatedAt ?? "",
-        })
+        }),
       );
     }
   }
@@ -193,7 +193,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
   onScrollHorizontal(): void {
     const container = this.blogListContainer.nativeElement as HTMLElement;
     const userCurrentWidth = Math.ceil(
-      Math.abs(container.scrollLeft) + container.clientWidth + 1
+      Math.abs(container.scrollLeft) + container.clientWidth + 1,
     );
     const scrollWidth = container.scrollWidth;
     const isAtTop = userCurrentWidth >= scrollWidth;
@@ -205,7 +205,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
       this.store.dispatch(
         getPastBlogs({
           lastBlogDate: this.blogs[this.blogs.length - 1]?.updatedAt ?? "",
-        })
+        }),
       );
     }
   }
