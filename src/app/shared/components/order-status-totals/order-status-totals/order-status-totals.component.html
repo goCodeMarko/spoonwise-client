@@ -1,16 +1,16 @@
-<ng-container *ngIf="onload; else dataLoaded"> Loading... </ng-container>
-<ng-template #dataLoaded>
-  <div style="display: flex; flex-direction: column; gap: 7px">
+<div style="margin-top: 7px">
+  <ng-container *ngIf="onload; else dataLoaded"> Loading... </ng-container>
+  <ng-template #dataLoaded>
     <ng-container *ngIf="chartData.length; else emptyState">
-    <div
-      style="
-        overflow-x: scroll;
-        background-color: white;
-        margin-top: 7px;
-        border-radius: 8px;
-      "
-    >
-      <!-- <div style="height: 30vh">
+      <div
+        style="
+          overflow-x: scroll;
+          background-color: white;
+
+          border-radius: 8px;
+        "
+      >
+        <!-- <div style="height: 30vh">
         <ngx-charts-line-chart
           [results]="x"
           [scheme]="colorScheme"
@@ -27,38 +27,38 @@
         >
         </ngx-charts-line-chart>
       </div> -->
-    </div>
-    <div
-      style="overflow-x: scroll; background-color: white; border-radius: 8px"
-    >
-      <div style="height: 30vh">
-        <ngx-charts-bar-horizontal
-          [results]="chartData"
-          [scheme]="colorScheme"
-          [xAxis]="true"
-          [yAxis]="true"
-          [legend]="false"
-          [animations]="animationsEnabled"
-          [showXAxisLabel]="false"
-          [showYAxisLabel]="false"
-          [showDataLabel]="true"
-          [barPadding]="5"
-          [gradient]="false"
-        >
-        </ngx-charts-bar-horizontal>
       </div>
+      <div
+        style="overflow-x: scroll; background-color: white; border-radius: 8px"
+      >
+        <div style="height: 30vh">
+          <ngx-charts-bar-horizontal
+            [results]="chartData"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [legend]="false"
+            [animations]="animationsEnabled"
+            [showXAxisLabel]="false"
+            [showYAxisLabel]="false"
+            [showDataLabel]="true"
+            [barPadding]="5"
+            [gradient]="false"
+          >
+          </ngx-charts-bar-horizontal>
+        </div>
 
-      <div style="height: 60vh">
-        <ngx-charts-pie-grid
-          [results]="chartData"
-          [scheme]="colorScheme"
-          [legend]="false"
-          [animations]="animationsEnabled"
-          [tooltipDisabled]="false"
-        >
-        </ngx-charts-pie-grid>
+        <div style="height: 60vh">
+          <ngx-charts-pie-grid
+            [results]="chartData"
+            [scheme]="colorScheme"
+            [legend]="false"
+            [animations]="animationsEnabled"
+            [tooltipDisabled]="false"
+          >
+          </ngx-charts-pie-grid>
+        </div>
       </div>
-    </div>
     </ng-container>
     <ng-template #emptyState>
       <div
@@ -94,5 +94,5 @@
       </div>
     </div>
   </div> -->
-  </div>
-</ng-template>
+  </ng-template>
+</div>

@@ -36,5 +36,23 @@
   .mat-icon-button {
     width: 40px;
     height: 40px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+  }
+
+  button {
+    width: 100%;
+
+    mat-icon {
+      font-size: 30px !important;
+      text-align: center !important;
+      width: 100%;
+      color: #f8da50;
+    }
+  }
+
+  .ms-icon-text {
+    margin-top: 4px;
+    color: white;
   }
 }

@@ -2,18 +2,11 @@
   <div
     #blogListContainer
     (scroll)="onScroll()"
-    style="
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      overflow-y: scroll;
-
-      padding: 7px;
-    "
+    style="display: flex; flex-direction: column; gap: 7px; overflow-y: scroll"
     [ngStyle]="
       savedBlogsOnly
-        ? { height: 'calc(100dvh - 56.11px - 84px - 79px - 48px - 7px)' }
-        : { height: 'calc(100dvh - 56.11px - 84px)' }
+        ? { height: 'calc(100dvh - 56.11px - 84px - 79px - 48px - 21px)' }
+        : { height: 'calc(100dvh - 56.11px - 84px - 14px)' }
     "
   >
     <div

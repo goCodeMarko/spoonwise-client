@@ -1,6 +1,7 @@
 <app-profile>
   <mat-tab-group
-    style="padding: 0px 14px 7px 14px; border-radius: 15px 15px 0px 0px" >
+    style="padding: 0px 14px 0px 14px; border-radius: 0px 0px 15px 15px"
+  >
     <mat-tab label="Dashboard">
       <app-dashboard>
         <app-order-status-totals
@@ -11,7 +12,6 @@
     </mat-tab>
     <mat-tab label="Orders">
       <mat-tab-group
-        style="margin-top: 7px"
         mat-align-tabs="start"
         animationDuration="0ms"
         (selectedTabChange)="onTabChange($event)"
@@ -49,8 +49,8 @@
       </mat-tab-group>
     </mat-tab>
     <mat-tab label="Saved Blogs">
+      <div style="margin-top: 7px"></div>
       <app-blog-list
-        style="margin-top: 7px"
         [horizontalBlogListView]="true"
         [isShop]="false"
         [savedBlogsOnly]="true"
