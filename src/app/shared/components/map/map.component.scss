@@ -1,9 +1,30 @@
+:host {
+  position: relative;
+}
+
 :host .map-container,
 :host #map {
   height: 100%;
   width: 100%;
   display: block;
   overflow: hidden;
+}
+
+.map-control-group {
+  position: absolute;
+  display: flex;
+  left: 10px;
+  z-index: 99999;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.map-control-group--top {
+  top: 96px;
+}
+
+.map-control-group--side {
+  top: 195px;
 }
 
 .side-button {
@@ -13,6 +34,10 @@
   padding: 4px;
   border: none;
   width: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 ::ng-deep .leaflet-control-attribution {

@@ -1,147 +1,196 @@
-<div style="padding: 7px">
+<ng-container *ngIf="currentDisplay === 'seller-form'">
+  <div style="background-color: #f5ca05; margin-top: 7px; border-radius: 14px">
+    <app-map
+      [height]="'200px'"
+      [zIndex]="'0'"
+      [borderRadius]="'10px'"
+      (dragend)="onDragend($event)"
+      [detectCurrentLocation]="detectCurrentLocation"
+      [checkDBLocation]="false"
+      [disabled]="false"
+      class="mb-2"
+    ></app-map>
+  </div>
+</ng-container>
+<div style="margin: 7px 14px; height: calc(100vh - 56.1px); overflow: scroll">
   <form
     [formGroup]="registrationForm"
     style="width: min(90vw, 400px); margin: auto"
   >
-    <div style="display: flex; flex-direction: column">
+    <div style="display: flex; flex-direction: column; gap: 7px">
       <ng-container *ngIf="currentDisplay === 'seller-form'">
-        <app-map
-          [height]="'200px'"
-          [zIndex]="'0'"
-          [borderRadius]="'10px'"
-          (dragend)="onDragend($event)"
-          [detectCurrentLocation]="detectCurrentLocation"
-          [checkDBLocation]="false"
-          [disabled]="false"
-          class="mb-2"
-        ></app-map>
-      </ng-container>
-      <ng-container *ngIf="currentDisplay === 'seller-form'">
-        <input
-          placeholder="Business Name"
-          type="text"
-          formControlName="businessname"
-          class="form-control"
-          [class.is-invalid]="
-            registrationForm.get('businessname')?.touched &&
-            registrationForm.get('businessname')?.invalid
+        <div
+          style="
+            background-color: #f5ca05;
+            padding: 14px 14px;
+            border-radius: 14px;
           "
-        />
-        <ng-container
-          *ngIf="isFormControlInvalid('businessname', 'Business Name') as err"
         >
-          <mat-error [innerHtml]="err.message"></mat-error>
-        </ng-container>
+          <input
+            placeholder="Business Name"
+            type="text"
+            formControlName="businessname"
+            class="form-control"
+            [class.is-invalid]="
+              registrationForm.get('businessname')?.touched &&
+              registrationForm.get('businessname')?.invalid
+            "
+          />
+          <ng-container
+            *ngIf="isFormControlInvalid('businessname', 'Business Name') as err"
+          >
+            <mat-error [innerHtml]="err.message"></mat-error>
+          </ng-container>
+        </div>
       </ng-container>
 
-      <input
-        placeholder="First Name"
-        type="text"
-        formControlName="firstname"
-        class="form-control"
-        [class.is-invalid]="
-          registrationForm.get('firstname')?.touched &&
-          registrationForm.get('firstname')?.invalid
+      <div
+        style="
+          display: flex;
+          gap: 7px;
+          flex-direction: column;
+          background-color: #f5ca05;
+          padding: 14px 14px;
+          border-radius: 14px;
         "
-      />
-      <ng-container
-        *ngIf="isFormControlInvalid('firstname', 'First Name') as err"
       >
-        <mat-error [innerHtml]="err.message"></mat-error>
-      </ng-container>
-
-      <input
-        placeholder="Last Name"
-        type="text"
-        formControlName="lastname"
-        class="form-control"
-        [class.is-invalid]="
-          registrationForm.get('lastname')?.touched &&
-          registrationForm.get('lastname')?.invalid
-        "
-      />
-
-      <ng-container
-        *ngIf="isFormControlInvalid('lastname', 'Last Name') as err"
-      >
-        <mat-error [innerHtml]="err.message"></mat-error>
-      </ng-container>
-
-      <input
-        placeholder="Email"
-        type="text"
-        formControlName="email"
-        class="form-control"
-        [class.is-invalid]="
-          registrationForm.get('email')?.touched &&
-          registrationForm.get('email')?.invalid
-        "
-      />
-      <ng-container *ngIf="isFormControlInvalid('email', 'Email') as err">
-        <mat-error [innerHtml]="err.message"></mat-error>
-      </ng-container>
-
-      <div formGroupName="passwordGroup">
         <input
-          placeholder="Password"
+          placeholder="First Name"
           type="text"
-          formControlName="password"
+          formControlName="firstname"
           class="form-control"
           [class.is-invalid]="
-            (registrationForm.get('passwordGroup.password')?.touched &&
-              registrationForm.get('passwordGroup.password')?.invalid) ||
-            (registrationForm.get('passwordGroup')?.invalid &&
-              registrationForm.get('passwordGroup')?.touched)
+            registrationForm.get('firstname')?.touched &&
+            registrationForm.get('firstname')?.invalid
           "
         />
         <ng-container
-          *ngIf="
-            isFormControlInvalid('passwordGroup.password', 'Password') as err
-          "
+          *ngIf="isFormControlInvalid('firstname', 'First Name') as err"
         >
           <mat-error [innerHtml]="err.message"></mat-error>
         </ng-container>
 
         <input
-          placeholder="Confirm Password"
+          placeholder="Last Name"
           type="text"
-          formControlName="confirmPassword"
+          formControlName="lastname"
           class="form-control"
           [class.is-invalid]="
-            (registrationForm.get('passwordGroup.password')?.touched &&
-              registrationForm.get('passwordGroup.password')?.invalid) ||
-            (registrationForm.get('passwordGroup')?.invalid &&
-              registrationForm.get('passwordGroup')?.touched)
+            registrationForm.get('lastname')?.touched &&
+            registrationForm.get('lastname')?.invalid
           "
         />
+
         <ng-container
-          *ngIf="isFormGroupInvalid('passwordGroup', 'Passwords') as err"
+          *ngIf="isFormControlInvalid('lastname', 'Last Name') as err"
         >
+          <mat-error [innerHtml]="err.message"></mat-error>
+        </ng-container>
+
+        <input
+          placeholder="Email"
+          type="text"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="
+            registrationForm.get('email')?.touched &&
+            registrationForm.get('email')?.invalid
+          "
+        />
+        <ng-container *ngIf="isFormControlInvalid('email', 'Email') as err">
           <mat-error [innerHtml]="err.message"></mat-error>
         </ng-container>
       </div>
-    </div>
 
-    <div
-      style="display: flex; gap: 7px; flex-direction: column; margin-top: 7px"
-    >
-      <button
-        mat-flat-button
-        type="button"
-        class="btn-block fw-bold w-full"
-        (click)="createAccount()"
+      <div
+        style="
+          background-color: #f5ca05;
+          padding: 14px 14px;
+          border-radius: 14px;
+        "
       >
-        <ng-container *ngIf="!createAccountLoad; else createAccountLoader">
-          CREATE ACCOUNT
-        </ng-container>
-        <ng-template #createAccountLoader>
-          <i class="fas fa-circle-notch fa-spin"></i>
-        </ng-template>
-      </button>
+        <div
+          formGroupName="passwordGroup"
+          style="display: flex; gap: 7px; flex-direction: column"
+        >
+          <input
+            placeholder="Password"
+            type="text"
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="
+              (registrationForm.get('passwordGroup.password')?.touched &&
+                registrationForm.get('passwordGroup.password')?.invalid) ||
+              (registrationForm.get('passwordGroup')?.invalid &&
+                registrationForm.get('passwordGroup')?.touched)
+            "
+          />
+          <ng-container
+            *ngIf="
+              isFormControlInvalid('passwordGroup.password', 'Password') as err
+            "
+          >
+            <mat-error [innerHtml]="err.message"></mat-error>
+          </ng-container>
 
-      <button mat-button class="btn-block fw-bold w-full mt-2" (click)="back()">
-        BACK
-      </button>
+          <input
+            placeholder="Confirm Password"
+            type="text"
+            formControlName="confirmPassword"
+            class="form-control"
+            [class.is-invalid]="
+              (registrationForm.get('passwordGroup.password')?.touched &&
+                registrationForm.get('passwordGroup.password')?.invalid) ||
+              (registrationForm.get('passwordGroup')?.invalid &&
+                registrationForm.get('passwordGroup')?.touched)
+            "
+          />
+          <ng-container
+            *ngIf="isFormGroupInvalid('passwordGroup', 'Passwords') as err"
+          >
+            <mat-error [innerHtml]="err.message"></mat-error>
+          </ng-container>
+        </div>
+      </div>
+
+      <div
+        style="
+          background-color: #f5ca05;
+          padding: 14px 14px;
+          border-radius: 14px;
+          margin-top: 14px;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            gap: 7px;
+            flex-direction: column;]
+          "
+        >
+          <button
+            mat-flat-button
+            type="button"
+            class="btn-block fw-bold w-full"
+            (click)="createAccount()"
+          >
+            <ng-container *ngIf="!createAccountLoad; else createAccountLoader">
+              CREATE ACCOUNT
+            </ng-container>
+            <ng-template #createAccountLoader>
+              <i class="fas fa-circle-notch fa-spin"></i>
+            </ng-template>
+          </button>
+
+          <button
+            mat-flat-button
+            class="btn-block fw-bold w-full"
+            (click)="back()"
+          >
+            BACK
+          </button>
+        </div>
+      </div>
     </div>
   </form>
 </div>

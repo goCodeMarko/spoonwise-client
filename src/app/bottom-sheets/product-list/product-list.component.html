@@ -87,21 +87,23 @@
           (click)="viewProduct(prod._id)"
           class="card"
           style="
-            background-color: #f6f6f6;
-            border-radius: 8px;
+            background-color: #f7d94f3b;
+            border-radius: 30px;
             padding: 14px 7px;
+
             gap: 7px;
           "
         >
           <div
             style="
               position: absolute;
-              background: #f8da50;
-              padding: 1px 3px;
-              right: 7px;
+              background: #eb5468;
+              border-radius: 20px;
+              padding: 1px 6px;
+              right: 14px;
               top: 7px;
               color: white;
-              font-size: smaller;
+              font-size: x-small;
             "
           >
             {{ prod.expiryDate | countdown2 }}

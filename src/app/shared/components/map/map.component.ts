@@ -47,6 +47,9 @@ export class MapComponent
   @Input() isShop = false;
   @Input() nearestShopButton = false;
   @Input() topRatedShopButton = false;
+  @Input() showProductButton = false;
+  @Input() showLocationButton = true;
+  @Input() showRadiusSlider = false;
 
   @HostBinding("style.height") @Input() height = "calc(100dvh - 56.1px - 84px)";
   @HostBinding("style.z-index") @Input() zIndex = "1";
@@ -166,6 +169,14 @@ export class MapComponent
       console.log("Map initializing with subject:", this.subject);
       this.loadMap();
     }
+
+    if (
+      changes["detectCurrentLocation"]?.currentValue &&
+      !changes["detectCurrentLocation"].firstChange &&
+      !this.hasSubjectCoordinates()
+    ) {
+      this.detectLocation();
+    }
   }
 
   ngOnDestroy(): void {
@@ -205,6 +216,32 @@ export class MapComponent
     });
   }
 
+  private hasSubjectCoordinates() {
+    const coordinates = this.subject?.coordinates;
+
+    return Boolean(
+      coordinates &&
+        coordinates.lat !== undefined &&
+        coordinates.lat !== null &&
+        coordinates.lat !== "" &&
+        coordinates.lng !== undefined &&
+        coordinates.lng !== null &&
+        coordinates.lng !== "",
+    );
+  }
+
+  private clearUserLayers() {
+    if (this.marker) {
+      this.map.removeLayer(this.marker);
+      this.marker = null;
+    }
+
+    if (this.circle) {
+      this.map.removeLayer(this.circle);
+      this.circle = null;
+    }
+  }
+
   private async getPositionFromDB() {
     const { data } = (await firstValueFrom(
       this.hrs.request("getV2", `user/getAuthUser`, {}),
@@ -233,17 +270,28 @@ export class MapComponent
     this.dragend.emit(this.subject.coordinates);
   }
 
+  private async initializeSubjectCoordinates() {
+    if (this.hasSubjectCoordinates()) {
+      return;
+    }
+
+    if (this.isShop) {
+      await this.getShopCoordinates();
+      return;
+    }
+
+    if (this.checkDBLocation) {
+      await this.getPositionFromDB();
+      return;
+    }
+
+    if (this.detectCurrentLocation) {
+      await this.getCurrentPosition();
+    }
+  }
+
   private updateLocByUserClick(lat: string, lng: string) {
-    if (this.marker) {
-      this.map.removeLayer(this.marker);
-    }
-
-    if (this.circle) {
-      this.map.removeLayer(this.circle);
-    }
-
-    // Move the radius circle alog with the marker
-    if (this.radius > 0) this.circle.setLatLng([lat, lng]);
+    this.clearUserLayers();
 
     this.subject = {
       coordinates: {
@@ -263,12 +311,7 @@ export class MapComponent
       this.map = null; // Clear the reference
     }
 
-    if (!this.isShop) {
-      if (this.checkDBLocation) await this.getPositionFromDB();
-      else await this.getCurrentPosition();
-    } else if (this.isShop) {
-      await this.getShopCoordinates();
-    }
+    await this.initializeSubjectCoordinates();
 
     this.map = L.map("map", {
       center: [12.8797, 121.774], // Center of the Philippines
@@ -292,13 +335,14 @@ export class MapComponent
 
     this.addZoomControl();
 
-    if (!this.isShop) {
+    if (this.showRadiusSlider) {
       this.addRadiusSlider();
-      this.addGPSButton();
     }
 
-    if (!this.isShop) this.setUserMapPin();
-    else this.setUserMapPin("seller");
+    if (this.hasSubjectCoordinates()) {
+      if (!this.isShop) this.setUserMapPin();
+      else this.setUserMapPin("seller");
+    }
 
     if (!this.isShop) {
       this.addNearShops();
@@ -311,6 +355,28 @@ export class MapComponent
     } else {
       this.addNearBuyers();
     }
+  }
+
+  async detectLocation(event?: Event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (this.isShop) {
+      await this.getShopCoordinates();
+    } else {
+      const currentLocation = await this.getCurrentPosition();
+
+      if (!currentLocation && this.checkDBLocation) {
+        await this.getPositionFromDB();
+      }
+    }
+
+    if (!this.map || !this.hasSubjectCoordinates()) {
+      return;
+    }
+
+    this.clearUserLayers();
+    this.setUserMapPin(this.isShop ? "seller" : "buyer");
   }
 
   addZoomControl(): void {
@@ -331,47 +397,6 @@ export class MapComponent
     container.style.borderRadius = "10px";
     container.style.padding = "4px";
     container.style.border = "none";
-  }
-
-  addGPSButton(): void {
-    const gpsButton = L.control({ position: "topleft" });
-
-    gpsButton.onAdd = () => {
-      const container = L.DomUtil.create("div", "gps-control");
-      container.innerHTML = `
-        <style>     
-        #gpsButton {
-          background: white;
-          border-radius: 10px;
-          top: 25px;
-          color: #f8da50;
-          padding: 4px;
-          border: none;  
-          width: 38px;      
-          }
-          </style>
-        <button id="gpsButton"> <i class="material-icons">gps_fixed</i></button>
-      `;
-
-      const gpsButton = container.querySelector(
-        "#gpsButton",
-      ) as HTMLLabelElement;
-
-      gpsButton.addEventListener("click", async (event) => {
-        await this.getCurrentPosition();
-        if (this.marker) {
-          this.map.removeLayer(this.marker);
-        }
-
-        if (this.circle) {
-          this.map.removeLayer(this.circle);
-        }
-        this.setUserMapPin();
-      });
-
-      return container;
-    };
-    gpsButton.addTo(this.map);
   }
 
   addRadiusSlider(): void {

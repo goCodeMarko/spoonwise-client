@@ -1,28 +1,44 @@
 <div class="map-container" id="map"></div>
 
+<div *ngIf="showLocationButton" class="map-control-group map-control-group--top">
+  <button
+    type="button"
+    class="side-button"
+    aria-label="Detect current location"
+    (click)="detectLocation($event)"
+  >
+    <i class="material-icons">gps_fixed</i>
+  </button>
+</div>
+
 <div
-  style="
-    position: absolute;
-    display: flex;
-    top: 195px;
-    left: 10px;
-    z-index: 99999;
-    flex-direction: column;
-    gap: 10px;
-  "
+  *ngIf="showProductButton || topRatedShopButton || nearestShopButton"
+  class="map-control-group map-control-group--side"
 >
-  <div>
-    <button class="side-button" (click)="toggleProductVisibility()">
+  <div *ngIf="showProductButton">
+    <button
+      type="button"
+      class="side-button"
+      (click)="toggleProductVisibility()"
+    >
       <i class="material-icons">restaurant</i>
     </button>
   </div>
   <ng-container *ngIf="topRatedShopButton">
-    <button class="side-button" (click)="toggleTopRatedShopsVisibility()">
+    <button
+      type="button"
+      class="side-button"
+      (click)="toggleTopRatedShopsVisibility()"
+    >
       <i class="material-icons"> star </i>
     </button>
   </ng-container>
   <ng-container *ngIf="nearestShopButton">
-    <button class="side-button" (click)="toggleNearShopsVisibility()">
+    <button
+      type="button"
+      class="side-button"
+      (click)="toggleNearShopsVisibility()"
+    >
       <i class="material-icons"> route </i>
     </button>
   </ng-container>
