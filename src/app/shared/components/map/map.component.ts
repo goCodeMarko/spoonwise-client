@@ -247,10 +247,18 @@ export class MapComponent
       this.hrs.request("getV2", `user/getAuthUser`, {}),
     )) as any;
 
+    const lat = data?.coordinates?.lat;
+    const lng = data?.coordinates?.lng;
+
+    if (lat === undefined || lat === null || lng === undefined || lng === null) {
+      this.subject = {};
+      return;
+    }
+
     this.subject = {
       coordinates: {
-        lat: data.coordinates.lat.toString(),
-        lng: data.coordinates.lng.toString(),
+        lat: lat.toString(),
+        lng: lng.toString(),
       },
     };
     // this.dragend.emit(this.subject.coordinates);
@@ -282,7 +290,10 @@ export class MapComponent
 
     if (this.checkDBLocation) {
       await this.getPositionFromDB();
-      return;
+
+      if (this.hasSubjectCoordinates()) {
+        return;
+      }
     }
 
     if (this.detectCurrentLocation) {

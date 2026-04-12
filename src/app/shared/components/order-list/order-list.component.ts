@@ -61,9 +61,10 @@ export class OrderListComponent implements OnInit, OnDestroy {
   @Input() type!: string;
   @Input() isShop = false;
 
-  public orderItems!: Order[];
-  public orderItems$!: Observable<Order[]>;
+  public orderItems: Order[] = [];
+  public orderItems$?: Observable<Order[]>;
   private destroy$ = new Subject<void>();
+  private orderItemsSubscription?: Subscription;
   public account = {};
   public orderValue = Object.values(OrderStatusValue);
   public orderLabels = OrderStatusLabels;
@@ -105,10 +106,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.orderItems$.subscribe((data) => {
-      this.orderItems = data;
-    });
-
     this.actions$
       .pipe(ofType(setLineItemOrderReceivedSuccess), takeUntil(this.destroy$))
       .subscribe((action) => {
@@ -129,6 +126,10 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (!changes["type"]?.currentValue) {
+      return;
+    }
+
     switch (changes.type.currentValue) {
       case "to_pay":
         this.orderItems$ = this.store
@@ -162,13 +163,29 @@ export class OrderListComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$));
         break;
     }
+
+    this.subscribeToOrderItems();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
 
+    this.orderItemsSubscription?.unsubscribe();
     this.onLalamoveStatusChangeSubscriber.unsubscribe();
+  }
+
+  private subscribeToOrderItems() {
+    this.orderItemsSubscription?.unsubscribe();
+
+    if (!this.orderItems$) {
+      this.orderItems = [];
+      return;
+    }
+
+    this.orderItemsSubscription = this.orderItems$.subscribe((data) => {
+      this.orderItems = data ?? [];
+    });
   }
 
   payNow(url: string) {

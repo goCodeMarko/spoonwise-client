@@ -7,7 +7,7 @@
   "
 >
   <div style="display: flex; flex-direction: column; gap: 7px">
-    <ng-container *ngIf="orderItems.length; else emptyState">
+    <ng-container *ngIf="orderItems?.length; else emptyState">
       <div
         *ngFor="let order of orderItems; let i = index; trackBy: trackByOrderId"
         style="
