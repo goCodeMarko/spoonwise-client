@@ -9,17 +9,19 @@ export const selectCartItems = createSelector(
 );
 
 export const selectCheckedLineItems = createSelector(selectCartState, (state) =>
-  state.cart.map((cart) => ({
-    lineItems: cart.lineItems.filter((lineItem) => lineItem.checked),
-    subtotal: cart.lineItems
-      .filter((lineItem) => lineItem.checked)
-      .reduce(
-        (total, lineItem) => total + lineItem.price * lineItem.orderQty,
-        0
-      ),
-    totalItems: _.size(cart.lineItems.filter((lineItem) => lineItem.checked)),
-    shop: cart.shop,
-  }))
+  state.cart
+    .map((cart) => ({
+      lineItems: cart.lineItems.filter((lineItem) => lineItem.checked),
+      subtotal: cart.lineItems
+        .filter((lineItem) => lineItem.checked)
+        .reduce(
+          (total, lineItem) => total + lineItem.price * lineItem.orderQty,
+          0
+        ),
+      totalItems: _.size(cart.lineItems.filter((lineItem) => lineItem.checked)),
+      shop: cart.shop,
+    }))
+    .filter((cart) => cart.lineItems.length > 0)
 );
 
 export const selectLineItemCount = createSelector(selectCartState, (state) =>

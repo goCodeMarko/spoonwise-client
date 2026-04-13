@@ -3,6 +3,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable, Subject } from "rxjs";
+import { clearCheckedCart } from "../../../shared/store/cart/cart.actions";
 import {
   selectCartItems,
   selectLineItemCount,
@@ -142,6 +143,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       },
       async (res: any) => {
         if (res.success) {
+          this.store.dispatch(clearCheckedCart());
           this.router.navigate(["/profile"], {
             queryParams: {
               tab: "orders",

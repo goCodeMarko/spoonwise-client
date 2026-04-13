@@ -69,4 +69,6 @@ export const updateCart = createAction(
   props<{ productId: string; orderQty: number }>()
 );
 
+export const clearCheckedCart = createAction("[Cart] Clear Checked Cart");
+
 export const clearCartError = createAction("[Cart] Clear Cart Error");

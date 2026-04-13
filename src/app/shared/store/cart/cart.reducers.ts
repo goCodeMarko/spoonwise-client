@@ -44,11 +44,20 @@ export const initialState: CartState = {
   error: null,
 };
 
+function sanitizeCart(cart: CartItem[]) {
+  return cart
+    .map((cartItem) => ({
+      ...cartItem,
+      lineItems: (cartItem.lineItems || []).filter(Boolean),
+    }))
+    .filter((cartItem) => cartItem.lineItems.length > 0);
+}
+
 export const cartReducer = createReducer(
   initialState,
   on(CartActions.setCartSuccess, (state, { cart }) => ({
     ...state,
-    cart: cart,
+    cart: sanitizeCart(cart),
     error: null,
   })),
   on(CartActions.setCartFailure, (state, { error }) => ({
@@ -125,6 +134,16 @@ export const cartReducer = createReducer(
   on(CartActions.addToCartFailure, (state, { error }) => ({
     ...state,
     error: error.error.error, // Store error on failure
+  })),
+
+  on(CartActions.clearCheckedCart, (state) => ({
+    ...state,
+    cart: sanitizeCart(
+      state.cart.map((cartItem) => ({
+        ...cartItem,
+        lineItems: cartItem.lineItems.filter((lineItem) => !lineItem.checked),
+      })),
+    ),
   })),
 
   on(CartActions.clearCartError, (state) => ({
