@@ -71,7 +71,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private store: Store,
     private router: Router,
     private _snackBar: MatSnackBar,
-    private hrs: HttpRequestService
+    private hrs: HttpRequestService,
   ) {
     this.selectCheckedLineItems$ = this.store
       .select(selectCheckedLineItems)
@@ -86,7 +86,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       const sortedData = JSON.parse(JSON.stringify(data));
       const response = sortedData
         .sort((a: any, b: any) =>
-          a.shop.businessName.localeCompare(b.shop.businessName)
+          a.shop.businessName.localeCompare(b.shop.businessName),
         )
         .map((shop: any) => {
           // Sort lineItems by name within each shop
@@ -142,14 +142,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       },
       async (res: any) => {
         if (res.success) {
-          if (this.paymentMethod == "ONLINE") {
-            window.location.href = res.data.invoice.url;
-          } else {
-            this.router.navigate(["/"]);
-          }
+          this.router.navigate(["/profile"], {
+            queryParams: {
+              tab: "orders",
+              orderTab: "to_pay",
+              checkoutSuccess: true,
+              checkoutMethod: this.paymentMethod,
+            },
+          });
         } else {
         }
-      }
+      },
     );
   }
 }

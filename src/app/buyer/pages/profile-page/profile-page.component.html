@@ -1,5 +1,7 @@
 <app-profile>
   <mat-tab-group
+    [selectedIndex]="mainTabIndex"
+    (selectedTabChange)="onMainTabChange($event)"
     style="padding: 0px 14px 0px 14px; border-radius: 0px 0px 15px 15px"
   >
     <mat-tab label="Dashboard">
@@ -12,6 +14,7 @@
     </mat-tab>
     <mat-tab label="Orders">
       <mat-tab-group
+        [selectedIndex]="orderTabIndex"
         mat-align-tabs="start"
         animationDuration="0ms"
         (selectedTabChange)="onTabChange($event)"
