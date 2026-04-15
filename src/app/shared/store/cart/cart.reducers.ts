@@ -62,7 +62,12 @@ export const cartReducer = createReducer(
   })),
   on(CartActions.setCartFailure, (state, { error }) => ({
     ...state,
+    cart: [],
     error,
+  })),
+
+  on(CartActions.clearCart, () => ({
+    ...initialState,
   })),
 
   on(CartActions.addToCartSuccess, (state, { shop, lineItem }) => {
@@ -146,10 +151,9 @@ export const cartReducer = createReducer(
     ),
   })),
 
-  on(CartActions.clearCartError, (state) => ({
-    ...state,
-    error: null,
-  }))
+  on(CartActions.clearCartError, (state) =>
+    state.error ? { ...state, error: null } : state
+  )
 
   // on(CartActions.removeFromCart, (state, { productId }) => ({
   //   ...state,

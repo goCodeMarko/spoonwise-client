@@ -10,6 +10,8 @@ import { Subscription } from "rxjs";
 import { TransactionDetailsService } from "./shared/services/transaction-details/transaction-details.service";
 import * as _ from "lodash";
 import { SwPush } from "@angular/service-worker";
+import { Store } from "@ngrx/store";
+import { clearCart } from "../shared/store/cart/cart.actions";
 
 interface ITransactionDetail {
   _id: string;
@@ -54,7 +56,8 @@ export class TransactionComponent implements OnInit {
     private route: ActivatedRoute,
     private socket: SocketService,
     private transactionDetailsService: TransactionDetailsService,
-    private swPush: SwPush
+    private swPush: SwPush,
+    private store: Store,
   ) {
     this.socketSubscription = this.socket.onMessage().subscribe((message) => {
       if (message.type === "updateTransactionDetails") {
@@ -272,6 +275,7 @@ export class TransactionComponent implements OnInit {
   }
 
   public logout() {
+    this.store.dispatch(clearCart());
     this.auth.logout();
   }
 

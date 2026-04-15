@@ -187,9 +187,9 @@ export class ProductViewComponent implements OnInit, OnDestroy {
             verticalPosition: "top",
           });
         }
-      }
 
-      this.store.dispatch(clearCartError());
+        this.store.dispatch(clearCartError());
+      }
     });
   }
 

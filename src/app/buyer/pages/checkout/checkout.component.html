@@ -1,109 +1,10 @@
 <div
   style="
-    height: calc(100dvh - 56.11px - 70px);
+    height: calc(100dvh - 56.11px - 265px);
     overflow-y: scroll;
     padding-bottom: 7px;
   "
 >
-  <div
-    style="
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background-color: white;
-      padding: 7px;
-      margin: 7px 14px;
-      border-radius: 7px;
-    "
-  >
-    <div>
-      <div>Payment Method</div>
-
-      <div class="option-container">
-        <div
-          class="option"
-          (click)="changePaymentMethod('ONLINE')"
-          [class.selected]="paymentMethod === 'ONLINE'"
-        >
-          Online Payment
-        </div>
-
-        <div
-          class="option"
-          (click)="changePaymentMethod('CASH')"
-          [class.selected]="paymentMethod === 'CASH'"
-        >
-          Cash
-        </div>
-
-        <!-- Hidden Radio Buttons -->
-        <input
-          type="radio"
-          name="options"
-          value="ONLINE"
-          [(ngModel)]="paymentMethod"
-          hidden
-        />
-        <input
-          type="radio"
-          name="options"
-          value="CASH"
-          [(ngModel)]="paymentMethod"
-          hidden
-        />
-      </div>
-    </div>
-
-    <div>
-      <div>Shipping Option</div>
-      <div class="option-container">
-        <div
-          class="option lalamove-option"
-          (click)="changeShippingOption('LALAMOVE')"
-          [class.selected]="shippingOption === 'LALAMOVE'"
-          [class.disabled]="disabledLalamoveBtn"
-          [attr.disabled]="disabledLalamoveBtn ? true : null"
-        >
-          <img
-            class="lalamove-logo"
-            src="../../assets/images/logo/lalamove-whole-logo.png"
-          />
-        </div>
-
-        <div
-          class="option"
-          (click)="changeShippingOption('STORE_PICKUP')"
-          [class.selected]="shippingOption === 'STORE_PICKUP'"
-        >
-          Store Pickup
-        </div>
-
-        <!-- Hidden Radio Buttons -->
-        <input
-          type="radio"
-          name="options"
-          value="ONLINE"
-          [(ngModel)]="shippingOption"
-          hidden
-        />
-        <input
-          type="radio"
-          name="options"
-          value="STORE_PICKUP"
-          [(ngModel)]="shippingOption"
-          hidden
-        />
-        <input
-          type="radio"
-          name="options"
-          value="MEETUP"
-          [(ngModel)]="shippingOption"
-          hidden
-        />
-      </div>
-    </div>
-  </div>
-
   <div
     *ngFor="let cart of checkedLineItems; let i = index"
     style="
@@ -181,28 +82,123 @@
       </div>
     </div>
   </div>
-</div>
 
-<div class="gs-main-button-group">
-  <div style="display: flex; justify-content: space-between">
-    <div></div>
-    <div style="display: flex; align-items: center; gap: 15px">
+  <div
+    style="
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      width: 100%;
+      padding: 7px 14px;
+      background-color: #f7d94f;
+      position: fixed;
+      bottom: 0px;
+      height: 265px;
+    "
+  >
+    <div style="display: flex; flex-direction: row; gap: 7px; color: black">
       <div>
-        Total
-        <b>
-          {{ lineItemTotal | currency: "PHP" : "symbol" }}
-        </b>
+        <div style="text-align: center">Payment Method</div>
+
+        <div class="option-container">
+          <div
+            class="option"
+            (click)="changePaymentMethod('ONLINE')"
+            [class.selected]="paymentMethod === 'ONLINE'"
+          >
+            Online Payment
+          </div>
+
+          <div
+            class="option"
+            (click)="changePaymentMethod('CASH')"
+            [class.selected]="paymentMethod === 'CASH'"
+          >
+            Cash
+          </div>
+
+          <!-- Hidden Radio Buttons -->
+          <input
+            type="radio"
+            name="options"
+            value="ONLINE"
+            [(ngModel)]="paymentMethod"
+            hidden
+          />
+          <input
+            type="radio"
+            name="options"
+            value="CASH"
+            [(ngModel)]="paymentMethod"
+            hidden
+          />
+        </div>
       </div>
+
       <div>
-        <button
-          mat-flat-button
-          color="main-green"
-          style="height: 40px"
-          (click)="checkoutAPI()"
-        >
-          Place Order
-        </button>
+        <div style="text-align: center">Shipping Option</div>
+        <div class="option-container">
+          <div
+            class="option lalamove-option"
+            (click)="changeShippingOption('LALAMOVE')"
+            [class.selected]="shippingOption === 'LALAMOVE'"
+            [class.disabled]="disabledLalamoveBtn"
+            [attr.disabled]="disabledLalamoveBtn ? true : null"
+          >
+            <img
+              class="lalamove-logo"
+              src="../../assets/images/logo/lalamove-whole-logo.png"
+            />
+          </div>
+
+          <div
+            class="option"
+            (click)="changeShippingOption('STORE_PICKUP')"
+            [class.selected]="shippingOption === 'STORE_PICKUP'"
+          >
+            Store Pickup
+          </div>
+
+          <!-- Hidden Radio Buttons -->
+          <input
+            type="radio"
+            name="options"
+            value="ONLINE"
+            [(ngModel)]="shippingOption"
+            hidden
+          />
+          <input
+            type="radio"
+            name="options"
+            value="STORE_PICKUP"
+            [(ngModel)]="shippingOption"
+            hidden
+          />
+          <input
+            type="radio"
+            name="options"
+            value="MEETUP"
+            [(ngModel)]="shippingOption"
+            hidden
+          />
+        </div>
       </div>
     </div>
+
+    <div style="color: black; font-size: 16px">
+      <b>
+        {{ lineItemTotal | currency: "PHP" : "symbol" }}
+      </b>
+    </div>
+
+    <button
+      mat-flat-button
+      class="btn-block fw-bold"
+      style="height: 50px; border-radius: 50px"
+      (click)="checkoutAPI()"
+    >
+      PLACE ORDER
+    </button>
   </div>
 </div>

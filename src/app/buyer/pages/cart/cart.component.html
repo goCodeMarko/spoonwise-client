@@ -1,119 +1,128 @@
-<div
-  style="
-    height: calc(100dvh - 56.11px - 84px - 81px);
-    overflow-y: scroll;
-
-    padding: 7px 14px 7px 14px;
-  "
->
+<ng-container *ngIf="cartItems.length > 0; else emptyState">
   <div
-    style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px"
+    style="
+      height: calc(100dvh - 56.11px - 84px - 81px);
+      overflow-y: scroll;
+
+      padding: 7px 14px 7px 14px;
+    "
   >
     <div
-      *ngFor="let cart of cartItems; let i = index; trackBy: trackByShopId"
       style="
-        background-color: white;
-        color: black;
-        padding: 10px;
-        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-bottom: 20px;
       "
     >
-      <div>
-        <div
-          style="
-            margin-bottom: 12px;
-            display: grid;
-            gap: 16px;
-            grid-template-columns: 12px 1fr;
-          "
-        >
-          <div>
-            <mat-checkbox
-              [checked]="isShopChecked(cart)"
-              (change)="toggleShopCheckbox($event, cart)"
-              class="example-margin"
-            ></mat-checkbox>
-          </div>
-          <div>
-            <b style="font-weight: 700; margin-bottom: 12px">{{
-              cart.shop.businessName
-            }}</b>
-          </div>
-        </div>
-
-        <div
-          *ngFor="
-            let lineItem of cart.lineItems;
-            let i = index;
-            trackBy: trackByLineItemId
-          "
-          style="
-            display: grid;
-            grid-template-columns: 12px 1fr 2fr;
-            gap: 16px;
-            margin-bottom: 10px;
-          "
-        >
+      <div
+        *ngFor="let cart of cartItems; let i = index; trackBy: trackByShopId"
+        style="
+          background-color: white;
+          color: black;
+          padding: 10px;
+          border-radius: 8px;
+        "
+      >
+        <div>
           <div
             style="
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
+              margin-bottom: 12px;
+              display: grid;
+              gap: 16px;
+              grid-template-columns: 12px 1fr;
             "
           >
-            <mat-checkbox
-              [checked]="lineItem.checked"
-              (change)="onCheckedChange($event, lineItem, cart.shop)"
-              class="example-margin"
-            ></mat-checkbox>
+            <div>
+              <mat-checkbox
+                [checked]="isShopChecked(cart)"
+                (change)="toggleShopCheckbox($event, cart)"
+                class="example-margin"
+              ></mat-checkbox>
+            </div>
+            <div>
+              <b style="font-weight: 700; margin-bottom: 12px">{{
+                cart.shop.businessName
+              }}</b>
+            </div>
           </div>
-          <div (click)="viewProduct(lineItem.productId)">
-            <img
-              [src]="lineItem.images[0]"
-              alt=""
+
+          <div
+            *ngFor="
+              let lineItem of cart.lineItems;
+              let i = index;
+              trackBy: trackByLineItemId
+            "
+            style="
+              display: grid;
+              grid-template-columns: 12px 1fr 2fr;
+              gap: 16px;
+              margin-bottom: 10px;
+            "
+          >
+            <div
               style="
-                width: 110px;
-                height: auto;
-                object-fit: cover;
-                border-radius: 15px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
               "
-            />
-          </div>
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-            "
-          >
-            <div class="line-clamp" (click)="viewProduct(lineItem.productId)">
-              {{ lineItem.name }}
+            >
+              <mat-checkbox
+                [checked]="lineItem.checked"
+                (change)="onCheckedChange($event, lineItem, cart.shop)"
+                class="example-margin"
+              ></mat-checkbox>
             </div>
-
-            {{ lineItem.commission }}
-
-            {{ lineItem.points }}
-            <div style="display: flex; flex-direction: column; gap: 7px">
-              <div *ngFor="let offer of lineItem.specialOffers; let i = index">
-                {{ offer.name }}
-              </div>
-              <div></div>
+            <div (click)="viewProduct(lineItem.productId)">
+              <img
+                [src]="lineItem.images[0]"
+                alt=""
+                style="
+                  width: 110px;
+                  height: auto;
+                  object-fit: cover;
+                  border-radius: 15px;
+                "
+              />
             </div>
-            <div style="display: flex; justify-content: space-between">
-              <div style="display: flex; flex-direction: column">
-                <div>Stocks: {{ lineItem.qty }}</div>
-
-                <b>{{ lineItem.price | currency: "PHP" : "symbol" }}</b>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              "
+            >
+              <div class="line-clamp" (click)="viewProduct(lineItem.productId)">
+                {{ lineItem.name }}
               </div>
-              <div>
-                <app-counter
-                  [value]="lineItem.orderQty"
-                  [step]="1"
-                  [min]="1"
-                  [max]="lineItem.qty"
-                  [wrap]="false"
-                  (onQtyChange)="onQtyChange($event, lineItem, cart.shop)"
-                ></app-counter>
+
+              {{ lineItem.commission }}
+
+              {{ lineItem.points }}
+              <div style="display: flex; flex-direction: column; gap: 7px">
+                <div
+                  *ngFor="let offer of lineItem.specialOffers; let i = index"
+                >
+                  {{ offer.name }}
+                </div>
+                <div></div>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <div style="display: flex; flex-direction: column">
+                  <div>Stocks: {{ lineItem.qty }}</div>
+
+                  <b>{{ lineItem.price | currency: "PHP" : "symbol" }}</b>
+                </div>
+                <div>
+                  <app-counter
+                    [value]="lineItem.orderQty"
+                    [step]="1"
+                    [min]="1"
+                    [max]="lineItem.qty"
+                    [wrap]="false"
+                    (onQtyChange)="onQtyChange($event, lineItem, cart.shop)"
+                  ></app-counter>
+                </div>
               </div>
             </div>
           </div>
@@ -121,29 +130,49 @@
       </div>
     </div>
   </div>
-</div>
 
-<div class="gs-main-button-group">
-  <div style="display: flex; justify-content: space-between">
-    <div></div>
-    <div style="display: flex; align-items: center; gap: 15px">
-      <div>
-        Total
-        <b>
-          {{ lineItemTotal | currency: "PHP" : "symbol" }}
-        </b>
-      </div>
-      <div>
-        <button
-          mat-flat-button
-          color="main-green"
-          style="height: 40px"
-          [routerLink]="['/checkout']"
-        >
-          Check Out ({{ checkedLineItemCount }})
-        </button>
-      </div>
+  <div
+    style="
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      width: 100%;
+      padding: 7px 14px;
+      background-color: #f7d94f;
+      position: fixed;
+      bottom: 83px;
+    "
+  >
+    <div style="color: black; font-size: 16px">
+      <b>
+        {{ lineItemTotal | currency: "PHP" : "symbol" }}
+      </b>
+
+      ({{ checkedLineItemCount }} ITEMS)
+    </div>
+
+    <button
+      mat-flat-button
+      class="btn-block fw-bold"
+      style="height: 50px; border-radius: 50px"
+      [routerLink]="['/checkout']"
+    >
+      CHECK OUT
+    </button>
+  </div>
+</ng-container>
+
+<ng-template #emptyState>
+  <div
+    style="
+      height: calc(100vh - 56px);
+      background-color: #f6f6f6;
+      padding: 7px 14px 7px 14px;
+    "
+  >
+    <div style="background-color: white; border-radius: 8px; padding: 14px">
+      There are no items in your cart.
     </div>
   </div>
-</div>
-`
+</ng-template>

@@ -17,6 +17,7 @@ import { takeUntil } from "rxjs/operators";
 import { Observable, Subject, Subscriber, Subscription } from "rxjs";
 import { SocketService } from "../../socket/socket.service";
 import { Router } from "@angular/router";
+import { clearCart } from "../../store/cart/cart.actions";
 
 @Component({
   selector: "app-profile",
@@ -119,6 +120,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
+    this.store.dispatch(clearCart());
     this.auth.logout();
   }
 }

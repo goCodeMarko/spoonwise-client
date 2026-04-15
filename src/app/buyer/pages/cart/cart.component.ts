@@ -189,9 +189,9 @@ export class CartComponent implements OnInit {
             panelClass: "snackbar-center",
           });
         }
-      }
 
-      this.store.dispatch(clearCartError());
+        this.store.dispatch(clearCartError());
+      }
     });
   }
 

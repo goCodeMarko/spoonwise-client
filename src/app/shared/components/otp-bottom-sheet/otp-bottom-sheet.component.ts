@@ -13,6 +13,7 @@ import { BottomSheetContext } from "swipe-bottom-sheet/angular";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Store } from "@ngrx/store";
 import { AuthService } from "src/app/authorization/auth.service";
+import { clearCart } from "../../store/cart/cart.actions";
 
 interface OtpSheetProps {
   userId: string;
@@ -70,6 +71,8 @@ export class OtpBottomSheetComponent implements OnInit, AfterViewInit {
         console.log("this.role", this.role);
         console.log("this.account", this.account);
         if (data.success && data.data?.status == "OTP_CORRECT") {
+          this.store.dispatch(clearCart());
+
           const user = await this.auth.setToken({
             account: this.account,
             token: data.data.token,
