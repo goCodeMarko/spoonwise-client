@@ -11,15 +11,18 @@ import {
 import { MatDialog } from "@angular/material/dialog";
 import { Actions, ofType } from "@ngrx/effects";
 import { select, Store } from "@ngrx/store";
-import { Observable, Subject, takeUntil } from "rxjs";
+import { Observable, Subject, take, takeUntil } from "rxjs";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { PopUpModalComponent } from "src/app/modals/pop-up-modal/pop-up-modal.component";
 import {
   getBlogs,
+  getBlogsFailure,
+  getBlogsSuccess,
   getPastBlogs,
   getPastBlogsFailure,
   getPastBlogsSuccess,
   getSavedBlogs,
+  getSavedBlogsFailure,
   getSavedBlogsSuccess,
   saveBlog,
   saveBlogFailure,
@@ -69,11 +72,20 @@ export class BlogListComponent implements OnInit, OnDestroy {
       .subscribe((action) => {
         this.onLoad = false;
       });
+
+    this.actions$
+      .pipe(
+        ofType(getBlogsSuccess, getBlogsFailure, getSavedBlogsFailure),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(() => {
+        this.onLoad = false;
+      });
   }
 
   ngOnInit(): void {
     console.log("BlogListComponent Initiated!", this.savedBlogsOnly);
-    this.onLoad = true;
+    this.onLoad = false;
     this.selectBlogs$ = this.store
       .select(this.savedBlogsOnly ? selectSavedBlogs : selectBlogs)
       .pipe(takeUntil(this.destroy$));
@@ -82,11 +94,16 @@ export class BlogListComponent implements OnInit, OnDestroy {
       this.blogs = data;
     });
 
-    // if (this.savedBlogsOnly) {
-    //   this.store.dispatch(getSavedBlogs());
-    // } else {
-    //   this.store.dispatch(getBlogs());
-    // }
+    this.selectBlogs$.pipe(take(1)).subscribe((data) => {
+      if (data.length === 0) {
+        this.onLoad = true;
+        if (this.savedBlogsOnly) {
+          this.store.dispatch(getSavedBlogs());
+        } else {
+          this.store.dispatch(getBlogs());
+        }
+      }
+    });
 
     this.actions$
       .pipe(

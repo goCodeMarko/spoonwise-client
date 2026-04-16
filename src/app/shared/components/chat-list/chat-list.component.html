@@ -137,7 +137,11 @@
                   [src]="
                     isShop
                       ? chatroom.users.buyer.profile_picture
+                        ? chatroom.users.buyer.profile_picture
+                        : 'assets/images/logo/spoonwise-icon.png'
                       : chatroom.users.shop.profile_picture
+                        ? chatroom.users.shop.profile_picture
+                        : 'assets/images/logo/spoonwise-icon.png'
                   "
                   alt=""
                   width="65"
