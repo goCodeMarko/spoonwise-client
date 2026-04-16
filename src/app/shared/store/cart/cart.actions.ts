@@ -46,12 +46,12 @@ export const setCartFailure = createAction(
 
 export const addToCart = createAction(
   "[Cart] Add To Cart",
-  props<{ shop: Shop; lineItem: LineItem }>()
+  props<{ shop: Shop; lineItem: LineItem; showSuccessModal?: boolean }>()
 );
 
 export const addToCartSuccess = createAction(
   "[Cart] Add To Cart Success",
-  props<{ shop: Shop; lineItem: LineItem }>()
+  props<{ shop: Shop; lineItem: LineItem; showSuccessModal?: boolean }>()
 );
 
 export const addToCartFailure = createAction(

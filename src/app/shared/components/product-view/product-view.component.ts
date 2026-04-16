@@ -215,6 +215,7 @@ export class ProductViewComponent implements OnInit, OnDestroy {
           description: this.product.description,
           category: this.product.category,
         },
+        showSuccessModal: true,
       }),
     );
   }

@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
-import { catchError, map, mergeMap } from "rxjs/operators";
+import { catchError, filter, map, mergeMap, tap } from "rxjs/operators";
 import { of } from "rxjs";
 import * as CartActions from "./cart.actions";
 import { environment } from "../../../../environments/environment";
+import { MatDialog } from "@angular/material/dialog";
+import { PopUpModalComponent } from "src/app/modals/pop-up-modal/pop-up-modal.component";
 
 export interface LineItem {
   checked?: boolean;
@@ -44,6 +46,7 @@ export class CartEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
+    private dialog: MatDialog,
   ) {}
 
   // set cart from backend
@@ -71,7 +74,7 @@ export class CartEffects {
   addToCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CartActions.addToCart),
-      mergeMap(({ shop, lineItem }) =>
+      mergeMap(({ shop, lineItem, showSuccessModal }) =>
         this.http
           .post(
             `${environment.SERVER_URL_CLUSTERS}user/addToCart`,
@@ -82,12 +85,37 @@ export class CartEffects {
             { withCredentials: true },
           )
           .pipe(
-            map(() => CartActions.addToCartSuccess({ shop, lineItem })),
+            map(() =>
+              CartActions.addToCartSuccess({ shop, lineItem, showSuccessModal }),
+            ),
             catchError((error) => {
               return of(CartActions.addToCartFailure({ error }));
             }),
           ),
       ),
     ),
+  );
+
+  showAddToCartSuccessModal$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(CartActions.addToCartSuccess),
+        filter(({ showSuccessModal }) => !!showSuccessModal),
+        tap(({ lineItem }) => {
+          this.dialog.open(PopUpModalComponent, {
+            width: "500px",
+            data: {
+              deletebutton: false,
+              okaybutton: true,
+              okayBtnText:
+                '<b><span style="font-size: 30px;line-height: 1;vertical-align: middle;">&#127881;</span> Sounds good!</b>',
+              title: "Added to Cart!",
+              message: `${lineItem.name} has been added to your cart successfully.`,
+              file: "assets/icons/party.png",
+            },
+          });
+        }),
+      ),
+    { dispatch: false },
   );
 }
