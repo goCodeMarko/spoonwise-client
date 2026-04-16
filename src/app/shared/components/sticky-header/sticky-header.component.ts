@@ -51,7 +51,7 @@ export class StickyHeaderComponent implements OnInit, OnChanges, OnDestroy {
     private store: Store,
     private router: ActivatedRoute,
     private bottomSheet: MatBottomSheet,
-    private swipeSheet: BottomSheetProvider
+    private swipeSheet: BottomSheetProvider,
   ) {
     this.chatroomId = this.router.snapshot.paramMap.get("id")!;
     this.orderQtyCount$ = this.store.select(selectOrderQtyCount);

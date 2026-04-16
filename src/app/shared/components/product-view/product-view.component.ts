@@ -105,6 +105,7 @@ import SwiperCore, {
 } from "swiper";
 import { takeUntil } from "rxjs/operators";
 import { ShopReviewsComponent } from "src/app/bottom-sheets/shop-reviews/shop-reviews.component";
+import { chatSeller } from "../../store/chat/chat.actions";
 
 // install Swiper components
 SwiperCore.use([
@@ -148,7 +149,7 @@ export class ProductViewComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private store: Store,
     private _snackBar: MatSnackBar,
-    private swipeSheet: BottomSheetProvider
+    private swipeSheet: BottomSheetProvider,
   ) {
     this.productId = this.route.snapshot.paramMap.get("id");
 
@@ -214,8 +215,12 @@ export class ProductViewComponent implements OnInit, OnDestroy {
           description: this.product.description,
           category: this.product.category,
         },
-      })
+      }),
     );
+  }
+
+  chatSeller() {
+    this.store.dispatch(chatSeller({ shopId: this.product.shop._id }));
   }
 
   removeItem(productId: string) {
@@ -241,17 +246,17 @@ export class ProductViewComponent implements OnInit, OnDestroy {
         } else {
         }
         this.productOnLoad = false;
-      }
+      },
     );
   }
 
   private productQtyInTheCart() {
     const shop = this.cartItems.find(
-      (shop) => shop.shop.shopId == this.product.shopId
+      (shop) => shop.shop.shopId == this.product.shopId,
     );
     if (shop) {
       const product = shop.lineItems.find(
-        (lineItem) => lineItem.productId == this.product._id
+        (lineItem) => lineItem.productId == this.product._id,
       );
 
       if (product) this.orderQty = product.orderQty;
