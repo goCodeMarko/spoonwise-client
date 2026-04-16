@@ -261,7 +261,7 @@ export class MapComponent
         lng: lng.toString(),
       },
     };
-    // this.dragend.emit(this.subject.coordinates);
+    this.dragend.emit(this.subject.coordinates);
   }
 
   private async getShopCoordinates() {
