@@ -5,12 +5,19 @@
       [zIndex]="'0'"
       [borderRadius]="'10px'"
       (dragend)="onDragend($event)"
+      (locationError)="onLocationError($event)"
       [detectCurrentLocation]="detectCurrentLocation"
       [checkDBLocation]="false"
       [disabled]="false"
       class="mb-2"
     ></app-map>
   </div>
+  <mat-error
+    *ngIf="sellerLocationErrorMessage"
+    style="display: block; margin: 4px 14px 0"
+  >
+    {{ sellerLocationErrorMessage }}
+  </mat-error>
 </ng-container>
 <div style="margin: 7px 14px; height: calc(100vh - 56.1px); overflow: scroll">
   <form

@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
 } from "@angular/core";
 import {
   FormBuilder,
@@ -50,8 +51,9 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
       lng: string | number;
     };
   };
-  coordinates = {};
+  coordinates: { lat?: string; lng?: string } = {};
   createAccountLoad = false;
+  sellerLocationErrorMessage = "";
   @Output() onBack = new EventEmitter();
   @Input() currentDisplay: string = "";
   private createAccount$ = new Subject<ICreateAccountPayload>();
@@ -111,18 +113,18 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  ngOnChanges(change: any) {
-    this.currentDisplay = change.currentDisplay.currentValue;
+  ngOnChanges(change: SimpleChanges): void {
+    this.currentDisplay = change["currentDisplay"]?.currentValue || "";
+    this.detectCurrentLocation = this.currentDisplay === "seller-form";
+    this.coordinates = {};
+    this.sellerLocationErrorMessage = "";
     this.registrationForm = this.setForm();
+
     if (this.currentDisplay === "seller-form") {
       this.registrationForm.addControl(
         "businessname",
         this.fb.control("", Validators.required)
       );
-    } else {
-      if (!this.registrationForm.get("businessname")) return;
-
-      this.registrationForm.removeControl("businessname");
     }
   }
 
@@ -234,6 +236,15 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
     // Mark all controls as touched to trigger validation display
     this.markAllTouched(this.registrationForm);
 
+    if (
+      this.currentDisplay === "seller-form" &&
+      !this.hasSelectedSellerLocation()
+    ) {
+      this.sellerLocationErrorMessage =
+        this.getSellerLocationErrorMessage();
+      return;
+    }
+
     const account = {
       ...this.registrationForm.value,
       role: this.currentDisplay === "buyer-form" ? "buyer" : "seller",
@@ -271,6 +282,30 @@ export class RegisterComponent implements OnInit, OnChanges, OnDestroy {
       lat: event.lat.toString(),
       lng: event.lng.toString(),
     };
+    this.sellerLocationErrorMessage = "";
+  }
+
+  onLocationError(message: string | null): void {
+    if (this.currentDisplay !== "seller-form") {
+      return;
+    }
+
+    this.sellerLocationErrorMessage = message
+      ? this.getSellerLocationErrorMessage()
+      : "";
+  }
+
+  private hasSelectedSellerLocation(): boolean {
+    return Boolean(
+      this.coordinates.lat &&
+        this.coordinates.lng &&
+        this.coordinates.lat !== "" &&
+        this.coordinates.lng !== ""
+    );
+  }
+
+  private getSellerLocationErrorMessage(): string {
+    return "Allow location access or select your business location on the map to continue.";
   }
 
   back() {

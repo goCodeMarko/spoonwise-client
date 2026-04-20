@@ -58,6 +58,7 @@ export class MapComponent
   @HostBinding("style.overflow") overflow = "hidden";
 
   @Output() dragend = new EventEmitter<any>();
+  @Output() locationError = new EventEmitter<string | null>();
   destroy$ = new EventEmitter<void>();
 
   productListSheet: any;
@@ -206,11 +207,15 @@ export class MapComponent
               lng: position.coords.longitude.toString(),
             },
           };
+          this.locationError.emit(null);
           this.dragend.emit(this.subject.coordinates);
           resolve(this.subject);
         })
         .catch((err) => {
           console.error(err);
+          this.locationError.emit(
+            err instanceof Error ? err.message : "Unable to detect location.",
+          );
           resolve(null);
         });
     });
@@ -261,6 +266,7 @@ export class MapComponent
         lng: lng.toString(),
       },
     };
+    this.locationError.emit(null);
     this.dragend.emit(this.subject.coordinates);
   }
 
@@ -275,6 +281,7 @@ export class MapComponent
         lng: data.coordinates.lng.toString(),
       },
     };
+    this.locationError.emit(null);
     this.dragend.emit(this.subject.coordinates);
   }
 
@@ -310,6 +317,7 @@ export class MapComponent
         lng: lng.toString(),
       },
     };
+    this.locationError.emit(null);
     this.dragend.emit(this.subject.coordinates);
     this.setUserMapPin();
   }
