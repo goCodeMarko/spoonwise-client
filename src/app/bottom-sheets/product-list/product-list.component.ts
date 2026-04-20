@@ -57,6 +57,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.account = JSON.parse(this.auth.getUserData());
+    this.isShop = this.account?.role === "seller";
+    this.showPublishSlider = this.isShop;
 
     console.log("------------account", this.account);
 
@@ -84,7 +86,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   getProducts() {
     this.productListOnLoad = true;
-    const shop = this.route.snapshot.paramMap.get("shopId") || "";
+    const shop =
+      this.route.snapshot.paramMap.get("shopId") ||
+      this.account?.shop?._id ||
+      "";
 
     this.hrs.request(
       "get",

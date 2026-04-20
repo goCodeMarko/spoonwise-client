@@ -6,6 +6,8 @@
     class="side-button"
     aria-label="Detect current location"
     (click)="detectLocation($event)"
+    (mousedown)="$event.stopPropagation()"
+    (touchstart)="$event.stopPropagation()"
   >
     <i class="material-icons">gps_fixed</i>
   </button>
@@ -19,7 +21,9 @@
     <button
       type="button"
       class="side-button"
-      (click)="toggleProductVisibility()"
+      (click)="onMapControlClick($event, 'products')"
+      (mousedown)="$event.stopPropagation()"
+      (touchstart)="$event.stopPropagation()"
     >
       <i class="material-icons">restaurant</i>
     </button>
@@ -28,7 +32,9 @@
     <button
       type="button"
       class="side-button"
-      (click)="toggleTopRatedShopsVisibility()"
+      (click)="onMapControlClick($event, 'topRatedShops')"
+      (mousedown)="$event.stopPropagation()"
+      (touchstart)="$event.stopPropagation()"
     >
       <i class="material-icons"> star </i>
     </button>
@@ -37,7 +43,9 @@
     <button
       type="button"
       class="side-button"
-      (click)="toggleNearShopsVisibility()"
+      (click)="onMapControlClick($event, 'topNearShops')"
+      (mousedown)="$event.stopPropagation()"
+      (touchstart)="$event.stopPropagation()"
     >
       <i class="material-icons"> route </i>
     </button>

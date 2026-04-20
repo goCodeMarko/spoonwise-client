@@ -1,17 +1,7 @@
 <div *ngIf="!productOnLoad" style="background: white; padding: 7px">
-  <swiper
-    [loop]="true"
-    [autoHeight]="true"
-    [allowTouchMove]="true"
-    [pagination]="{ clickable: true }"
-    [navigation]="false"
-    class="custom-swiper"
-  >
-    <ng-template
-      *ngFor="let src of images; let i = index"
-      data-swiper-autoplay="2000"
-      swiperSlide
-    >
+  <swiper [loop]="true" [autoHeight]="true" [allowTouchMove]="true" [pagination]="{ clickable: true }"
+    [navigation]="false" class="custom-swiper">
+    <ng-template *ngFor="let src of images; let i = index" data-swiper-autoplay="2000" swiperSlide>
       <img [src]="src" alt="" class="swiper-image" />
     </ng-template>
   </swiper>
@@ -19,8 +9,7 @@
   <div>{{ output }}</div>
 
   <div style="display: flex; gap: 7px; flex-direction: column">
-    <div
-      style="
+    <div style="
         display: flex;
         flex-direction: column;
         align-items: start;
@@ -37,8 +26,7 @@
         -moz-user-select: none;
         -webkit-user-drag: none;
         -webkit-tap-highlight-color: transparent;
-      "
-    >
+      ">
       <div class="prod-bar">
         <div class="price">
           <b>{{ product.price | currency: "PHP" : "symbol" }}</b>
@@ -55,10 +43,7 @@
       </div>
     </div>
 
-    <div
-      matRipple
-      (click)="openShopReviewsSheet(product.shopId)"
-      style="
+    <div matRipple (click)="openShopReviewsSheet(product.shopId)" style="
         background-color: #f6f6f6;
         color: black;
         padding: 14px 7px;
@@ -70,27 +55,22 @@
 
         -webkit-user-drag: none;
         -webkit-tap-highlight-color: transparent;
-      "
-    >
-      <div
-        style="
+      ">
+      <div style="
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 7px;
-        "
-      >
+        ">
         <div>
-          <b
-            >Shop Reviews <span>{{ product.totalReviews }}</span></b
-          >
+          <b>Shop Reviews <span>{{ product.totalReviews }}</span></b>
         </div>
         <div><mat-icon style="font-size: x-large">chevron_right</mat-icon></div>
       </div>
     </div>
 
-    <div
-      style="
+    <ng-container *ngIf="!isShop">
+      <div style="
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -107,21 +87,21 @@
         -moz-user-select: none;
         -webkit-user-drag: none;
         -webkit-tap-highlight-color: transparent;
-      "
-    >
-      <div class="ms-icon-container" style="color: black">
-        <button mat-icon-button (click)="chatSeller()">
-          <mat-icon>chat_bubble</mat-icon>
-        </button>
-        <div class="ms-icon-text">Chat</div>
-      </div>
+      ">
+        <div class="ms-icon-container" style="color: black">
+          <button mat-icon-button (click)="chatSeller()">
+            <mat-icon>chat_bubble</mat-icon>
+          </button>
+          <div class="ms-icon-text">Chat</div>
+        </div>
 
-      <div class="ms-icon-container">
-        <button mat-icon-button (click)="addToCart()">
-          <mat-icon>add_box</mat-icon>
-        </button>
-        <div class="ms-icon-text">Cart</div>
+        <div class="ms-icon-container">
+          <button mat-icon-button (click)="addToCart()">
+            <mat-icon>add_box</mat-icon>
+          </button>
+          <div class="ms-icon-text">Cart</div>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>

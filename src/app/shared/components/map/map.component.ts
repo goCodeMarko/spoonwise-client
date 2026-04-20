@@ -398,6 +398,26 @@ export class MapComponent
     this.setUserMapPin(this.isShop ? "seller" : "buyer");
   }
 
+  onMapControlClick(
+    event: Event,
+    view: "products" | "topRatedShops" | "topNearShops",
+  ): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (view === "products") {
+      this.toggleProductVisibility();
+      return;
+    }
+
+    if (view === "topRatedShops") {
+      this.toggleTopRatedShopsVisibility();
+      return;
+    }
+
+    this.toggleNearShopsVisibility();
+  }
+
   addZoomControl(): void {
     // Create the zoom control
     const zoomControl = L.control.zoom({
