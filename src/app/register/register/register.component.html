@@ -1,25 +1,35 @@
-<ng-container *ngIf="currentDisplay === 'seller-form'">
-  <div style="background-color: #f5ca05; margin-top: 7px; border-radius: 14px">
-    <app-map
-      [height]="'200px'"
-      [zIndex]="'0'"
-      [borderRadius]="'10px'"
-      (dragend)="onDragend($event)"
-      (locationError)="onLocationError($event)"
-      [detectCurrentLocation]="detectCurrentLocation"
-      [checkDBLocation]="false"
-      [disabled]="false"
-      class="mb-2"
-    ></app-map>
-  </div>
-  <mat-error
-    *ngIf="sellerLocationErrorMessage"
-    style="display: block; margin: 4px 14px 0"
-  >
-    {{ sellerLocationErrorMessage }}
-  </mat-error>
-</ng-container>
-<div style="margin: 7px 14px; height: calc(100vh - 56.1px); overflow: scroll">
+<div
+  style="
+    margin: 7px 14px;
+    height: calc(100dvh - 56.1px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 14px;
+  "
+>
+  <ng-container *ngIf="currentDisplay === 'seller-form'">
+    <div
+      style="background-color: #f5ca05; margin-top: 7px; border-radius: 14px"
+    >
+      <app-map
+        [height]="'200px'"
+        [zIndex]="'0'"
+        [borderRadius]="'10px'"
+        (dragend)="onDragend($event)"
+        (locationError)="onLocationError($event)"
+        [detectCurrentLocation]="detectCurrentLocation"
+        [checkDBLocation]="false"
+        [disabled]="false"
+        class="mb-2"
+      ></app-map>
+    </div>
+    <mat-error
+      *ngIf="sellerLocationErrorMessage"
+      style="display: block; margin: 4px 0 0"
+    >
+      {{ sellerLocationErrorMessage }}
+    </mat-error>
+  </ng-container>
   <form
     [formGroup]="registrationForm"
     style="width: min(90vw, 400px); margin: auto"
