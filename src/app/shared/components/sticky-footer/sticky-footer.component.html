@@ -43,7 +43,11 @@
     </ng-container>
 
     <ng-container *ngIf="isShop">
-      <div class="ms-icon-container" [routerLink]="'/shop/add-product'">
+      <div
+        class="ms-icon-container"
+        style="width: 70px; height: 70px"
+        [routerLink]="'/shop/add-product'"
+      >
         <button
           mat-fab
           style="
@@ -55,7 +59,7 @@
             background-color: white;
           "
         >
-          <mat-icon style="color: #f8da50">add</mat-icon>
+          <mat-icon style="color: #f8da50; padding: 9.4px">add</mat-icon>
         </button>
       </div>
     </ng-container>

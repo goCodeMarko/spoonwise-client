@@ -154,10 +154,25 @@ export const orderReducer = createReducer(
           ...state,
           order: {
             ...state.order,
-            toPack: state.order.forReview.filter(
+            toPack: state.order.toPack.filter(
               (order) => order.orderId != orderId && order.shop._id != shopId
             ),
             forPickup: [...order],
+          },
+          error: null,
+        };
+      } else if (
+        statusBefore.status == "FOR_PICKUP" &&
+        status == "TO_RECEIVE"
+      ) {
+        return {
+          ...state,
+          order: {
+            ...state.order,
+            forPickup: state.order.forPickup.filter(
+              (order) => order.orderId != orderId && order.shop._id != shopId
+            ),
+            toReceive: [...order],
           },
           error: null,
         };

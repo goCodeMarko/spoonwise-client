@@ -25,7 +25,6 @@ import {
   BottomSheetContent,
   BottomSheetProvider,
 } from "swipe-bottom-sheet/angular";
-import { HttpRequestService } from "src/app/http-request/http-request.service";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import {
   setLineItemOrderReceived,
@@ -78,7 +77,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
     private store: Store,
     private auth: AuthService,
     private swipeSheet: BottomSheetProvider,
-    private hrs: HttpRequestService,
     private dialog: MatDialog,
     private actions$: Actions,
     private socket: SocketService
@@ -218,19 +216,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   pickUpMeetUp(orderId: string, shopId: string) {
-    this.hrs.request(
-      "put",
-      "order/updateOrderStatus",
-      {
-        orderId,
-        shopId,
-        status: "TO_RECEIVE",
-      },
-      async (data: any) => {
-        if (data.success) {
-        }
-      }
-    );
+    this.store.dispatch(setOrderStatus({ orderId, shopId, status: "TO_RECEIVE" }));
   }
 
   earnedPoints = 0;

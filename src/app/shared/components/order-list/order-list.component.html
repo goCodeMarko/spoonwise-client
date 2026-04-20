@@ -373,22 +373,24 @@
                 </div>
               </ng-container>
 
-              <div
+              <ng-container
                 *ngIf="
-                  ['FOR_PICKUP', 'TO_RECEIVE'].includes(
-                    order.latestStatus.status
+                  ['FOR_PICKUP'].includes(order.latestStatus.status) &&
+                  ['STORE_PICKUP', 'PICK_UP', 'MEET_UP'].includes(
+                    order.shippingOption
                   ) &&
-                  ['STORE_PICKUP', 'MEET_UP'].includes(order.shippingOption) &&
-                  order.buyer == account._id
+                  !isShop
                 "
                 (click)="pickUpMeetUp(order.orderId, order.shop._id)"
               >
                 <button mat-flat-button>
                   {{
-                    order.shippingOption == "PICK_UP" ? "PICK UP" : "MEET UP"
+                    ["STORE_PICKUP", "PICK_UP"].includes(order.shippingOption)
+                      ? "PICK UP"
+                      : "MEET UP"
                   }}
                 </button>
-              </div>
+              </ng-container>
             </div>
           </div>
         </div>

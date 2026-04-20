@@ -1,5 +1,4 @@
-<section
-  [ngClass]="{
+<section [ngClass]="{
     'justify-center':
       routerOutletComponent === 'HomePageComponent' ||
       routerOutletComponent === 'ChatListPageComponent' ||
@@ -15,31 +14,21 @@
       routerOutletComponent === 'AddProductComponent' ||
       routerOutletComponent === 'LoginComponent'
     )
-  }"
-  class="sticky-header"
->
-  <ng-container
-    *ngIf="
+  }" class="sticky-header">
+  <ng-container *ngIf="
       routerOutletComponent != 'DealsPageComponent' &&
         routerOutletComponent != 'ViewShopPageComponent';
       else searchbar
-    "
-  >
-    <ng-container
-      *ngIf="
+    ">
+    <ng-container *ngIf="
         routerOutletComponent === 'HomePageComponent' ||
           routerOutletComponent === 'ChatListPageComponent' ||
           routerOutletComponent === 'ProfilePageComponent' ||
           routerOutletComponent === 'CartComponent' ||
           routerOutletComponent === 'AddProductComponent';
         else backbutton
-      "
-      style="color: white; font-size: larger"
-    >
-      <img
-        src="../../assets/images/logo/spoonwise-logo-full.png"
-        style="width: clamp(100px, 25vw, 150px)"
-      />
+      " style="color: white; font-size: larger">
+      <img src="../../assets/images/logo/spoonwise-logo-full.png" style="width: clamp(100px, 25vw, 150px)" />
     </ng-container>
 
     <ng-template #backbutton>
@@ -50,53 +39,30 @@
   </ng-container>
 
   <ng-template #searchbar>
-    <button
-      mat-icon-button
-      class="mat-icon-size"
-      (click)="goBack()"
-      *ngIf="routerOutletComponent === 'ViewShopPageComponent'"
-    >
+    <button mat-icon-button class="mat-icon-size" (click)="goBack()"
+      *ngIf="routerOutletComponent === 'ViewShopPageComponent'">
       <mat-icon>arrow_back_ios</mat-icon>
     </button>
     <div class="input-group search">
-      <input
-        type="search"
-        class="form-control"
-        [placeholder]="
+      <input type="search" class="form-control" [placeholder]="
           routerOutletComponent === 'ViewShopPageComponent'
             ? 'Search in Shop'
             : 'Search'
-        "
-        aria-label="Search"
-        aria-describedby="search-addon"
-        (keyup.enter)="emitSearch()"
-        [(ngModel)]="searchInput"
-      />
+        " aria-label="Search" aria-describedby="search-addon" (keyup.enter)="emitSearch()" [(ngModel)]="searchInput" />
 
-      <button
-        mat-flat-button
-        style="height: 50px; text-align: center"
-        (click)="emitSearch()"
-      >
+      <button mat-flat-button style="height: 50px; text-align: center" (click)="emitSearch()">
         <img src="assets/icons/search.png" width="40" />
       </button>
     </div>
 
     <div class="filters">
-      <button
-        mat-icon-button
-        color="primary"
-        style="width: 50px; text-align: center"
-        (click)="openBottomSheet()"
-      >
+      <button mat-icon-button color="primary" style="width: 50px; text-align: center" (click)="openBottomSheet()">
         <img src="assets/icons/color.png" width="40" />
       </button>
     </div>
   </ng-template>
 
-  <ng-container
-    *ngIf="routerOutletComponent === 'ChatComponent' && isSpoonwiseAI"
-  >
+  <ng-container *ngIf="routerOutletComponent === 'ChatComponent' && isSpoonwiseAI">
     <button mat-icon-button class="mat-icon-size" (click)="openSettingSheet()">
       <mat-icon>settings</mat-icon>
     </button>
