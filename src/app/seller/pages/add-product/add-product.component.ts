@@ -24,6 +24,8 @@ import {
 } from "ngx-image-cropper";
 import { DomSanitizer } from "@angular/platform-browser";
 import { MatStepper } from "@angular/material/stepper";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import {
   ProductCategory,
   ProductCategoryLabels,
@@ -32,6 +34,7 @@ import {
 } from "./../../../shared/enums/index";
 import { base64ToBlob, blobToBase64 } from "base64-blob";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
+import { PopUpModalComponent } from "src/app/modals/pop-up-modal/pop-up-modal.component";
 
 @Component({
   selector: "app-add-product",
@@ -60,7 +63,9 @@ export class AddProductComponent implements OnInit {
     private sheet: BottomSheetProvider,
     private vcRef: ViewContainerRef,
     private sanitizer: DomSanitizer,
-    private hrs: HttpRequestService
+    private hrs: HttpRequestService,
+    private dialog: MatDialog,
+    private router: Router
   ) {
     sheet.rootVcRef = vcRef;
     const today = new Date();
@@ -129,11 +134,49 @@ export class AddProductComponent implements OnInit {
     formData.append("details", JSON.stringify(this.productDetailsForm.value));
     this.addProdBtnOnLoad = true;
     this.hrs.request("post", "product/createProduct", formData, (res: any) => {
-      if (res.success) {
+      if (res?.success) {
+        this.openStatusModal({
+          deletebutton: false,
+          okaybutton: true,
+          okayBtnText: "<b>Sounds good!</b>",
+          title: "Product Added Successfully!",
+          message:
+            res?.message ||
+            "Your product has been added successfully and is ready for your shop.",
+          file: "assets/icons/party.png",
+        });
+      } else {
+        this.openStatusModal({
+          deletebutton: false,
+          okaybutton: true,
+          okayBtnText: "Close",
+          title: "Something went wrong",
+          message: res?.message || "Unable to add product.",
+          file: "assets/icons/error.png",
+        });
       }
 
       this.addProdBtnOnLoad = false;
     });
+  }
+
+  private openStatusModal(data: {
+    deletebutton: boolean;
+    okaybutton: boolean;
+    okayBtnText: string;
+    title: string;
+    message: string;
+    file: string;
+  }) {
+    this.dialog
+      .open(PopUpModalComponent, {
+        width: "500px",
+        data,
+      })
+      .afterClosed()
+      .subscribe(() => {
+        this.router.navigate(["/shop/deals"]);
+      });
   }
 
   convertBase64ToBlob() {
