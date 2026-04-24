@@ -119,22 +119,21 @@ export class AddProductComponent implements OnInit {
 
   addProdBtnOnLoad = false;
   async submitForm() {
-    if (this.productDetailsForm.valid && _.size(this.copies)) {
-      const formData = await this.convertBase64ToBlob();
-      formData.append("details", JSON.stringify(this.productDetailsForm.value));
-      this.addProdBtnOnLoad = true;
-      this.hrs.request(
-        "post",
-        "product/createProduct",
-        formData,
-        (res: any) => {
-          if (res.success) {
-          }
-
-          this.addProdBtnOnLoad = false;
-        }
-      );
+    if (!this.productDetailsForm.valid || !_.size(this.copies)) {
+      this.productDetailsForm.markAllAsTouched();
+      this.copiesForm.markAllAsTouched();
+      return;
     }
+
+    const formData = await this.convertBase64ToBlob();
+    formData.append("details", JSON.stringify(this.productDetailsForm.value));
+    this.addProdBtnOnLoad = true;
+    this.hrs.request("post", "product/createProduct", formData, (res: any) => {
+      if (res.success) {
+      }
+
+      this.addProdBtnOnLoad = false;
+    });
   }
 
   convertBase64ToBlob() {

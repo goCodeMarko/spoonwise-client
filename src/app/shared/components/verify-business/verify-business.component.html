@@ -6,6 +6,7 @@
     [height]="'200px'"
     [zIndex]="'0'"
     [borderRadius]="'10px'"
+    [isShop]="true"
     (dragend)="onDragend($event)"
     [subject]="subject"
   ></app-map>
@@ -377,6 +378,7 @@
           [zIndex]="'0'"
           [borderRadius]="'10px'"
           #mapRef
+          [isShop]="true"
           [detectCurrentLocation]="detectCurrentLocation"
           [subject]="subject"
           (dragend)="onDragend($event)"
