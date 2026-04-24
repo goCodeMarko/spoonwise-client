@@ -1,10 +1,8 @@
-<div
-  style="
+<div style="
     height: calc(100dvh - 56.1px - 84px);
     overflow-y: scroll;
     margin-top: 7px;
-  "
->
+  ">
   <mat-stepper linear #stepper>
     <mat-step [stepControl]="copiesForm" [editable]="true">
       <ng-template matStepLabel>Upload Fruit Images</ng-template>
@@ -16,68 +14,35 @@
       <ng-container *ngIf="copies.length >= 1; else noPictures">
         <div style="display: flex; align-items: center; gap: 7px">
           <!-- <button (click)="scrollLeft()">←</button> -->
-          <div
-            #scrollContainer
-            cdkDropList
-            cdkDropListOrientation="horizontal"
-            class="example-list"
-            (cdkDropListDropped)="drop($event)"
-          >
-            <div
-              class="example-box"
-              *ngFor="let copy of copies; index as i"
-              cdkDrag
-            >
+          <div #scrollContainer cdkDropList cdkDropListOrientation="horizontal" class="example-list"
+            (cdkDropListDropped)="drop($event)">
+            <div class="example-box" *ngFor="let copy of copies; index as i" cdkDrag>
               <div class="buttons">
-                <button
-                  (click)="openCropper(cropperSheet, copy)"
-                  mat-icon-button
-                  color="primary"
-                  style="
+                <button (click)="openCropper(cropperSheet, copy)" mat-icon-button color="primary" style="
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                  "
-                >
-                  <mat-icon style="font-size: 40px; color: white"
-                    >crop</mat-icon
-                  >
+                  ">
+                  <mat-icon style="font-size: 40px; color: white">crop</mat-icon>
                 </button>
-                <button
-                  (click)="remove(copy)"
-                  mat-icon-button
-                  color="primary"
-                  style="
+                <button (click)="remove(copy)" mat-icon-button color="primary" style="
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                  "
-                >
-                  <mat-icon style="font-size: 40px; color: white"
-                    >delete</mat-icon
-                  >
+                  ">
+                  <mat-icon style="font-size: 40px; color: white">delete</mat-icon>
                 </button>
               </div>
 
               <div style="position: absolute; bottom: 7px; left: 7px">
                 <ng-container *ngIf="i === 0; else imageOrderNo">
-                  <mat-icon style="font-size: 40px; color: white"
-                    >star</mat-icon
-                  >
+                  <mat-icon style="font-size: 40px; color: white">star</mat-icon>
                 </ng-container>
                 <ng-template #imageOrderNo>
-                  <span
-                    style="font-weight: bold; font-size: x-large; color: white"
-                    >{{ i + 1 }}</span
-                  >
+                  <span style="font-weight: bold; font-size: x-large; color: white">{{ i + 1 }}</span>
                 </ng-template>
               </div>
-              <img
-                [src]="copy.img"
-                alt=""
-                width="300"
-                style="border-radius: 7px"
-              />
+              <img [src]="copy.img" alt="" width="300" style="border-radius: 7px" />
             </div>
           </div>
           <!-- <button (click)="scrollRight()">→</button> -->
@@ -86,195 +51,158 @@
 
       <ng-template #noPictures> </ng-template>
 
-      <input
-        #openCameraInput
-        type="file"
-        id="picture"
-        name="picture"
-        accept="image/*"
-        capture="environment"
-        (change)="onFileChange($event)"
-        hidden
-      />
+      <input #openCameraInput type="file" id="picture" name="picture" accept="image/*" capture="environment"
+        (change)="onFileChange($event)" hidden />
 
-      <input
-        #openGalleryInput
-        type="file"
-        id="picture"
-        name="picture"
-        accept="image/*"
-        (change)="onFileChange($event)"
-        multiple
-        hidden
-      />
+      <input #openGalleryInput type="file" id="picture" name="picture" accept="image/*" (change)="onFileChange($event)"
+        multiple hidden />
       <div style="display: flex; align-items: center; justify-content: center">
-        <ng-container *ngIf="copies.length">
+        <!-- <ng-container *ngIf="copies.length">
           <div style="width: 64px"></div>
-        </ng-container>
-        <button
-          mat-icon-button
-          color="primary"
-          style="width: 50px; height: 50px"
-          (click)="openGallery()"
-        >
+        </ng-container> -->
+        <button mat-icon-button color="primary" style="width: 50px; height: 50px" (click)="openGallery()">
           <mat-icon style="font-size: 40px; color: #f8da50">image</mat-icon>
         </button>
 
-        <button
-          mat-icon-button
-          color="primary"
-          style="width: 50px; height: 50px"
-          (click)="openCamera()"
-        >
-          <mat-icon style="font-size: 40px; color: #f8da50"
-            >camera_alt</mat-icon
-          >
+        <button mat-icon-button color="primary" style="width: 50px; height: 50px" (click)="openCamera()">
+          <mat-icon style="font-size: 40px; color: #f8da50">camera_alt</mat-icon>
         </button>
 
-        <ng-container *ngIf="copies.length">
-          <button mat-button (click)="stepper.next()">Next</button>
-        </ng-container>
+
       </div>
+      <ng-container *ngIf="copies.length">
+        <button class="btn-block" mat-button (click)="stepper.next()">Next</button>
+      </ng-container>
     </mat-step>
     <mat-step [stepControl]="productDetailsForm" [editable]="true">
       <ng-template matStepLabel>Fruit Details</ng-template>
 
       <form [formGroup]="productDetailsForm" (ngSubmit)="submitForm()">
-        <div style="display: flex; justify-content: flex-end">
-          <mat-slide-toggle formControlName="isPublished"
-            >Publish</mat-slide-toggle
-          >
+        <div style="
+          background-color: white;
+          padding: 14px 14px;
+          border-radius: 14px;
+        ">
+          <div style="display: flex; justify-content: flex-end">
+            <mat-slide-toggle formControlName="isPublished">Publish</mat-slide-toggle>
+          </div>
         </div>
 
         <div style="display: flex; flex-direction: column">
-          <mat-form-field appearance="outline">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name" />
-          </mat-form-field>
-          <mat-error *ngIf="isFieldInvalid('name')">
-            {{ getErrorMessage("name") }}
-          </mat-error>
-          <div style="display: flex; gap: 7px">
-            <div style="flex: 1; min-width: 0">
-              <mat-form-field appearance="outline">
-                <mat-label>Quantity</mat-label>
-                <input
-                  type="number"
-                  matInput
-                  formControlName="qty"
-                  (paste)="numberStrict($event)"
-                  (keypress)="numberStrict($event)"
-                />
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('qty')">
-                {{ getErrorMessage("qty") }}
-              </mat-error>
+          <div style="
+          background-color: white;
+          padding: 14px 14px;
+          border-radius: 14px;
+        ">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" />
+            </mat-form-field>
+            <mat-error *ngIf="isFieldInvalid('name')">
+              {{ getErrorMessage("name") }}
+            </mat-error>
+            <div style="display: flex; gap: 7px">
+              <div style="flex: 1; min-width: 0">
+                <mat-form-field appearance="outline">
+                  <mat-label>Quantity</mat-label>
+                  <input type="number" matInput formControlName="qty" (paste)="numberStrict($event)"
+                    (keypress)="numberStrict($event)" />
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('qty')">
+                  {{ getErrorMessage("qty") }}
+                </mat-error>
+              </div>
+              <div style="flex: 1; min-width: 0">
+                <mat-form-field appearance="outline">
+                  <mat-label>Price</mat-label>
+                  <input type="number" matInput formControlName="price" (paste)="currencyStrict($event)"
+                    (keypress)="currencyStrict($event)" />
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('price')">
+                  {{ getErrorMessage("price") }}
+                </mat-error>
+              </div>
             </div>
-            <div style="flex: 1; min-width: 0">
-              <mat-form-field appearance="outline">
-                <mat-label>Price</mat-label>
-                <input
-                  type="number"
-                  matInput
-                  formControlName="price"
-                  (paste)="currencyStrict($event)"
-                  (keypress)="currencyStrict($event)"
-                />
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('price')">
-                {{ getErrorMessage("price") }}
-              </mat-error>
-            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="category" multiple>
+                <mat-option *ngFor="let categoryId of categoryIds" [value]="categoryId">
+                  {{ categoryLabels[categoryId] }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-error *ngIf="isFieldInvalid('category')">
+              {{ getErrorMessage("category") }}
+            </mat-error>
           </div>
 
-          <mat-form-field appearance="outline">
-            <mat-select formControlName="category" multiple>
-              <mat-option
-                *ngFor="let categoryId of categoryIds"
-                [value]="categoryId"
-              >
-                {{ categoryLabels[categoryId] }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-error *ngIf="isFieldInvalid('category')">
-            {{ getErrorMessage("category") }}
-          </mat-error>
+          <div style="
+          background-color: white;
+          padding: 14px 14px;
+          border-radius: 14px;
+        ">
 
-          <mat-form-field appearance="outline">
-            <mat-label>Description</mat-label>
-            <textarea
-              matInput
-              formControlName="description"
-              rows="10"
-              style="resize: none"
-            ></textarea>
-          </mat-form-field>
-          <mat-error *ngIf="isFieldInvalid('description')">
-            {{ getErrorMessage("description") }}
-          </mat-error>
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="10" style="resize: none"></textarea>
+            </mat-form-field>
+            <mat-error *ngIf="isFieldInvalid('description')">
+              {{ getErrorMessage("description") }}
+            </mat-error>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Expiry Date</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              formControlName="expiryDate"
-              [min]="minDate"
-              readonly
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-          <mat-error *ngIf="isFieldInvalid('expiryDate')">
-            {{ getErrorMessage("expiryDate") }}
-          </mat-error>
+            <mat-form-field appearance="outline">
+              <mat-label>Expiry Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="expiryDate" [min]="minDate" readonly />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-error *ngIf="isFieldInvalid('expiryDate')">
+              {{ getErrorMessage("expiryDate") }}
+            </mat-error>
 
-          <mat-form-field appearance="outline">
-            <mat-select formControlName="specialOffers" multiple>
-              <mat-option
-                *ngFor="let specialOfferId of specialOfferIds"
-                [value]="specialOfferId"
-              >
-                {{ specialOfferLabels[specialOfferId] }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-error *ngIf="isFieldInvalid('specialOffers')">
-            {{ getErrorMessage("specialOffers") }}
-          </mat-error>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="specialOffers" multiple>
+                <mat-option *ngFor="let specialOfferId of specialOfferIds" [value]="specialOfferId">
+                  {{ specialOfferLabels[specialOfferId] }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-error *ngIf="isFieldInvalid('specialOffers')">
+              {{ getErrorMessage("specialOffers") }}
+            </mat-error>
+          </div>
         </div>
 
-        <div
-          style="
+        <div style="
             margin-top: 1em;
+          
+          ">
+
+          <div style="
+          background-color: white;
+          padding: 14px 14px;
+          border-radius: 14px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+           
             justify-content: end;
             gap: 7px;
-          "
-        >
-          <!-- <div style="flex: 1; width: 100%"> -->
-          <button mat-button (click)="stepper.previous()">Back</button>
-          <!-- </div> -->
-          <!-- <div style="flex: 1; width: 100%"> -->
-          <button
-            mat-flat-button
-            color="main-green"
-            type="submit"
-            [disabled]="addProdBtnOnLoad"
-          >
-            <ng-container *ngIf="!addProdBtnOnLoad; else loadupdate">
-              Save
-            </ng-container>
-            <ng-template #loadupdate>
-              <i class="fas fa-circle-notch fa-spin"></i>
-            </ng-template>
-          </button>
-          <!-- </div> -->
+        ">
+
+            <!-- <div style="flex: 1; width: 100%"> -->
+            <button style="width:100%;" mat-button (click)="stepper.previous()">Back</button>
+            <!-- </div> -->
+            <!-- <div style="flex: 1; width: 100%"> -->
+            <button mat-flat-button style="width:100%;" color="main-green" type="submit" [disabled]="addProdBtnOnLoad">
+              <ng-container *ngIf="!addProdBtnOnLoad; else loadupdate">
+                Save
+              </ng-container>
+              <ng-template #loadupdate>
+                <i class="fas fa-circle-notch fa-spin"></i>
+              </ng-template>
+            </button>
+            <!-- </div> -->
+          </div>
         </div>
       </form>
     </mat-step>
@@ -283,35 +211,21 @@
   <ng-template #cropperSheet let-context>
     <ul class="sheet-list">
       <div style="justify-items: center; margin-bottom: 15px">
-        <div
-          style="
+        <div style="
             margin-top: 8px;
             width: 40px;
             height: 5px;
             background-color: #7f7f7f1a;
             border-radius: 20px;
-          "
-        ></div>
+          "></div>
       </div>
 
       <div style="margin: 0px 20px 20px 20px">
-        <image-cropper
-          [imageBase64]="imageBase64"
-          [maintainAspectRatio]="true"
-          [aspectRatio]="4 / 4"
-          format="png"
-          (imageCropped)="imageCropped($event)"
-          (imageLoaded)="imageLoaded($event)"
-          (cropperReady)="cropperReady()"
-          (loadImageFailed)="loadImageFailed()"
-        ></image-cropper>
+        <image-cropper [imageBase64]="imageBase64" [maintainAspectRatio]="true" [aspectRatio]="4 / 4" format="png"
+          (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady()"
+          (loadImageFailed)="loadImageFailed()"></image-cropper>
 
-        <button
-          mat-flat-button
-          color="main-green"
-          (click)="cropImage()"
-          class="btn-block fw-bold"
-        >
+        <button mat-flat-button color="main-green" (click)="cropImage()" class="btn-block fw-bold">
           CROP IMAGE
         </button>
       </div>
