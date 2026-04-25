@@ -49,6 +49,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   text = "";
   onNewChatMessage: Subscription;
   onAIStreamComplete: Subscription;
+  isWaitingForAIResponse = false;
 
   fromAI = "";
   @ViewChild("chatContainer", { static: false }) chatContainer!: ElementRef;
@@ -89,6 +90,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((message: any) => {
         console.log("------------this.isSpoonwiseAI", this.isSpoonwiseAI);
+        if (this.isSpoonwiseAI === "true" && message?.isAIAgent) {
+          this.hideAIResponseLoader();
+        }
         this.markSenderMessagesAsSeen();
       });
 
@@ -96,6 +100,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       .onAIStreamComplete()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
+        this.hideAIResponseLoader();
         this.markSenderMessagesAsSeen();
       });
   }
@@ -127,6 +132,18 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.onLoad = false;
       });
 
+    this.actions$
+      .pipe(ofType(chunksReceivedFromAI), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.hideAIResponseLoader();
+      });
+
+    this.actions$
+      .pipe(ofType(sendMessageFailure), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.hideAIResponseLoader();
+      });
+
     this.markSenderMessagesAsSeen();
   }
 
@@ -134,6 +151,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.onNewChatMessage.unsubscribe();
+    this.onAIStreamComplete.unsubscribe();
   }
 
   trackByMessageId(index: number, message: any): string {
@@ -200,6 +218,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.isSpoonwiseAI === "true") {
       // when query param is true
       message.isAIAgent = false; //  all message sent via this component is from the user
+      this.isWaitingForAIResponse = true;
     }
 
     this.store.dispatch(
@@ -218,6 +237,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.forUploadImage = "";
     this.text = "";
     console.log("sending message", message);
+  }
+
+  private hideAIResponseLoader(): void {
+    this.isWaitingForAIResponse = false;
   }
 
   markSenderMessagesAsSeen() {

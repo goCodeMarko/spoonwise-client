@@ -1,7 +1,4 @@
-<div
-  #chatContainer
-  (scroll)="onScroll()"
-  style="
+<div #chatContainer (scroll)="onScroll()" style="
     overflow-y: scroll;
     display: flex;
     flex-direction: column-reverse;
@@ -10,59 +7,49 @@
     height: calc(100dvh - 56.1px - 85px);
     margin: 0px;
     padding: 7px 14px 7px 14px;
-  "
->
-  <div
-    style="display: flex; justify-content: end; align-items: center"
-    *ngIf="
+  ">
+  <div *ngIf="isSpoonwiseAI === 'true' && isWaitingForAIResponse" class="ai-loader-row">
+    <div class="ai-loader-bubble" aria-label="AI is typing" aria-live="polite">
+      <span class="ai-loader-dot"></span>
+      <span class="ai-loader-dot"></span>
+      <span class="ai-loader-dot"></span>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: end; align-items: center" *ngIf="
       chatroomMessages[0] &&
       [this.authUser._id, this.authUser.shop?._id].includes(
         chatroomMessages[0].senderId
       )
-    "
-  >
+    ">
     {{ chatroomMessages[0].status | titlecase }} ·
     {{ chatroomMessages[0].updatedAt | timeAgo }}
   </div>
 
-  <div
-    *ngFor="
+  <div *ngFor="
       let message of chatroomMessages;
       let i = index;
       trackBy: trackByMessageId
-    "
-  >
-    <div
-      *ngIf="i === chatroomMessages.length - 1 && onLoad"
-      style="text-align: center; margin-top: 10px"
-      style="margin-top: 10px"
-    >
+    ">
+    <div *ngIf="i === chatroomMessages.length - 1 && onLoad" style="text-align: center; margin-top: 10px"
+      style="margin-top: 10px">
       Loading...
     </div>
-    <ng-container
-      *ngIf="
+    <ng-container *ngIf="
         [this.authUser._id, this.authUser.shop?._id].includes(
           message?.senderId
         ) ||
           (!message.isAIAgent && isSpoonwiseAI == 'true');
         else leftSide
-      "
-    >
-      <div
-        style="
+      ">
+      <div style="
           display: flex;
           justify-content: end;
           align-items: end;
           flex-direction: column;
-        "
-      >
+        ">
         <ng-container *ngIf="message?.content?.attachments?.length > 0">
           <div>
-            <img
-              [src]="message.content.attachments[0].url"
-              alt=""
-              style="width: 70vw; border-radius: 20px"
-            />
+            <img [src]="message.content.attachments[0].url" alt="" style="width: 70vw; border-radius: 20px" />
           </div>
         </ng-container>
 
@@ -81,29 +68,22 @@
         <div>
           <ng-container *ngIf="message?.content?.attachments?.length > 0">
             <div>
-              <img
-                [src]="message.content.attachments[0].url"
-                alt=""
-                style="width: 70vw; border-radius: 20px"
-              />
+              <img [src]="message.content.attachments[0].url" alt="" style="width: 70vw; border-radius: 20px" />
             </div>
           </ng-container>
           <ng-container *ngIf="message?.content?.message">
             <div class="message">
-              <p
-                [innerHTML]="message.content.message"
-                style="margin-top: 0; margin-bottom: 0"
-              ></p>
+              <p [innerHTML]="message.content.message" style="margin-top: 0; margin-bottom: 0"></p>
             </div>
           </ng-container>
         </div>
       </div>
     </ng-template>
   </div>
+
 </div>
 
-<div
-  style="
+<div style="
     position: fixed;
     bottom: 0;
     left: 0;
@@ -114,21 +94,11 @@
     gap: 7px;
     display: flex;
     flex-direction: column;
-  "
->
-  <div
-    style="display: flex; justify-content: center; position: relative"
-    *ngIf="forUploadImage"
-  >
+  ">
+  <div style="display: flex; justify-content: center; position: relative" *ngIf="forUploadImage">
     <div>
-      <button
-        style="position: absolute; top: 1px; right: 1px"
-        mat-icon-button
-        (click)="removeForUpload()"
-      >
-        <mat-icon style="font-size: 25px; color: &quot;#f8da50&quot;"
-          >close</mat-icon
-        >
+      <button style="position: absolute; top: 1px; right: 1px" mat-icon-button (click)="removeForUpload()">
+        <mat-icon style="font-size: 25px; color: &quot;#f8da50&quot;">close</mat-icon>
       </button>
     </div>
     <img [src]="forUploadImage" alt="" style="width: 70vw" />
@@ -137,55 +107,29 @@
     <div style="flex: 1; display: flex; gap: 7px">
       <ng-template #noPictures> </ng-template>
 
-      <input
-        #openCameraInput
-        type="file"
-        id="picture"
-        name="picture"
-        accept="image/*"
-        capture="environment"
-        (change)="onFileChange($event)"
-        hidden
-      />
+      <input #openCameraInput type="file" id="picture" name="picture" accept="image/*" capture="environment"
+        (change)="onFileChange($event)" hidden />
 
-      <input
-        #openGalleryInput
-        type="file"
-        id="picture"
-        name="picture"
-        accept="image/*"
-        (change)="onFileChange($event)"
-        hidden
-      />
+      <input #openGalleryInput type="file" id="picture" name="picture" accept="image/*" (change)="onFileChange($event)"
+        hidden />
       <div>
         <button mat-icon-button (click)="openCamera()">
-          <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;"
-            >camera_alt</mat-icon
-          >
+          <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;">camera_alt</mat-icon>
         </button>
       </div>
       <div>
         <button mat-icon-button (click)="openGallery()">
-          <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;"
-            >image</mat-icon
-          >
+          <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;">image</mat-icon>
         </button>
       </div>
     </div>
     <div style="flex: 9">
-      <textarea
-        class="form-control"
-        [(ngModel)]="text"
-        rows="1"
-        style="width: 100%; resize: none"
-        (keyup.enter)="sendMessage()"
-      ></textarea>
+      <textarea class="form-control" [(ngModel)]="text" rows="1" style="width: 100%; resize: none"
+        (keyup.enter)="sendMessage()"></textarea>
     </div>
     <div style="flex: 1">
       <button mat-icon-button (click)="sendMessage()">
-        <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;"
-          >send</mat-icon
-        >
+        <mat-icon style="font-size: 45px; color: &quot;#f8da50&quot;">send</mat-icon>
       </button>
     </div>
   </div>
