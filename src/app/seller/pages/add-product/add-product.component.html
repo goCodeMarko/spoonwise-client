@@ -1,9 +1,5 @@
-<div style="
-    height: calc(100dvh - 56.1px - 84px);
-    overflow-y: scroll;
-    margin-top: 7px;
-  ">
-  <mat-stepper linear #stepper>
+<div class="add-product-page">
+  <mat-stepper linear #stepper class="add-product-stepper">
     <mat-step [stepControl]="copiesForm" [editable]="true">
       <ng-template matStepLabel>Upload Fruit Images</ng-template>
 
@@ -77,106 +73,107 @@
     <mat-step [stepControl]="productDetailsForm" [editable]="true">
       <ng-template matStepLabel>Fruit Details</ng-template>
 
-      <form [formGroup]="productDetailsForm" (ngSubmit)="submitForm()">
-        <div style="
-          background-color: white;
-          padding: 14px 14px;
-          border-radius: 14px;
-        ">
-          <div style="display: flex; justify-content: flex-end">
-            <mat-slide-toggle formControlName="isPublished">Publish</mat-slide-toggle>
-          </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column">
+      <form [formGroup]="productDetailsForm" (ngSubmit)="submitForm()" style="margin-top: 7px;">
+        <div style="display: flex;gap: 7px;flex-direction: column;">
           <div style="
           background-color: white;
           padding: 14px 14px;
           border-radius: 14px;
         ">
-            <mat-form-field appearance="outline">
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="name" />
-            </mat-form-field>
-            <mat-error *ngIf="isFieldInvalid('name')">
-              {{ getErrorMessage("name") }}
-            </mat-error>
-            <div style="display: flex; gap: 7px">
-              <div style="flex: 1; min-width: 0">
-                <mat-form-field appearance="outline">
-                  <mat-label>Quantity</mat-label>
-                  <input type="number" matInput formControlName="qty" (paste)="numberStrict($event)"
-                    (keypress)="numberStrict($event)" />
-                </mat-form-field>
-                <mat-error *ngIf="isFieldInvalid('qty')">
-                  {{ getErrorMessage("qty") }}
-                </mat-error>
+            <div style="display: flex; justify-content: flex-end">
+              <mat-slide-toggle formControlName="isPublished">Publish</mat-slide-toggle>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column">
+            <div style="
+          background-color: white;
+          padding: 14px 14px;
+          border-radius: 14px;
+        ">
+              <mat-form-field appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" />
+              </mat-form-field>
+              <mat-error *ngIf="isFieldInvalid('name')">
+                {{ getErrorMessage("name") }}
+              </mat-error>
+              <div style="display: flex; gap: 7px">
+                <div style="flex: 1; min-width: 0">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Quantity</mat-label>
+                    <input type="number" matInput formControlName="qty" (paste)="numberStrict($event)"
+                      (keypress)="numberStrict($event)" />
+                  </mat-form-field>
+                  <mat-error *ngIf="isFieldInvalid('qty')">
+                    {{ getErrorMessage("qty") }}
+                  </mat-error>
+                </div>
+                <div style="flex: 1; min-width: 0">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Price</mat-label>
+                    <input type="number" matInput formControlName="price" (paste)="currencyStrict($event)"
+                      (keypress)="currencyStrict($event)" />
+                  </mat-form-field>
+                  <mat-error *ngIf="isFieldInvalid('price')">
+                    {{ getErrorMessage("price") }}
+                  </mat-error>
+                </div>
               </div>
-              <div style="flex: 1; min-width: 0">
-                <mat-form-field appearance="outline">
-                  <mat-label>Price</mat-label>
-                  <input type="number" matInput formControlName="price" (paste)="currencyStrict($event)"
-                    (keypress)="currencyStrict($event)" />
-                </mat-form-field>
-                <mat-error *ngIf="isFieldInvalid('price')">
-                  {{ getErrorMessage("price") }}
-                </mat-error>
-              </div>
+
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="category" multiple>
+                  <mat-option *ngFor="let categoryId of categoryIds" [value]="categoryId">
+                    {{ categoryLabels[categoryId] }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-error *ngIf="isFieldInvalid('category')">
+                {{ getErrorMessage("category") }}
+              </mat-error>
             </div>
 
-            <mat-form-field appearance="outline">
-              <mat-select formControlName="category" multiple>
-                <mat-option *ngFor="let categoryId of categoryIds" [value]="categoryId">
-                  {{ categoryLabels[categoryId] }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-error *ngIf="isFieldInvalid('category')">
-              {{ getErrorMessage("category") }}
-            </mat-error>
+
+
           </div>
 
-          <div style="
+          <div style="display: flex; flex-direction: column">
+            <div style="
           background-color: white;
           padding: 14px 14px;
           border-radius: 14px;
         ">
 
-            <mat-form-field appearance="outline">
-              <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description" rows="10" style="resize: none"></textarea>
-            </mat-form-field>
-            <mat-error *ngIf="isFieldInvalid('description')">
-              {{ getErrorMessage("description") }}
-            </mat-error>
+              <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" rows="10" style="resize: none"></textarea>
+              </mat-form-field>
+              <mat-error *ngIf="isFieldInvalid('description')">
+                {{ getErrorMessage("description") }}
+              </mat-error>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Expiry Date</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="expiryDate" [min]="minDate" readonly />
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-error *ngIf="isFieldInvalid('expiryDate')">
-              {{ getErrorMessage("expiryDate") }}
-            </mat-error>
+              <mat-form-field appearance="outline">
+                <mat-label>Expiry Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="expiryDate" [min]="minDate" readonly />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-error *ngIf="isFieldInvalid('expiryDate')">
+                {{ getErrorMessage("expiryDate") }}
+              </mat-error>
 
-            <mat-form-field appearance="outline">
-              <mat-select formControlName="specialOffers" multiple>
-                <mat-option *ngFor="let specialOfferId of specialOfferIds" [value]="specialOfferId">
-                  {{ specialOfferLabels[specialOfferId] }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-error *ngIf="isFieldInvalid('specialOffers')">
-              {{ getErrorMessage("specialOffers") }}
-            </mat-error>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="specialOffers" multiple>
+                  <mat-option *ngFor="let specialOfferId of specialOfferIds" [value]="specialOfferId">
+                    {{ specialOfferLabels[specialOfferId] }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-error *ngIf="isFieldInvalid('specialOffers')">
+                {{ getErrorMessage("specialOffers") }}
+              </mat-error>
+            </div>
           </div>
-        </div>
-
-        <div style="
-            margin-top: 1em;
-          
-          ">
 
           <div style="
           background-color: white;
@@ -204,6 +201,7 @@
             <!-- </div> -->
           </div>
         </div>
+
       </form>
     </mat-step>
   </mat-stepper>

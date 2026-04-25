@@ -1,3 +1,10 @@
+.add-product-page {
+  height: calc(100dvh - 56.1px - 84px);
+  overflow-y: scroll;
+  margin-top: 7px;
+  padding: 0 14px 14px;
+}
+
 .example-list {
   width: 1000px;
   max-width: 100%;
@@ -108,4 +115,34 @@
       border-radius: 20px;
     }
   }
+}
+
+::ng-deep .mat-horizontal-content-container {
+  background-color: #f5f5f5;
+  padding: 0px !important;
+}
+
+::ng-deep .add-product-stepper.mat-stepper-horizontal {
+  border-radius: 20px 20px;
+  overflow: hidden;
+  background-color: white;
+}
+
+::ng-deep .add-product-stepper .mat-horizontal-stepper-header-container {
+  background-color: white;
+}
+
+::ng-deep .add-product-stepper .mat-step-header[aria-selected="true"] {
+  background-color: white;
+}
+
+::ng-deep .add-product-stepper .mat-step-header[aria-selected="true"]:hover,
+::ng-deep .add-product-stepper .mat-step-header[aria-selected="true"]:focus,
+::ng-deep
+  .add-product-stepper
+  .mat-step-header[aria-selected="true"].cdk-program-focused,
+::ng-deep
+  .add-product-stepper
+  .mat-step-header[aria-selected="true"].cdk-keyboard-focused {
+  background-color: white;
 }
