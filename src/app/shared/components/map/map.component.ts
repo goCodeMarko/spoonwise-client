@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   DoCheck,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
@@ -10,6 +11,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -36,6 +38,9 @@ export class MapComponent
   map: any;
   circle: any;
   marker: any;
+
+  @ViewChild("topControls") topControls?: ElementRef<HTMLElement>;
+  @ViewChild("sideControls") sideControls?: ElementRef<HTMLElement>;
 
   @Input() shops: any[] = [];
   @Input() buyers: any[] = [];
@@ -154,6 +159,7 @@ export class MapComponent
   }
 
   ngAfterViewInit(): void {
+    this.setupMapControlEvents();
     this.loadMap();
 
     if (this.map) {
@@ -416,6 +422,19 @@ export class MapComponent
     }
 
     this.toggleNearShopsVisibility();
+  }
+
+  private setupMapControlEvents(): void {
+    [this.topControls?.nativeElement, this.sideControls?.nativeElement].forEach(
+      (control) => {
+        if (!control) {
+          return;
+        }
+
+        L.DomEvent.disableClickPropagation(control);
+        L.DomEvent.disableScrollPropagation(control);
+      },
+    );
   }
 
   addZoomControl(): void {

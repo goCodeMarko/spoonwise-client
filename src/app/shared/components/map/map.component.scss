@@ -17,6 +17,7 @@
   z-index: 99999;
   flex-direction: column;
   gap: 10px;
+  pointer-events: auto;
 }
 
 .map-control-group--top {
@@ -38,6 +39,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 
 ::ng-deep .leaflet-control-attribution {

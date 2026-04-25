@@ -1,12 +1,17 @@
 <div class="map-container" id="map"></div>
 
-<div *ngIf="showLocationButton" class="map-control-group map-control-group--top">
+<div
+  *ngIf="showLocationButton"
+  #topControls
+  class="map-control-group map-control-group--top"
+>
   <button
     type="button"
     class="side-button"
     aria-label="Detect current location"
     (click)="detectLocation($event)"
     (mousedown)="$event.stopPropagation()"
+    (pointerdown)="$event.stopPropagation()"
     (touchstart)="$event.stopPropagation()"
   >
     <i class="material-icons">gps_fixed</i>
@@ -15,6 +20,7 @@
 
 <div
   *ngIf="showProductButton || topRatedShopButton || nearestShopButton"
+  #sideControls
   class="map-control-group map-control-group--side"
 >
   <div *ngIf="showProductButton">
@@ -23,6 +29,7 @@
       class="side-button"
       (click)="onMapControlClick($event, 'products')"
       (mousedown)="$event.stopPropagation()"
+      (pointerdown)="$event.stopPropagation()"
       (touchstart)="$event.stopPropagation()"
     >
       <i class="material-icons">restaurant</i>
@@ -34,6 +41,7 @@
       class="side-button"
       (click)="onMapControlClick($event, 'topRatedShops')"
       (mousedown)="$event.stopPropagation()"
+      (pointerdown)="$event.stopPropagation()"
       (touchstart)="$event.stopPropagation()"
     >
       <i class="material-icons"> star </i>
@@ -45,6 +53,7 @@
       class="side-button"
       (click)="onMapControlClick($event, 'topNearShops')"
       (mousedown)="$event.stopPropagation()"
+      (pointerdown)="$event.stopPropagation()"
       (touchstart)="$event.stopPropagation()"
     >
       <i class="material-icons"> route </i>
