@@ -2,73 +2,86 @@
   <mat-stepper linear #stepper class="add-product-stepper">
     <mat-step [stepControl]="copiesForm" [editable]="true">
       <ng-template matStepLabel>Upload Fruit Images</ng-template>
+      <div style="display: flex;gap: 7px; flex-direction: column;">
+        <form [formGroup]="copiesForm">
+          <mat-checkbox hidden formControlName="copies"></mat-checkbox>
+        </form>
 
-      <form [formGroup]="copiesForm">
-        <mat-checkbox hidden formControlName="copies"></mat-checkbox>
-      </form>
-
-      <ng-container *ngIf="copies.length >= 1; else noPictures">
-        <div style="display: flex; align-items: center; gap: 7px">
-          <!-- <button (click)="scrollLeft()">←</button> -->
-          <div #scrollContainer cdkDropList cdkDropListOrientation="horizontal" class="example-list"
-            (cdkDropListDropped)="drop($event)">
-            <div class="example-box" *ngFor="let copy of copies; index as i" cdkDrag>
-              <div class="buttons">
-                <button (click)="openCropper(cropperSheet, copy)" mat-icon-button color="primary" style="
+        <ng-container *ngIf="copies.length >= 1; else noPictures">
+          <div style="display: flex; align-items: center; gap: 7px">
+            <div #scrollContainer cdkDropList cdkDropListOrientation="horizontal" class="example-list"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let copy of copies; index as i" cdkDrag>
+                <div class="buttons">
+                  <button (click)="openCropper(cropperSheet, copy)" mat-icon-button color="primary" style="
                     display: flex;
                     align-items: center;
                     justify-content: center;
                   ">
-                  <mat-icon style="font-size: 40px; color: white">crop</mat-icon>
-                </button>
-                <button (click)="remove(copy)" mat-icon-button color="primary" style="
+                    <mat-icon style="font-size: 25px; color: white">crop</mat-icon>
+                  </button>
+                  <button (click)="remove(copy)" mat-icon-button color="primary" style="
                     display: flex;
                     align-items: center;
                     justify-content: center;
                   ">
-                  <mat-icon style="font-size: 40px; color: white">delete</mat-icon>
-                </button>
-              </div>
+                    <mat-icon style="font-size: 25px; color: white">delete</mat-icon>
+                  </button>
+                </div>
 
-              <div style="position: absolute; bottom: 7px; left: 7px">
-                <ng-container *ngIf="i === 0; else imageOrderNo">
-                  <mat-icon style="font-size: 40px; color: white">star</mat-icon>
-                </ng-container>
-                <ng-template #imageOrderNo>
-                  <span style="font-weight: bold; font-size: x-large; color: white">{{ i + 1 }}</span>
-                </ng-template>
+                <div style="position: absolute; bottom: 7px; left: 7px">
+                  <ng-container *ngIf="i === 0; else imageOrderNo">
+                    <mat-icon style="font-size: 35px; color: #f8da50">star</mat-icon>
+                  </ng-container>
+                  <ng-template #imageOrderNo>
+                    <!-- <span style="font-weight: bold; font-size: x-large; color: white">{{ i + 1 }}</span> -->
+                  </ng-template>
+                </div>
+                <img [src]="copy.img" alt="" width="200" style="border-radius: 14px" />
               </div>
-              <img [src]="copy.img" alt="" width="300" style="border-radius: 7px" />
             </div>
+
           </div>
-          <!-- <button (click)="scrollRight()">→</button> -->
-        </div>
-      </ng-container>
+        </ng-container>
 
-      <ng-template #noPictures> </ng-template>
+        <ng-template #noPictures> </ng-template>
 
-      <input #openCameraInput type="file" id="picture" name="picture" accept="image/*" capture="environment"
-        (change)="onFileChange($event)" hidden />
+        <input #openCameraInput type="file" id="picture" name="picture" accept="image/*" capture="environment"
+          (change)="onFileChange($event)" hidden />
 
-      <input #openGalleryInput type="file" id="picture" name="picture" accept="image/*" (change)="onFileChange($event)"
-        multiple hidden />
-      <div style="display: flex; align-items: center; justify-content: center">
-        <!-- <ng-container *ngIf="copies.length">
+        <input #openGalleryInput type="file" id="picture" name="picture" accept="image/*"
+          (change)="onFileChange($event)" multiple hidden />
+        <div
+          [style]="
+          copies.length
+            ? 'display: flex; align-items: center; justify-content: center;background-color: white; padding: 14px 14px; border-radius: 14px; gap: 7px; '
+            : 'display: flex; align-items: center; justify-content: center;background-color: white; padding: 14px 14px; border-radius: 14px; gap: 7px; height: calc(100vh - 72px - 56.1px - 84px - 7px - 7px - 7px);'">
+          <!-- <ng-container *ngIf="copies.length">
           <div style="width: 64px"></div>
         </ng-container> -->
-        <button mat-icon-button color="primary" style="width: 50px; height: 50px" (click)="openGallery()">
-          <mat-icon style="font-size: 40px; color: #f8da50">image</mat-icon>
-        </button>
+          <button mat-icon-button color="primary" style="width: 50px; height: 50px" (click)="openGallery()">
+            <mat-icon style="font-size: 40px; color: #f8da50">image</mat-icon>
+          </button>
 
-        <button mat-icon-button color="primary" style="width: 50px; height: 50px" (click)="openCamera()">
-          <mat-icon style="font-size: 40px; color: #f8da50">camera_alt</mat-icon>
-        </button>
+          <button mat-icon-button color="primary" style="width: 50px; height: 50px" (click)="openCamera()">
+            <mat-icon style="font-size: 40px; color: #f8da50">camera_alt</mat-icon>
+          </button>
 
 
+        </div>
+        <ng-container *ngIf="copies.length">
+          <div
+            style="display: flex; align-items: center; justify-content: center;background-color: white; padding: 14px 14px; border-radius: 14px; gap: 7px;">
+
+            <button mat-flat-button class="btn-block fw-bold"
+              style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
+              (click)="stepper.next()">
+              NEXT
+
+            </button>
+          </div>
+        </ng-container>
       </div>
-      <ng-container *ngIf="copies.length">
-        <button class="btn-block" mat-button (click)="stepper.next()">Next</button>
-      </ng-container>
     </mat-step>
     <mat-step [stepControl]="productDetailsForm" [editable]="true">
       <ng-template matStepLabel>Fruit Details</ng-template>
@@ -186,19 +199,25 @@
             gap: 7px;
         ">
 
-            <!-- <div style="flex: 1; width: 100%"> -->
-            <button style="width:100%;" mat-button (click)="stepper.previous()">Back</button>
-            <!-- </div> -->
-            <!-- <div style="flex: 1; width: 100%"> -->
-            <button mat-flat-button style="width:100%;" color="main-green" type="submit" [disabled]="addProdBtnOnLoad">
+
+
+
+
+
+
+            <button mat-flat-button class="btn-block fw-bold"
+              style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;" type="submit"
+              [disabled]="addProdBtnOnLoad">
               <ng-container *ngIf="!addProdBtnOnLoad; else loadupdate">
-                Save
+                SAVE FRUIT
               </ng-container>
               <ng-template #loadupdate>
                 <i class="fas fa-circle-notch fa-spin"></i>
               </ng-template>
             </button>
-            <!-- </div> -->
+            <button mat-flat-button class="btn-block fw-bold"
+              style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
+              (click)="stepper.previous()">BACK</button>
           </div>
         </div>
 
