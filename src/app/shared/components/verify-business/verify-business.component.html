@@ -501,44 +501,88 @@
 
 <ng-template #mySheet let-context>
   <ul class="sheet-list">
+    <div class="sheet-handle-wrapper">
+      <div style="
+        margin-top: 8px;
+        width: 40px;
+        height: 5px;
+        background-color: #f7d94f;
+        border-radius: 20px;
+      "></div>
+    </div>
+
     <ng-container *ngIf="sheetType === 'bir'">
-      <ng-container *ngIf="bir.fileType === 'image'; else pdf">
-        <img [src]="bir.file" alt="" style="width: 100vw !important" />
+      <ng-container *ngIf="bir.fileType === 'image'; else birPdfPreview">
+        <div class="sheet-preview-wrapper">
+          <img [src]="bir.file" alt="" class="sheet-preview-image" />
+        </div>
       </ng-container>
 
-      <ng-template #pdf>
+      <ng-template #birPdfPreview>
         <div class="pdf-scroll-container">
-          <img *ngFor="let page of renderedPages" [src]="page" style="width: 100%; margin-bottom: 16px" />
+          <img
+            *ngFor="let page of renderedPages"
+            [src]="page"
+            class="sheet-pdf-page"
+          />
         </div>
       </ng-template>
     </ng-container>
 
     <ng-container *ngIf="sheetType === 'businessLogo'">
-      <img [src]="businessLogo.file" alt="" style="width: 100vw !important" /></ng-container>
+      <div class="sheet-preview-wrapper">
+        <img
+          [src]="businessLogo.file"
+          alt=""
+          class="sheet-preview-image"
+        />
+      </div>
+    </ng-container>
 
     <ng-container *ngIf="sheetType === 'ownerSelfie'">
-      <img [src]="ownerSelfie.file" alt="" style="width: 100vw !important" /></ng-container>
+      <div class="sheet-preview-wrapper">
+        <img [src]="ownerSelfie.file" alt="" class="sheet-preview-image" />
+      </div>
+    </ng-container>
 
     <ng-container *ngIf="sheetType === 'validID'">
-      <ng-container *ngIf="validID.fileType === 'image'; else pdf">
-        <img [src]="validID.file" alt="" style="width: 100vw !important" />
+      <ng-container *ngIf="validID.fileType === 'image'; else validIdPdfPreview">
+        <div class="sheet-preview-wrapper">
+          <img [src]="validID.file" alt="" class="sheet-preview-image" />
+        </div>
       </ng-container>
 
-      <ng-template #pdf>
+      <ng-template #validIdPdfPreview>
         <div class="pdf-scroll-container">
-          <img *ngFor="let page of renderedPages" [src]="page" style="width: 100%; margin-bottom: 16px" />
+          <img
+            *ngFor="let page of renderedPages"
+            [src]="page"
+            class="sheet-pdf-page"
+          />
         </div>
       </ng-template>
     </ng-container>
 
     <ng-container *ngIf="sheetType === 'businessPermit'">
-      <ng-container *ngIf="businessPermit.fileType === 'image'; else pdf">
-        <img [src]="businessPermit.file" alt="" style="width: 100vw !important" />
+      <ng-container
+        *ngIf="businessPermit.fileType === 'image'; else businessPermitPdfPreview"
+      >
+        <div class="sheet-preview-wrapper">
+          <img
+            [src]="businessPermit.file"
+            alt=""
+            class="sheet-preview-image"
+          />
+        </div>
       </ng-container>
 
-      <ng-template #pdf>
+      <ng-template #businessPermitPdfPreview>
         <div class="pdf-scroll-container">
-          <img *ngFor="let page of renderedPages" [src]="page" style="width: 100%; margin-bottom: 16px" />
+          <img
+            *ngFor="let page of renderedPages"
+            [src]="page"
+            class="sheet-pdf-page"
+          />
         </div>
       </ng-template>
     </ng-container>

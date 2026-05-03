@@ -1,3 +1,32 @@
+.sheet-list {
+  margin: 0;
+  padding: 0 16px 24px;
+  list-style: none;
+}
+
+.sheet-handle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.sheet-preview-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.sheet-preview-image {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  max-height: 70vh;
+  height: auto;
+  object-fit: contain;
+  border-radius: 16px;
+  background-color: #f9f9f9;
+}
+
 .verify-page {
   height: calc(100dvh - 56.1px);
   overflow-y: scroll;
@@ -28,9 +57,22 @@
 
 .pdf-scroll-container {
   margin-top: 1em;
-  height: 400px;
+  width: 100%;
+  max-height: 70vh;
   overflow-y: auto;
-  background-color: #f9f9f9;
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+.sheet-pdf-page {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  border-radius: 12px;
+}
+
+.sheet-pdf-page:last-child {
+  margin-bottom: 0;
 }
 
 ::ng-deep .mat-horizontal-content-container {
