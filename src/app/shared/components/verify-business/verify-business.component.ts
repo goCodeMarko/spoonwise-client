@@ -318,7 +318,7 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
       };
     }
     if (this.shop?.documents.validID) {
-      let fetchx = await fetch(this.shop?.documents.bir);
+      let fetchx = await fetch(this.shop?.documents.validID);
       const contentType = fetchx.headers.get("Content-Type");
 
       if (contentType === "application/pdf") {

@@ -1,3 +1,10 @@
+.verify-page {
+  height: calc(100dvh - 56.1px);
+  overflow-y: scroll;
+  margin-top: 7px;
+  padding: 0 14px 14px;
+}
+
 .custom-file-dropzone-default {
   width: 100%;
 
