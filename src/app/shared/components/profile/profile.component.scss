@@ -24,7 +24,8 @@
 
 .ms-icon-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 7px;
   align-items: center;
   cursor: pointer;
   text-align: center;
@@ -36,7 +37,7 @@
   .mat-icon-button {
     width: 40px;
     height: 40px;
-    background-color: #f9f9f9;
+    background-color: #f7d94f30;
     border-radius: 12px;
   }
 
@@ -54,5 +55,35 @@
   .ms-icon-text {
     margin-top: 4px;
     color: white;
+  }
+}
+
+.verification-status-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform-origin: center;
+  animation: verification-status-pulse 1.4s ease-in-out infinite;
+}
+
+.verification-status-dot--pending {
+  background-color: greenyellow;
+}
+
+.verification-status-dot--alert {
+  background-color: red;
+}
+
+@keyframes verification-status-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.45);
   }
 }

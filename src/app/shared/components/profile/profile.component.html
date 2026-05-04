@@ -1,43 +1,29 @@
-<div
-  style="
+<div style="
     background-color: white;
     border-radius: 15px 15px 0px 0px;
     padding: 7px;
     z-index: 0;
     height: 79px;
     margin: 7px 14px 0px 14px;
-  "
->
-  <div
-    style="
+  ">
+  <div style="
       display: flex;
-      align-items: center;
+      align-items: start;
       gap: 7px;
       justify-content: space-between;
-    "
-  >
+    ">
     <div style="display: flex; flex-direction: row; gap: 7px">
       <div>
         <ng-container *ngIf="authUser?.role === 'buyer'; else storeLogo">
-          <img
-            [src]="
+          <img [src]="
               authUser?.profile_picture?.url ||
               'assets/images/logo/spoonwise-icon.png'
-            "
-            alt=""
-            width="65"
-            style="border-radius: 50%"
-          />
+            " alt="" width="65" style="border-radius: 50%" />
         </ng-container>
         <ng-template #storeLogo>
-          <img
-            [src]="
+          <img [src]="
               authUser?.shop?.logo || 'assets/images/logo/spoonwise-icon.png'
-            "
-            alt=""
-            width="65"
-            style="border-radius: 50%"
-          />
+            " alt="" width="65" style="border-radius: 50%" />
         </ng-template>
       </div>
 
@@ -48,42 +34,56 @@
           </ng-container>
           <ng-template #storeName>
             {{ authUser?.shop?.businessName }}
-            <div
-              *ngIf="
+            <div *ngIf="
                 authUser?.shop?.verification_process?.status === 'APPROVED'
-              "
-            >
+              ">
               verified
             </div>
           </ng-template>
         </div>
 
-        <ng-container *ngIf="authUser?.role === 'buyer'; else verification"
-          >{{ points }} points</ng-container
-        >
+        <ng-container *ngIf="authUser?.role === 'buyer'; else verification">{{ points }} points</ng-container>
 
         <ng-template #verification>
-          <div [ngSwitch]="authUser?.shop?.verification_process?.status">
-            <p *ngSwitchCase="'APPROVED'"></p>
-            <p *ngSwitchCase="'IN_PROGRESS'">IN-PROGRESS</p>
-            <p *ngSwitchDefault>
-              <a [routerLink]="['/shop/profile/verify-business']"
-                ><button mat-stroked-button>
-                  Verify Your Business
-                  <mat-icon
-                    style="color: #00c6c8; font-size: large; margin-left: 7px"
-                    >arrow_forward</mat-icon
-                  >
-                </button>
-              </a>
-            </p>
-          </div>
+
         </ng-template>
       </div>
     </div>
 
     <div style="display: flex">
       <div class="ms-icon-container" style="color: black">
+
+        <ng-container *ngIf="
+                authUser?.shop?.verification_process?.status === 'APPROVED' else notVerified
+              ">
+          <button mat-icon-button (click)="logout()">
+            <mat-icon>verified</mat-icon>
+          </button>
+        </ng-container>
+
+        <ng-template #notVerified>
+
+          <a [routerLink]="['/shop/profile/verify-business']">
+            <button mat-icon-button style="position: relative;">
+
+              <mat-icon fontSet="material-symbols-outlined">
+                brightness_alert
+              </mat-icon>
+              <ng-container
+                *ngIf="authUser?.shop?.verification_process?.status === 'IN_PROGRESS'; else notVerifiedCircle">
+                <span class="verification-status-dot verification-status-dot--pending"></span>
+              </ng-container>
+
+              <ng-template #notVerifiedCircle>
+                <span class="verification-status-dot verification-status-dot--alert"></span>
+              </ng-template>
+
+
+
+            </button>
+          </a>
+        </ng-template>
+
         <button mat-icon-button (click)="logout()">
           <mat-icon>logout</mat-icon>
         </button>
