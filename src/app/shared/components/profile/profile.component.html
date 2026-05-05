@@ -34,11 +34,7 @@
           </ng-container>
           <ng-template #storeName>
             {{ authUser?.shop?.businessName }}
-            <div *ngIf="
-                authUser?.shop?.verification_process?.status === 'APPROVED'
-              ">
-              verified
-            </div>
+
           </ng-template>
         </div>
 
@@ -56,7 +52,7 @@
         <ng-container *ngIf="
                 authUser?.shop?.verification_process?.status === 'APPROVED' else notVerified
               ">
-          <button mat-icon-button (click)="logout()">
+          <button mat-icon-button>
             <mat-icon>verified</mat-icon>
           </button>
         </ng-container>

@@ -27,6 +27,20 @@
   background-color: #f9f9f9;
 }
 
+.verification-pending-banner {
+  background-color: #fff7cc;
+  border-radius: 16px;
+  color: #8a6d00;
+  font-weight: 600;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-direction: column;
+}
+
 .verify-page {
   height: calc(100dvh - 56.1px);
   overflow-y: scroll;

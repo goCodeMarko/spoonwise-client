@@ -95,6 +95,7 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
   @Input() isAdmin = false;
 
   output = "";
+  authUser: any;
   businessProfileForm: FormGroup;
   locationContactForm: FormGroup;
   settlementForm: FormGroup;
@@ -147,7 +148,12 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
   }
 
   async ngOnInit() {
+    this.userData();
     await this.getShopDetails();
+  }
+
+  userData() {
+    this.authUser = JSON.parse(this.auth.getUserData());
   }
 
   ngOnChanges(): void {
@@ -247,8 +253,7 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
   public shop!: IShop;
   detectCurrentLocation = false;
   async getShopDetails() {
-    const shop = JSON.parse(this.auth.getUserData());
-    const shopId = this.shopId ? this.shopId : shop.shop?._id;
+    const shopId = this.shopId ? this.shopId : this.authUser?.shop?._id;
     const getshop = (await firstValueFrom(
       this.hrs.request("getV2", `shop/getShop/${shopId}`, {})
     )) as any;
@@ -588,6 +593,7 @@ export class VerifyBusinessComponent implements OnInit, OnChanges {
           //When success
           if (response.success) {
             await this.auth.updateUserData();
+            this.userData();
             //Show success modal
             this.router.navigate(["/shop/profile"]);
             this.dialog.open(PopUpModalComponent, {

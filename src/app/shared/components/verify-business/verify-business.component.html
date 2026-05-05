@@ -11,256 +11,269 @@
     border-radius: 15px 15px 0px 0px;
     padding: 7px;
   ">
-    <mat-stepper linear #stepper class="verify-business-stepper" (selectionChange)="onStepChange($event)">
-      <mat-step>
-        <ng-template matStepLabel>Documents</ng-template>
-        <form [formGroup]="businessProfileForm">
-          <div style="display: flex;gap: 7px;flex-direction: column;margin-top: 7px;">
-            <!-- lOGO START-->
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
-              <div><b>Business Logo</b></div>
+    <ng-container *ngIf="authUser?.shop?.verification_process?.status === 'IN_PROGRESS'; else showStepper">
+      <div class="verification-pending-banner">
+        <img style="display: block;" src="assets/icons/party.png" width="100" height="100" />
+        <div>Your application is being reviewed. We will notify you once the review is complete.</div>
 
-              <div [ngClass]="businessLogoClass">
-                <div style="display: flex; align-items: center; gap: 14px">
-                  <div>
-                    <ng-container *ngIf="!businessLogo.file">
-                      <img src="assets/icons/picture.png" width="50" />
-                    </ng-container>
-                    <ng-container *ngIf="businessLogo.file">
-                      <img [src]="businessLogo.file" alt="" width="60" />
-                    </ng-container>
+      </div>
+    </ng-container>
+
+    <ng-template #showStepper>
+      <mat-stepper linear #stepper class="verify-business-stepper" (selectionChange)="onStepChange($event)">
+        <mat-step>
+          <ng-template matStepLabel>Documents</ng-template>
+          <form [formGroup]="businessProfileForm">
+            <div style="display: flex;gap: 7px;flex-direction: column;margin-top: 7px;">
+              <!-- lOGO START-->
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                <div><b>Business Logo</b></div>
+
+                <div [ngClass]="businessLogoClass">
+                  <div style="display: flex; align-items: center; gap: 14px">
+                    <div>
+                      <ng-container *ngIf="!businessLogo.file">
+                        <img src="assets/icons/picture.png" width="50" />
+                      </ng-container>
+                      <ng-container *ngIf="businessLogo.file">
+                        <img [src]="businessLogo.file" alt="" width="60" />
+                      </ng-container>
+                    </div>
+                    <div></div>
                   </div>
-                  <div></div>
-                </div>
-                <div style="display: flex; gap: 7px">
-                  <ng-container *ngIf="businessLogo.file">
-                    <ng-container *ngIf="!isAdmin">
-                      <button mat-stroked-button (click)="remove('businessLogo')">
-                        Remove
+                  <div style="display: flex; gap: 7px">
+                    <ng-container *ngIf="businessLogo.file">
+                      <ng-container *ngIf="!isAdmin">
+                        <button mat-stroked-button (click)="remove('businessLogo')">
+                          Remove
+                        </button>
+                      </ng-container>
+
+                      <button mat-stroked-button (click)="preview(mySheet, 'businessLogo')">
+                        Preview
                       </button>
                     </ng-container>
-
-                    <button mat-stroked-button (click)="preview(mySheet, 'businessLogo')">
-                      Preview
-                    </button>
-                  </ng-container>
-                  <ng-container *ngIf="!businessLogo.file">
-                    <button mat-stroked-button (click)="openGallery('businessLogo')">
-                      Upload
-                    </button>
-                  </ng-container>
+                    <ng-container *ngIf="!businessLogo.file">
+                      <button mat-stroked-button (click)="openGallery('businessLogo')">
+                        Upload
+                      </button>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <input #elementBusinessLogo formControlName="businessLogo" type="file" id="picture" name="picture"
-              accept="image/*" (change)="onFileChange($event, 'businessLogo')" hidden />
-            <!-- lOGO END -->
+              <input #elementBusinessLogo formControlName="businessLogo" type="file" id="picture" name="picture"
+                accept="image/*" (change)="onFileChange($event, 'businessLogo')" hidden />
+              <!-- lOGO END -->
 
-            <!-- Business Permit START-->
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
-              <div><b>Business Permit</b></div>
+              <!-- Business Permit START-->
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                <div><b>Business Permit</b></div>
 
-              <div [ngClass]="businessPermitClass">
-                <div style="display: flex; align-items: center; gap: 14px">
-                  <div>
-                    <ng-container *ngIf="!businessPermit.file">
-                      <img src="assets/icons/picture.png" width="50" />
-                    </ng-container>
-                    <ng-container *ngIf="businessPermit.file">
-                      <ng-container *ngIf="
+                <div [ngClass]="businessPermitClass">
+                  <div style="display: flex; align-items: center; gap: 14px">
+                    <div>
+                      <ng-container *ngIf="!businessPermit.file">
+                        <img src="assets/icons/picture.png" width="50" />
+                      </ng-container>
+                      <ng-container *ngIf="businessPermit.file">
+                        <ng-container *ngIf="
                       businessPermit.fileType === 'image';
                       else pdfbusinessPermit
                     ">
-                        <img *ngIf="businessPermit.fileType === 'image'" [src]="businessPermit.file" alt=""
-                          width="60" />
+                          <img *ngIf="businessPermit.fileType === 'image'" [src]="businessPermit.file" alt=""
+                            width="60" />
+                        </ng-container>
+                        <ng-template #pdfbusinessPermit>
+                          <img [src]="businessPermitPdfThumbnail" alt="" width="47" />
+                        </ng-template>
                       </ng-container>
-                      <ng-template #pdfbusinessPermit>
-                        <img [src]="businessPermitPdfThumbnail" alt="" width="47" />
-                      </ng-template>
-                    </ng-container>
+                    </div>
+                    <div></div>
                   </div>
-                  <div></div>
-                </div>
-                <div style="display: flex; gap: 7px">
-                  <ng-container *ngIf="businessPermit.file">
-                    <ng-container *ngIf="!isAdmin">
-                      <button mat-stroked-button (click)="remove('businessPermit')">
-                        Remove
+                  <div style="display: flex; gap: 7px">
+                    <ng-container *ngIf="businessPermit.file">
+                      <ng-container *ngIf="!isAdmin">
+                        <button mat-stroked-button (click)="remove('businessPermit')">
+                          Remove
+                        </button>
+                      </ng-container>
+                      <button mat-stroked-button (click)="preview(mySheet, 'businessPermit')">
+                        Preview
                       </button>
                     </ng-container>
-                    <button mat-stroked-button (click)="preview(mySheet, 'businessPermit')">
-                      Preview
-                    </button>
-                  </ng-container>
-                  <ng-container *ngIf="!businessPermit.file">
-                    <button mat-stroked-button (click)="openGallery('businessPermit')">
-                      Upload
-                    </button>
-                  </ng-container>
+                    <ng-container *ngIf="!businessPermit.file">
+                      <button mat-stroked-button (click)="openGallery('businessPermit')">
+                        Upload
+                      </button>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <input #elementBusinessPermit formControlName="businessPermit" type="file" id="picture" name="picture"
-              accept="image/*,.pdf" (change)="onFileChange($event, 'businessPermit')" hidden />
-            <!-- Business Permit END -->
+              <input #elementBusinessPermit formControlName="businessPermit" type="file" id="picture" name="picture"
+                accept="image/*,.pdf" (change)="onFileChange($event, 'businessPermit')" hidden />
+              <!-- Business Permit END -->
 
-            <!-- BIR START-->
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
-              <div><b>BIR 2303</b></div>
+              <!-- BIR START-->
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                <div><b>BIR 2303</b></div>
 
-              <div [ngClass]="birClass">
-                <div style="display: flex; align-items: center; gap: 14px">
-                  <div>
-                    <ng-container *ngIf="!bir.file">
-                      <img src="assets/icons/picture.png" width="50" />
-                    </ng-container>
+                <div [ngClass]="birClass">
+                  <div style="display: flex; align-items: center; gap: 14px">
+                    <div>
+                      <ng-container *ngIf="!bir.file">
+                        <img src="assets/icons/picture.png" width="50" />
+                      </ng-container>
+                      <ng-container *ngIf="bir.file">
+                        <ng-container *ngIf="bir.fileType === 'image'; else pdfBIR">
+                          <img *ngIf="bir.fileType === 'image'" [src]="bir.file" alt="" width="60" />
+                        </ng-container>
+                        <ng-template #pdfBIR>
+                          <img [src]="birPdfThumbnail" alt="" width="47" />
+                        </ng-template>
+                      </ng-container>
+                    </div>
+                    <div></div>
+                  </div>
+                  <div style="display: flex; gap: 7px">
                     <ng-container *ngIf="bir.file">
-                      <ng-container *ngIf="bir.fileType === 'image'; else pdfBIR">
-                        <img *ngIf="bir.fileType === 'image'" [src]="bir.file" alt="" width="60" />
+                      <ng-container *ngIf="!isAdmin">
+                        <button mat-stroked-button (click)="remove('bir')">
+                          Remove
+                        </button>
                       </ng-container>
-                      <ng-template #pdfBIR>
-                        <img [src]="birPdfThumbnail" alt="" width="47" />
-                      </ng-template>
-                    </ng-container>
-                  </div>
-                  <div></div>
-                </div>
-                <div style="display: flex; gap: 7px">
-                  <ng-container *ngIf="bir.file">
-                    <ng-container *ngIf="!isAdmin">
-                      <button mat-stroked-button (click)="remove('bir')">
-                        Remove
+
+                      <button mat-stroked-button (click)="preview(mySheet, 'bir')">
+                        Preview
                       </button>
                     </ng-container>
-
-                    <button mat-stroked-button (click)="preview(mySheet, 'bir')">
-                      Preview
-                    </button>
-                  </ng-container>
-                  <ng-container *ngIf="!bir.file">
-                    <button mat-stroked-button (click)="openGallery('bir')">
-                      Upload
-                    </button>
-                  </ng-container>
+                    <ng-container *ngIf="!bir.file">
+                      <button mat-stroked-button (click)="openGallery('bir')">
+                        Upload
+                      </button>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <input #elementBIR formControlName="bir2303" type="file" id="picture" name="picture" accept="image/*,.pdf"
-              (change)="onFileChange($event, 'bir')" hidden />
-            <!-- BIR END -->
+              <input #elementBIR formControlName="bir2303" type="file" id="picture" name="picture" accept="image/*,.pdf"
+                (change)="onFileChange($event, 'bir')" hidden />
+              <!-- BIR END -->
 
-            <!-- Valid ID START-->
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
-              <div><b>Government Valid ID</b></div>
+              <!-- Valid ID START-->
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                <div><b>Government Valid ID</b></div>
 
-              <div [ngClass]="validIDClass">
-                <div style="display: flex; align-items: center; gap: 14px">
-                  <div>
-                    <ng-container *ngIf="!validID.file">
-                      <img src="assets/icons/picture.png" width="50" />
-                    </ng-container>
+                <div [ngClass]="validIDClass">
+                  <div style="display: flex; align-items: center; gap: 14px">
+                    <div>
+                      <ng-container *ngIf="!validID.file">
+                        <img src="assets/icons/picture.png" width="50" />
+                      </ng-container>
+                      <ng-container *ngIf="validID.file">
+                        <ng-container *ngIf="validID.fileType === 'image'; else pdfValidID">
+                          <img *ngIf="validID.fileType === 'image'" [src]="validID.file" alt="" width="60" />
+                        </ng-container>
+                        <ng-template #pdfValidID>
+                          <img [src]="validIDPdfThumbnail" alt="" width="47" />
+                        </ng-template>
+                      </ng-container>
+                    </div>
+                    <div></div>
+                  </div>
+                  <div style="display: flex; gap: 7px">
                     <ng-container *ngIf="validID.file">
-                      <ng-container *ngIf="validID.fileType === 'image'; else pdfValidID">
-                        <img *ngIf="validID.fileType === 'image'" [src]="validID.file" alt="" width="60" />
+                      <ng-container *ngIf="!isAdmin">
+                        <button mat-stroked-button (click)="remove('validID')">
+                          Remove
+                        </button>
                       </ng-container>
-                      <ng-template #pdfValidID>
-                        <img [src]="validIDPdfThumbnail" alt="" width="47" />
-                      </ng-template>
-                    </ng-container>
-                  </div>
-                  <div></div>
-                </div>
-                <div style="display: flex; gap: 7px">
-                  <ng-container *ngIf="validID.file">
-                    <ng-container *ngIf="!isAdmin">
-                      <button mat-stroked-button (click)="remove('validID')">
-                        Remove
+
+                      <button mat-stroked-button (click)="preview(mySheet, 'validID')">
+                        Preview
                       </button>
                     </ng-container>
-
-                    <button mat-stroked-button (click)="preview(mySheet, 'validID')">
-                      Preview
-                    </button>
-                  </ng-container>
-                  <ng-container *ngIf="!validID.file">
-                    <button mat-stroked-button (click)="openGallery('validID')">
-                      Upload
-                    </button>
-                  </ng-container>
+                    <ng-container *ngIf="!validID.file">
+                      <button mat-stroked-button (click)="openGallery('validID')">
+                        Upload
+                      </button>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <input #elementValidID formControlName="validID" type="file" id="picture" name="picture" accept="image/*"
-              (change)="onFileChange($event, 'validID')" hidden />
-            <!-- Valid ID END -->
+              <input #elementValidID formControlName="validID" type="file" id="picture" name="picture" accept="image/*"
+                (change)="onFileChange($event, 'validID')" hidden />
+              <!-- Valid ID END -->
 
-            <!-- lOGO START-->
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
-              <div><b>Owner Selfie with Valid ID</b></div>
+              <!-- lOGO START-->
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                <div><b>Owner Selfie with Valid ID</b></div>
 
-              <div [ngClass]="ownerSelfieClass">
-                <div style="display: flex; align-items: center; gap: 14px">
-                  <div>
-                    <ng-container *ngIf="!ownerSelfie.file">
-                      <img src="assets/icons/picture.png" width="50" />
-                    </ng-container>
+                <div [ngClass]="ownerSelfieClass">
+                  <div style="display: flex; align-items: center; gap: 14px">
+                    <div>
+                      <ng-container *ngIf="!ownerSelfie.file">
+                        <img src="assets/icons/picture.png" width="50" />
+                      </ng-container>
+                      <ng-container *ngIf="ownerSelfie.file">
+                        <img [src]="ownerSelfie.file" alt="" width="60" />
+                      </ng-container>
+                    </div>
+                    <div></div>
+                  </div>
+                  <div style="display: flex; gap: 7px">
                     <ng-container *ngIf="ownerSelfie.file">
-                      <img [src]="ownerSelfie.file" alt="" width="60" />
-                    </ng-container>
-                  </div>
-                  <div></div>
-                </div>
-                <div style="display: flex; gap: 7px">
-                  <ng-container *ngIf="ownerSelfie.file">
-                    <ng-container *ngIf="!isAdmin">
-                      <button mat-stroked-button (click)="remove('ownerSelfie')">
-                        Remove
+                      <ng-container *ngIf="!isAdmin">
+                        <button mat-stroked-button (click)="remove('ownerSelfie')">
+                          Remove
+                        </button>
+                      </ng-container>
+
+                      <button mat-stroked-button (click)="preview(mySheet, 'ownerSelfie')">
+                        Preview
                       </button>
                     </ng-container>
-
-                    <button mat-stroked-button (click)="preview(mySheet, 'ownerSelfie')">
-                      Preview
-                    </button>
-                  </ng-container>
-                  <ng-container *ngIf="!ownerSelfie.file">
-                    <button mat-stroked-button (click)="openGallery('ownerSelfie')">
-                      Upload
-                    </button>
-                  </ng-container>
+                    <ng-container *ngIf="!ownerSelfie.file">
+                      <button mat-stroked-button (click)="openGallery('ownerSelfie')">
+                        Upload
+                      </button>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <input #elementOwnerSelfie formControlName="ownerSelfie" type="file" id="picture" name="picture"
-              accept="image/*" capture="user" (change)="onFileChange($event, 'ownerSelfie')" hidden />
-            <!-- lOGO END -->
+              <input #elementOwnerSelfie formControlName="ownerSelfie" type="file" id="picture" name="picture"
+                accept="image/*" capture="user" (change)="onFileChange($event, 'ownerSelfie')" hidden />
+              <!-- lOGO END -->
 
-            <ng-container *ngIf="
+              <ng-container *ngIf="
             isAdmin ||
             (shop?.verification_process?.status === 'DECLINED' &&
               shop?.verification_process?.errors?.tab1)
           ">
-              <mat-form-field appearance="outline" style="margin-top: 7px">
-                <mat-label>Error Message</mat-label>
-                <textarea matInput cols="35" rows="5" formControlName="errorMessage" style="resize: none"></textarea>
-              </mat-form-field>
-            </ng-container>
+                <div
+                  style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                  <mat-form-field appearance="outline" style="margin-top: 7px">
+                    <mat-label>Error Message</mat-label>
+                    <textarea matInput cols="35" rows="5" formControlName="errorMessage"
+                      style="resize: none"></textarea>
+                  </mat-form-field>
+                </div>
+              </ng-container>
 
 
 
-            <div
-              style="display: flex; flex-direction: column; align-items: center; justify-content: center;background-color: white; padding: 14px 14px; border-radius: 14px; gap: 7px;">
+              <div
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center;background-color: white; padding: 14px 14px; border-radius: 14px; gap: 7px;">
 
-              <!-- <ng-container *ngIf=" !(!bir.file ||
+                <!-- <ng-container *ngIf=" !(!bir.file ||
                 !businessLogo.file ||
                 !validID.file ||
                 !businessPermit.file ||
@@ -280,110 +293,114 @@
               </ng-container> -->
 
 
-              <ng-container *ngIf="!isAdmin">
-                <button mat-flat-button class="btn-block fw-bold"
-                  style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
-                  (click)="saveAsDraftDocs()">
-                  SAVE AS DRAFT
-                </button>
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-flat-button class="btn-block fw-bold"
+                    style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
+                    (click)="saveAsDraftDocs()">
+                    SAVE AS DRAFT
+                  </button>
+                </ng-container>
+
+              </div>
+
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Location & Contact</ng-template>
+          <!-- Use ngIf to only create map when this step is selected -->
+
+          <form [formGroup]="locationContactForm">
+            <div style="display: flex;gap: 7px;flex-direction: column;margin-top: 7px;">
+              <ng-container *ngIf="isMapStepVisible">
+                <app-map [height]="'200px'" [zIndex]="'0'" [borderRadius]="'10px'" #mapRef [isShop]="true"
+                  [detectCurrentLocation]="detectCurrentLocation" [subject]="subject" (dragend)="onDragend($event)"
+                  [disabled]="true"></app-map>
               </ng-container>
 
-            </div>
-
-          </div>
-        </form>
-      </mat-step>
-
-      <mat-step>
-        <ng-template matStepLabel>Location & Contact</ng-template>
-        <!-- Use ngIf to only create map when this step is selected -->
-
-        <form [formGroup]="locationContactForm">
-          <div style="display: flex;gap: 7px;flex-direction: column;margin-top: 7px;">
-            <ng-container *ngIf="isMapStepVisible">
-              <app-map [height]="'200px'" [zIndex]="'0'" [borderRadius]="'10px'" #mapRef [isShop]="true"
-                [detectCurrentLocation]="detectCurrentLocation" [subject]="subject" (dragend)="onDragend($event)"
-                [disabled]="true"></app-map>
-            </ng-container>
-
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
-              <mat-form-field appearance="outline">
-                <mat-label>Province</mat-label>
-                <mat-select formControlName="province" (selectionChange)="onProvinceChange($event.value)">
-                  <mat-option *ngFor="let province of provinces" [value]="province.name">
-                    {{ province.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('province')">
-                {{ getErrorMessage("province") }}
-              </mat-error>
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                <mat-form-field appearance="outline">
+                  <mat-label>Province</mat-label>
+                  <mat-select formControlName="province" (selectionChange)="onProvinceChange($event.value)">
+                    <mat-option *ngFor="let province of provinces" [value]="province.name">
+                      {{ province.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('province')">
+                  {{ getErrorMessage("province") }}
+                </mat-error>
 
 
-              <mat-form-field appearance="outline">
-                <mat-label>City/Municipalty</mat-label>
-                <mat-select formControlName="municipality" (selectionChange)="onMunicipalityChange($event.value)">
-                  <mat-option *ngFor="let municipality of municipalities" [value]="municipality.name">
-                    {{ municipality.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('municipality')">
-                {{ getErrorMessage("municipality") }}
-              </mat-error>
+                <mat-form-field appearance="outline">
+                  <mat-label>City/Municipalty</mat-label>
+                  <mat-select formControlName="municipality" (selectionChange)="onMunicipalityChange($event.value)">
+                    <mat-option *ngFor="let municipality of municipalities" [value]="municipality.name">
+                      {{ municipality.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('municipality')">
+                  {{ getErrorMessage("municipality") }}
+                </mat-error>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Barangay</mat-label>
-                <mat-select formControlName="barangay">
-                  <mat-option *ngFor="let barangay of barangays" [value]="barangay.name">
-                    {{ barangay.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('barangay')">
-                {{ getErrorMessage("barangay") }}
-              </mat-error>
+                <mat-form-field appearance="outline">
+                  <mat-label>Barangay</mat-label>
+                  <mat-select formControlName="barangay">
+                    <mat-option *ngFor="let barangay of barangays" [value]="barangay.name">
+                      {{ barangay.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('barangay')">
+                  {{ getErrorMessage("barangay") }}
+                </mat-error>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Address (e.g. Block/Lot, Building, Street)</mat-label>
-                <input type="text" matInput formControlName="address" />
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('address')">
-                {{ getErrorMessage("address") }}
-              </mat-error>
+                <mat-form-field appearance="outline">
+                  <mat-label>Address (e.g. Block/Lot, Building, Street)</mat-label>
+                  <input type="text" matInput formControlName="address" />
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('address')">
+                  {{ getErrorMessage("address") }}
+                </mat-error>
 
-            </div>
+              </div>
 
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
-              <mat-form-field appearance="outline" class="gs-phone-field">
-                <mat-label>Phone number</mat-label>
-                <span matPrefix class="gs-phone-text">+63&nbsp;</span>
-                <input type="text" matInput maxlength="10" formControlName="phoneNumber"
-                  (paste)="phoneNumberStrict($event)" (keypress)="phoneNumberStrict($event)" />
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('phoneNumber')">
-                {{ getErrorMessage("phoneNumber") }}
-              </mat-error>
-            </div>
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                <mat-form-field appearance="outline" class="gs-phone-field">
+                  <mat-label>Phone number</mat-label>
+                  <span matPrefix class="gs-phone-text">+63&nbsp;</span>
+                  <input type="text" matInput maxlength="10" formControlName="phoneNumber"
+                    (paste)="phoneNumberStrict($event)" (keypress)="phoneNumberStrict($event)" />
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('phoneNumber')">
+                  {{ getErrorMessage("phoneNumber") }}
+                </mat-error>
+              </div>
 
-            <ng-container *ngIf="
+              <ng-container *ngIf="
             isAdmin ||
             (shop?.verification_process?.status === 'DECLINED' &&
               shop?.verification_process?.errors?.tab2)
           ">
-              <mat-form-field appearance="outline" style="margin-top: 7px">
-                <mat-label>Error Message</mat-label>
-                <textarea matInput cols="35" rows="5" formControlName="errorMessage" style="resize: none"></textarea>
-              </mat-form-field>
-            </ng-container>
+                <div
+                  style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                  <mat-form-field appearance="outline" style="margin-top: 7px">
+                    <mat-label>Error Message</mat-label>
+                    <textarea matInput cols="35" rows="5" formControlName="errorMessage"
+                      style="resize: none"></textarea>
+                  </mat-form-field>
+                </div>
+              </ng-container>
 
 
-            <div
-              style="display: flex; flex-direction: column; align-items: center; justify-content: center;background-color: white; padding: 14px 14px; border-radius: 14px; gap: 7px;">
+              <div
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center;background-color: white; padding: 14px 14px; border-radius: 14px; gap: 7px;">
 
-              <!-- <ng-container *ngIf=" !(!bir.file ||
+                <!-- <ng-container *ngIf=" !(!bir.file ||
                 !businessLogo.file ||
                 !validID.file ||
                 !businessPermit.file ||
@@ -403,99 +420,106 @@
               </ng-container> -->
 
 
-              <ng-container *ngIf="!isAdmin">
-                <button mat-flat-button class="btn-block fw-bold"
-                  style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
-                  (click)="saveAsDraftLocContact()">
-                  SAVE AS DRAFT
-                </button>
-              </ng-container>
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-flat-button class="btn-block fw-bold"
+                    style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
+                    (click)="saveAsDraftLocContact()">
+                    SAVE AS DRAFT
+                  </button>
+                </ng-container>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
 
-      </mat-step>
+        </mat-step>
 
-      <mat-step>
-        <ng-template matStepLabel>Settlement Information</ng-template>
-        <form [formGroup]="settlementForm" style="margin-top: 7px;">
-          <div style="display: flex;gap: 7px;flex-direction: column;">
-            <div
-              style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;gap: 7px;">
-              <mat-form-field appearance="outline">
-                <mat-label>Account Name</mat-label>
-                <input type="text" matInput formControlName="accountName" />
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('accountName')">
-                {{ getErrorMessage("accountName") }}
-              </mat-error>
+        <mat-step>
+          <ng-template matStepLabel>Settlement Information</ng-template>
+          <form [formGroup]="settlementForm" style="margin-top: 7px;">
+            <div style="display: flex;gap: 7px;flex-direction: column;">
+              <div
+                style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;gap: 7px;">
+                <mat-form-field appearance="outline">
+                  <mat-label>Account Name</mat-label>
+                  <input type="text" matInput formControlName="accountName" />
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('accountName')">
+                  {{ getErrorMessage("accountName") }}
+                </mat-error>
 
-              <mat-form-field appearance="outline" class="gs-phone-field">
-                <mat-label>Account Number</mat-label>
-                <span matPrefix class="gs-phone-text">+63&nbsp;</span>
-                <input type="text" matInput maxlength="10" formControlName="accountNumber"
-                  (paste)="phoneNumberStrict($event)" (keypress)="phoneNumberStrict($event)" />
-              </mat-form-field>
-              <mat-error *ngIf="isFieldInvalid('accountNumber')">
-                {{ getErrorMessage("accountNumber") }}
-              </mat-error>
+                <mat-form-field appearance="outline" class="gs-phone-field">
+                  <mat-label>Account Number</mat-label>
+                  <span matPrefix class="gs-phone-text">+63&nbsp;</span>
+                  <input type="text" matInput maxlength="10" formControlName="accountNumber"
+                    (paste)="phoneNumberStrict($event)" (keypress)="phoneNumberStrict($event)" />
+                </mat-form-field>
+                <mat-error *ngIf="isFieldInvalid('accountNumber')">
+                  {{ getErrorMessage("accountNumber") }}
+                </mat-error>
+
+              </div>
+
               <ng-container *ngIf="
             isAdmin ||
             (shop?.verification_process?.status === 'DECLINED' &&
               shop?.verification_process?.errors?.tab3)
           ">
-                <mat-form-field appearance="outline" style="margin-top: 7px">
-                  <mat-label>Error Message</mat-label>
-                  <textarea matInput cols="35" rows="5" formControlName="errorMessage" style="resize: none"></textarea>
-                </mat-form-field>
-              </ng-container>
-            </div>
-
-
-
-            <div
-              style="display: flex; flex-direction: column; align-items: center; justify-content: center;background-color: white; width: 100%;border-radius: 14px; gap: 7px; padding: 7px;">
-
-              <ng-container *ngIf="!isAdmin">
-                <button mat-flat-button class="btn-block fw-bold"
-                  style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
-                  (click)="saveAsDraftSettlement()">
-                  SAVE AS DRAFT
-                </button>
-              </ng-container>
-
-              <ng-container *ngIf="!isAdmin">
-                <button mat-flat-button class="btn-block fw-bold" (click)="sendApplication()"
-                  style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;">
-                  SEND APPLICATION
-                </button>
+                <div
+                  style="display: flex;flex-direction: column; align-items: center; justify-content: center;background-color: white; padding:  7px; border-radius: 14px;">
+                  <mat-form-field appearance="outline" style="margin-top: 7px">
+                    <mat-label>Error Message</mat-label>
+                    <textarea matInput cols="35" rows="5" formControlName="errorMessage"
+                      style="resize: none"></textarea>
+                  </mat-form-field>
+                </div>
               </ng-container>
 
 
-              <ng-container *ngIf="
+
+              <div
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center;background-color: white; width: 100%;border-radius: 14px; gap: 7px; padding: 7px;">
+
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-flat-button class="btn-block fw-bold"
+                    style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
+                    (click)="saveAsDraftSettlement()">
+                    SAVE AS DRAFT
+                  </button>
+                </ng-container>
+
+                <ng-container *ngIf="!isAdmin">
+                  <button mat-flat-button class="btn-block fw-bold" (click)="sendApplication()"
+                    style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;">
+                    SEND APPLICATION
+                  </button>
+                </ng-container>
+
+
+                <ng-container *ngIf="
                 isAdmin && shop?.verification_process?.status === 'IN_PROGRESS'
               ">
-                <button mat-flat-button
-                  style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
-                  (click)="declineApplication()">
-                  Decline
-                </button>
-                <button mat-flat-button
-                  style="height: 50px; border-radius: 50px; background-color: #f8da50;color: white;"
-                  (click)="approveApplication()">
-                  Accept
-                </button>
-              </ng-container>
+                  <button mat-flat-button
+                    style="height: 50px;width: 100%; border-radius: 50px; background-color: #f8da50;color: white;"
+                    (click)="declineApplication()">
+                    Decline
+                  </button>
+                  <button mat-flat-button
+                    style="height: 50px;width: 100%; border-radius: 50px; background-color: #f8da50;color: white;"
+                    (click)="approveApplication()">
+                    Accept
+                  </button>
+                </ng-container>
+
+              </div>
 
             </div>
-
-          </div>
-        </form>
+          </form>
 
 
 
-      </mat-step>
-    </mat-stepper>
+        </mat-step>
+      </mat-stepper>
+    </ng-template>
   </div>
 </div>
 
@@ -520,22 +544,14 @@
 
       <ng-template #birPdfPreview>
         <div class="pdf-scroll-container">
-          <img
-            *ngFor="let page of renderedPages"
-            [src]="page"
-            class="sheet-pdf-page"
-          />
+          <img *ngFor="let page of renderedPages" [src]="page" class="sheet-pdf-page" />
         </div>
       </ng-template>
     </ng-container>
 
     <ng-container *ngIf="sheetType === 'businessLogo'">
       <div class="sheet-preview-wrapper">
-        <img
-          [src]="businessLogo.file"
-          alt=""
-          class="sheet-preview-image"
-        />
+        <img [src]="businessLogo.file" alt="" class="sheet-preview-image" />
       </div>
     </ng-container>
 
@@ -554,35 +570,21 @@
 
       <ng-template #validIdPdfPreview>
         <div class="pdf-scroll-container">
-          <img
-            *ngFor="let page of renderedPages"
-            [src]="page"
-            class="sheet-pdf-page"
-          />
+          <img *ngFor="let page of renderedPages" [src]="page" class="sheet-pdf-page" />
         </div>
       </ng-template>
     </ng-container>
 
     <ng-container *ngIf="sheetType === 'businessPermit'">
-      <ng-container
-        *ngIf="businessPermit.fileType === 'image'; else businessPermitPdfPreview"
-      >
+      <ng-container *ngIf="businessPermit.fileType === 'image'; else businessPermitPdfPreview">
         <div class="sheet-preview-wrapper">
-          <img
-            [src]="businessPermit.file"
-            alt=""
-            class="sheet-preview-image"
-          />
+          <img [src]="businessPermit.file" alt="" class="sheet-preview-image" />
         </div>
       </ng-container>
 
       <ng-template #businessPermitPdfPreview>
         <div class="pdf-scroll-container">
-          <img
-            *ngFor="let page of renderedPages"
-            [src]="page"
-            class="sheet-pdf-page"
-          />
+          <img *ngFor="let page of renderedPages" [src]="page" class="sheet-pdf-page" />
         </div>
       </ng-template>
     </ng-container>

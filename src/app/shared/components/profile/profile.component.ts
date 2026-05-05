@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private store: Store,
     private auth: AuthService,
     private socket: SocketService,
-    private router: Router
+    private router: Router,
   ) {
     console.log("ProfileComponent Initiated!");
 
@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             orderId,
             shopId,
             status: latestStatus.status,
-          })
+          }),
         );
       });
 
@@ -114,6 +114,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   load = true;
   async userData() {
+    await this.auth.updateUserData();
     this.load = false;
     this.authUser = JSON.parse(this.auth.getUserData());
     console.log("---xxxxxxxxx", this.authUser);
