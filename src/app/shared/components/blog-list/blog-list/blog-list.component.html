@@ -1,80 +1,65 @@
 <ng-container *ngIf="horizontalBlogListView; else verticalBlogListView">
-  <div
-    #blogListContainer
-    (scroll)="onScroll()"
-    style="display: flex; flex-direction: column; gap: 7px; overflow-y: scroll"
-    [ngStyle]="
+  <div #blogListContainer (scroll)="onScroll()"
+    style="display: flex; flex-direction: column; gap: 7px; overflow-y: scroll" [ngStyle]="
       savedBlogsOnly
         ? { height: 'calc(100dvh - 56.11px - 84px - 79px - 48px - 21px)' }
         : { height: 'calc(100dvh - 56.11px - 84px - 14px)' }
-    "
-  >
+    ">
     <ng-container *ngIf="blogs.length > 0; else noBlogs">
-      <div
-        *ngFor="let blog of blogs"
-        style="
+      <div *ngFor="let blog of blogs" style="
           display: flex;
           flex-direction: column;
           gap: 7px;
           background-color: white;
-          border-radius: 7px;
+          border-radius: 14px;
           padding: 7px;
           min-width: 300px;
           min-height: auto;
-        "
-      >
-        <div style="display: flex; flex-direction: column">
+        ">
+        <div
+          style="display: flex; flex-direction: column; align-items: start;gap: 3px; justify-content: space-between; background-color: white;border-radius: 14px;">
           <div>
-            <h4>{{ blog.title | lineClamp: 200 }}</h4>
+            <div style="font-size: 32px;
+    line-height: 30px;">{{ blog.title | lineClamp: 200 }}</div>
           </div>
-          <div style="display: flex; justify-content: space-between">
+          <div style="display: flex;align-items:start;justify-content:start;gap: 7px;">
             <div>{{ blog.createdAt | timeAgo }}</div>
-            <div></div>
+            <div>
+
+              <ng-container *ngIf="blog.audience === 'PUBLIC' else privateAudience">
+                <mat-icon>public</mat-icon>
+              </ng-container>
+              <ng-template #privateAudience>
+                <mat-icon>lock</mat-icon>
+              </ng-template>
+            </div>
           </div>
         </div>
         <div>
-          <div
-            class="blog-content"
-            [innerHTML]="blog.content | lineClamp: 270"
-          ></div>
+          <div class="blog-content" [innerHTML]="blog.content | lineClamp: 270"></div>
         </div>
         <div style="display: flex; gap: 7px; flex-direction: row">
-          <a
-            [routerLink]="[isShop ? '/shop/blog' : '/blog', blog._id]"
-            style="width: 100%"
-          >
-            <button mat-stroked-button style="width: 100%">Read More</button>
+          <a [routerLink]="[isShop ? '/shop/blog' : '/blog', blog._id]" style="width: 100%">
+            <button mat-button style="width: 100%">READ POST</button>
           </a>
 
           <ng-container *ngIf="!blog.isSaved; else isSavedBlog">
-            <button
-              (click)="save(blog)"
-              mat-icon-button
-              color="primary"
-              style="
+            <button (click)="save(blog)" mat-icon-button color="primary" style="
                 display: flex;
                 align-items: center;
                 justify-content: center;
-              "
-            >
-              <mat-icon style="font-size: 45px">bookmark_border</mat-icon>
+              ">
+              <mat-icon style="font-size: 45px;color: #ffa0a0;">favorite</mat-icon>
             </button>
           </ng-container>
 
           <ng-template #isSavedBlog>
-            <button
-              (click)="unsave(blog._id)"
-              mat-icon-button
-              color="primary"
-              style="
+            <button (click)="unsave(blog._id)" mat-icon-button color="primary" style="
                 display: flex;
                 align-items: center;
                 justify-content: center;
-              "
-            >
-              <mat-icon style="font-size: 45px; color: #f8da50"
-                >bookmark</mat-icon
-              >
+              ">
+              <mat-icon style="font-size: 45px; color: red">favorite</mat-icon>
             </button>
           </ng-template>
         </div>
@@ -84,42 +69,44 @@
 </ng-container>
 <ng-template #verticalBlogListView>
   <ng-container *ngIf="blogs.length > 0; else noBlogs">
-    <div
-      #blogListContainer
-      (scroll)="onScroll()"
-      style="
+    <div #blogListContainer (scroll)="onScroll()" style="
         display: flex;
         flex-direction: column;
         gap: 7px;
         overflow-y: scroll;
         height: 100%;
-      "
-    >
-      <div
-        *ngFor="let blog of blogs"
-        style="
+      ">
+      <div *ngFor="let blog of blogs" style="
           display: flex;
           flex-direction: column;
           gap: 7px;
           background-color: #f6f6f6;
           border-radius: 7px;
           padding: 7px;
-        "
-      >
-        <div style="display: flex; flex-direction: column">
+        ">
+
+        <div
+          style="display: flex; flex-direction: column; align-items: start;gap:3px; justify-content: space-between; background-color: white;gap: 3px; border-radius: 14px;gap: 3px;">
           <div>
-            <h3>{{ blog.title | lineClamp: 200 }}</h3>
+            <div style="font-size: 32px;
+    line-height: 30px;">{{ blog.title | lineClamp: 200 }}</div>
           </div>
-          <div style="display: flex; justify-content: space-between">
+          <div style="display: flex;align-items:start;justify-content:start;gap: 7px;">
             <div>{{ blog.createdAt | timeAgo }}</div>
-            <div>{{ blog.audience }}</div>
+            <div>
+
+              <ng-container *ngIf="blog.audience === 'PUBLIC' else privateAudience">
+                <mat-icon>public</mat-icon>
+              </ng-container>
+              <ng-template #privateAudience>
+                <mat-icon>lock</mat-icon>
+              </ng-template>
+            </div>
           </div>
         </div>
+
         <div>
-          <div
-            class="blog-content"
-            [innerHTML]="blog.content | lineClamp: 270"
-          ></div>
+          <div class="blog-content" [innerHTML]="blog.content | lineClamp: 270"></div>
         </div>
         <div style="display: flex; gap: 7px; flex-direction: column">
           <div>

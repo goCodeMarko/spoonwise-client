@@ -4,6 +4,7 @@
     gap: 7px;
     overflow-y: scroll;
     height: calc(100vh - 56.1px);
+    padding: 7px;
   ">
   <div style="
       display: flex;
@@ -13,16 +14,28 @@
       border-radius: 7px;
       padding: 7px;
     ">
-    <div style="display: flex; flex-direction: column">
+
+    <div
+      style="display: flex;flex-direction: column;padding: 7px; align-items: start;gap:3px;  justify-content: space-between;gap: 3px;background-color: white; border-radius: 14px;">
       <div>
-        <h3>{{ blog.title }}</h3>
+        <h3 style="font-size: 24px;
+    line-height: 30px;">{{ blog.title }}</h3>
       </div>
-      <div style="display: flex; justify-content: space-between">
+      <div style="display: flex;align-items:start;justify-content:start;gap: 7px;">
         <div>{{ blog.createdAt | timeAgo }}</div>
-        <div>{{ blog.audience }}</div>
+        <div>
+
+          <ng-container *ngIf="blog.audience === 'PUBLIC' else privateAudience">
+            <mat-icon>public</mat-icon>
+          </ng-container>
+          <ng-template #privateAudience>
+            <mat-icon>lock</mat-icon>
+          </ng-template>
+        </div>
       </div>
     </div>
-    <div>
+    <div
+      style="display: flex;flex-direction: column; align-items: center; background-color: white; padding:  7px; border-radius: 14px;">
       <div class="blog-content" [innerHTML]="blog.content"></div>
     </div>
   </div>

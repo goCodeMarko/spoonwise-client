@@ -1,24 +1,15 @@
 <app-profile>
-  <mat-tab-group
-    [selectedIndex]="mainTabIndex"
-    (selectedTabChange)="onMainTabChange($event)"
-    style="padding: 0px 14px 0px 14px; border-radius: 0px 0px 15px 15px"
-  >
+  <mat-tab-group [selectedIndex]="mainTabIndex" (selectedTabChange)="onMainTabChange($event)"
+    style="padding: 0px 14px 0px 14px; border-radius: 0px 0px 15px 15px">
     <mat-tab label="Dashboard">
       <app-dashboard>
-        <app-order-status-totals
-          [data]="orderStatusTotals$ | async"
-          [onload]="orderStatusTotalsOnLoad"
-        ></app-order-status-totals>
+        <app-order-status-totals [data]="orderStatusTotals$ | async"
+          [onload]="orderStatusTotalsOnLoad"></app-order-status-totals>
       </app-dashboard>
     </mat-tab>
     <mat-tab label="Orders">
-      <mat-tab-group
-        [selectedIndex]="orderTabIndex"
-        mat-align-tabs="start"
-        animationDuration="0ms"
-        (selectedTabChange)="onTabChange($event)"
-      >
+      <mat-tab-group [selectedIndex]="orderTabIndex" mat-align-tabs="start" animationDuration="0ms"
+        (selectedTabChange)="onTabChange($event)">
         <mat-tab label="To Pay">
           <ng-container *ngIf="selectedTab == 'to_pay'">
             <app-order-list [type]="selectedTab"></app-order-list>
@@ -51,13 +42,9 @@
         </mat-tab>
       </mat-tab-group>
     </mat-tab>
-    <mat-tab label="Saved Blogs">
+    <mat-tab label="Favorites">
       <div style="margin-top: 7px"></div>
-      <app-blog-list
-        [horizontalBlogListView]="true"
-        [isShop]="false"
-        [savedBlogsOnly]="true"
-      ></app-blog-list>
+      <app-blog-list [horizontalBlogListView]="true" [isShop]="false" [savedBlogsOnly]="true"></app-blog-list>
     </mat-tab>
   </mat-tab-group>
 </app-profile>
