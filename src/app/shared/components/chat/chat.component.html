@@ -8,7 +8,9 @@
     margin: 0px;
     padding: 7px 14px 7px 14px;
   ">
-  <div *ngIf="isSpoonwiseAI === 'true' && isWaitingForAIResponse" class="ai-loader-row">
+  <div
+    *ngIf="isSpoonwiseAI === 'true' && isWaitingForAIResponse && chatroomMessages[0] && chatroomMessages[0].status === 'SENT'"
+    class="ai-loader-row">
     <div class="ai-loader-bubble" aria-label="AI is typing" aria-live="polite">
       <span class="ai-loader-dot"></span>
       <span class="ai-loader-dot"></span>
@@ -88,8 +90,8 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #f6f6f6;
-    padding: 20px;
+    background: white;
+    padding: 15px 20px;
     display: flex;
     gap: 7px;
     display: flex;
