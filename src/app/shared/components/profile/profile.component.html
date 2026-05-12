@@ -48,38 +48,39 @@
 
     <div style="display: flex">
       <div class="ms-icon-container" style="color: black">
+        <ng-container *ngIf="authUser?.role === 'seller'">
 
-        <ng-container *ngIf="
+          <ng-container *ngIf="
                 authUser?.shop?.verification_process?.status === 'APPROVED' else notVerified
               ">
-          <button mat-icon-button>
-            <mat-icon>verified</mat-icon>
-          </button>
-        </ng-container>
-
-        <ng-template #notVerified>
-
-          <a [routerLink]="['/shop/profile/verify-business']">
-            <button mat-icon-button style="position: relative;">
-
-              <mat-icon fontSet="material-symbols-outlined">
-                brightness_alert
-              </mat-icon>
-              <ng-container
-                *ngIf="authUser?.shop?.verification_process?.status === 'IN_PROGRESS'; else notVerifiedCircle">
-                <span class="verification-status-dot verification-status-dot--pending"></span>
-              </ng-container>
-
-              <ng-template #notVerifiedCircle>
-                <span class="verification-status-dot verification-status-dot--alert"></span>
-              </ng-template>
-
-
-
+            <button mat-icon-button>
+              <mat-icon>verified</mat-icon>
             </button>
-          </a>
-        </ng-template>
+          </ng-container>
 
+          <ng-template #notVerified>
+
+            <a [routerLink]="['/shop/profile/verify-business']">
+              <button mat-icon-button style="position: relative;">
+
+                <mat-icon fontSet="material-symbols-outlined">
+                  brightness_alert
+                </mat-icon>
+                <ng-container
+                  *ngIf="authUser?.shop?.verification_process?.status === 'IN_PROGRESS'; else notVerifiedCircle">
+                  <span class="verification-status-dot verification-status-dot--pending"></span>
+                </ng-container>
+
+                <ng-template #notVerifiedCircle>
+                  <span class="verification-status-dot verification-status-dot--alert"></span>
+                </ng-template>
+
+
+
+              </button>
+            </a>
+          </ng-template>
+        </ng-container>
         <button mat-icon-button (click)="logout()">
           <mat-icon>logout</mat-icon>
         </button>
