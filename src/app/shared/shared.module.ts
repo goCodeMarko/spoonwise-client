@@ -51,6 +51,7 @@ import { CountDown2Pipe } from "./pipes/count-down2.pipe";
 import { DashboardComponent } from "./components/dashboard/dashboard/dashboard.component";
 import { OrderStatusTotalsComponent } from "./components/order-status-totals/order-status-totals/order-status-totals.component";
 import { OrderStatusPipe } from "./pipes/order-status.pipe";
+import { MetersToKilometersPipe } from "./pipes/meters-to-kilometers.pipe";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 
 @NgModule({
@@ -81,6 +82,7 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
     ViewBlogComponent,
     HomeListComponent,
     OrderStatusPipe,
+    MetersToKilometersPipe,
     OrderStatusTotalsComponent,
     DashboardComponent,
   ],
@@ -128,6 +130,7 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
     ShopVerificationStatusPipe,
     LineClampPipe,
     OrderStatusPipe,
+    MetersToKilometersPipe,
     MapComponent,
     VerifyBusinessComponent,
     BlogListComponent,
