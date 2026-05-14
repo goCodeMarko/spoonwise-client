@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { HttpRequestService } from "src/app/http-request/http-request.service";
 import _ from "lodash";
+import { Subscription } from "rxjs";
+import { SocketService } from "src/app/shared/socket/socket.service";
 @Component({
   selector: "app-lalamove-request-details",
   templateUrl: "./lalamove-request-details.component.html",
@@ -17,14 +19,38 @@ export class LalamoveRequestDetailsComponent implements OnInit {
   lalamoveOrder = {};
   lalamoveShareLink: SafeResourceUrl = "";
   public _ = _;
+  public onLalamoveStatusChangeSubscriber: Subscription;
 
   constructor(
     private hrs: HttpRequestService,
-    private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer,
+    private socket: SocketService,
+  ) {
+    this.onLalamoveStatusChangeSubscriber = this.socket
+      .onLalamoveStatusChange()
+      .subscribe((lalamove: any) => {
+        console.log("===================lalamove", lalamove);
+        if (lalamove.role === "seller") {
+        } else if (lalamove.role === "buyer") {
+        }
+
+        if (lalamove.orderFullDetails.status === "PICKED_UP") {
+        }
+
+        this.lalamoveStatus = lalamove.orderFullDetails.status;
+        this.lalamoveOrder = {
+          ...lalamove.orderFullDetails,
+        };
+        this.lalamoveDriver = { phone: lalamove.driverPhone };
+      });
+  }
 
   ngOnInit(): void {
     this.getQoutation();
+  }
+
+  ngOnDestroy(): void {
+    this.onLalamoveStatusChangeSubscriber.unsubscribe();
   }
 
   getQoutation() {
@@ -46,19 +72,19 @@ export class LalamoveRequestDetailsComponent implements OnInit {
 
         if (
           ["ASSIGNING_DRIVER", "PICKED_UP", "ON_GOING", "COMPLETED"].includes(
-            data.data.lalamoveStatus
+            data.data.lalamoveStatus,
           )
         ) {
           this.lalamoveOrder = {
             ...data.data.latestLalamoveOrder,
           };
-          (this.lalamoveShareLink =
+          ((this.lalamoveShareLink =
             this.sanitizer.bypassSecurityTrustResourceUrl(
-              data.data.latestLalamoveOrder.shareLink
+              data.data.latestLalamoveOrder.shareLink,
             )),
-            (this.lalamoveDriver = data.data.latestLalamoveDriver);
+            (this.lalamoveDriver = data.data.latestLalamoveDriver));
         }
-      }
+      },
     );
   }
 
@@ -85,7 +111,7 @@ export class LalamoveRequestDetailsComponent implements OnInit {
         }
 
         this.isLalamoveLoad = false;
-      }
+      },
     );
   }
 
@@ -102,7 +128,7 @@ export class LalamoveRequestDetailsComponent implements OnInit {
         }
 
         this.isLalamoveLoad = false;
-      }
+      },
     );
   }
 
