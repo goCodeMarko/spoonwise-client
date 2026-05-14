@@ -1,64 +1,44 @@
 <div class="gs-main-button-group">
   <div class="gs-main-button-group-horizontal">
+
     <ng-container>
-      <div
-        class="ms-icon-container"
-        [routerLink]="isShop ? '/shop/home' : '/home'"
-      >
-        <button
-          mat-icon-button
-          color="primary"
-          style="
+      <div class="ms-icon-container" [routerLink]="isShop ? '/shop/home' : '/home'">
+        <button mat-icon-button color="primary" style="
             width: 70px;
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-          "
-        >
+          ">
           <mat-icon>home</mat-icon>
         </button>
       </div>
     </ng-container>
 
     <ng-container>
-      <div
-        class="ms-icon-container"
-        [routerLink]="isShop ? '/shop/deals' : '/deals'"
-      >
-        <button
-          mat-icon-button
-          color="primary"
-          style="
+      <div class="ms-icon-container" [routerLink]="isShop ? '/shop/deals' : '/deals'">
+        <button mat-icon-button color="primary" style="
             width: 70px;
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-          "
-        >
+          ">
           <mat-icon>dining</mat-icon>
         </button>
       </div>
     </ng-container>
 
     <ng-container *ngIf="isShop">
-      <div
-        class="ms-icon-container"
-        style="width: 70px; height: 70px"
-        [routerLink]="'/shop/add-product'"
-      >
-        <button
-          mat-fab
-          style="
+      <div class="ms-icon-container" style="width: 70px; height: 70px" [routerLink]="'/shop/add-product'">
+        <button mat-fab style="
             width: 45px;
             height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: white;
-          "
-        >
+          ">
           <mat-icon style="color: #f8da50; padding: 9.4px">add</mat-icon>
         </button>
       </div>
@@ -66,9 +46,7 @@
 
     <ng-container *ngIf="showCart">
       <div class="ms-icon-container" [routerLink]="'/cart'">
-        <div
-          *ngIf="lineItemCount"
-          style="
+        <div *ngIf="lineItemCount" style="
             position: absolute;
             top: 15px;
             right: 3px;
@@ -83,34 +61,24 @@
             z-index: 2;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
             font-size: 13px;
-          "
-        >
+          ">
           {{ lineItemCount }}
         </div>
-        <button
-          mat-icon-button
-          color="primary"
-          style="
+        <button mat-icon-button color="primary" style="
             width: 70px;
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-          "
-        >
+          ">
           <mat-icon>local_mall</mat-icon>
         </button>
       </div>
     </ng-container>
 
     <ng-container>
-      <div
-        class="ms-icon-container"
-        [routerLink]="isShop ? '/shop/chats' : '/chats'"
-      >
-        <div
-          *ngIf="totalCountSentDeliveredMessages"
-          style="
+      <div class="ms-icon-container" [routerLink]="isShop ? '/shop/chats' : '/chats'">
+        <div *ngIf="totalCountSentDeliveredMessages" style="
             position: absolute;
             top: 15px;
             right: 3px;
@@ -125,42 +93,30 @@
             z-index: 2;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
             font-size: 13px;
-          "
-        >
+          ">
           {{ totalCountSentDeliveredMessages }}
         </div>
-        <button
-          mat-icon-button
-          color="primary"
-          style="
+        <button mat-icon-button color="primary" style="
             width: 70px;
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-          "
-        >
+          ">
           <mat-icon>chat</mat-icon>
         </button>
       </div>
     </ng-container>
 
     <ng-container>
-      <div
-        class="ms-icon-container"
-        [routerLink]="isShop ? '/shop/profile' : '/profile'"
-      >
-        <button
-          mat-icon-button
-          color="primary"
-          style="
+      <div class="ms-icon-container" [routerLink]="isShop ? '/shop/profile' : '/profile'">
+        <button mat-icon-button color="primary" style="
             width: 70px;
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-          "
-        >
+          ">
           <mat-icon>account_box</mat-icon>
         </button>
       </div>

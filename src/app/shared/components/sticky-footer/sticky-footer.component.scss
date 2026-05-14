@@ -3,7 +3,7 @@
   bottom: 0px;
   left: 0px;
   width: 100vw !important;
-  background-color: #f8da50;
+  background-color: white; // #f8da50;
   z-index: 2;
   height: 84px;
 
@@ -12,6 +12,9 @@
     flex-wrap: wrap;
     flex-direction: row !important;
     justify-content: center;
+    background: #f8da50;
+    margin: 0px 30px;
+    border-radius: 50px;
   }
 }
 
