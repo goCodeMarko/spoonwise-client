@@ -15,8 +15,8 @@ export class LalamoveRequestDetailsComponent implements OnInit {
   orderId = "";
   lalamoveQoutationData: any = {};
   lalamoveStatus = "";
-  lalamoveDriver = {};
-  lalamoveOrder = {};
+  lalamoveDriver: any = {};
+  lalamoveOrder: any = {};
   lalamoveShareLink: SafeResourceUrl = "";
   public _ = _;
   public onLalamoveStatusChangeSubscriber: Subscription;
@@ -30,18 +30,45 @@ export class LalamoveRequestDetailsComponent implements OnInit {
       .onLalamoveStatusChange()
       .subscribe((lalamove: any) => {
         console.log("===================lalamove", lalamove);
-        if (lalamove.role === "seller") {
-        } else if (lalamove.role === "buyer") {
-        }
+        console.log("===================lalamoveOrder", this.lalamoveOrder);
 
-        if (lalamove.orderFullDetails.status === "PICKED_UP") {
-        }
+       
+        if (
+          ["ASSIGNING_DRIVER"].includes(lalamove.orderFullDetails.status) &&
+          lalamove.orderStatus == "ORDER_STATUS_CHANGED"
+        ) {
 
-        this.lalamoveStatus = lalamove.orderFullDetails.status;
-        this.lalamoveOrder = {
-          ...lalamove.orderFullDetails,
-        };
-        this.lalamoveDriver = { phone: lalamove.driverPhone };
+          
+          this.lalamoveStatus = lalamove.orderFullDetails.status;
+          this.lalamoveOrder = {
+            ...lalamove.orderFullDetails,
+          };
+          this.lalamoveDriver = { };
+
+          console.log("----------------1");
+          console.log(
+            "----------------1 this.lalamoveStatus",
+            this.lalamoveStatus,
+          );
+          console.log(
+            "----------------1 this.lalamoveOrder",
+            this.lalamoveOrder,
+          );
+          console.log(
+            "----------------1 this.lalamoveDriver",
+            this.lalamoveDriver,
+          );
+        } else if (["DRIVER_ASSIGNED"].includes(lalamove.orderStatus)) {
+          this.lalamoveStatus = lalamove.orderFullDetails.status;
+          this.lalamoveOrder = {
+            ...lalamove.orderFullDetails,
+          };
+          this.lalamoveDriver = { phone: lalamove.driverPhone };
+        } else if (["CANCELLED"].includes(lalamove.orderStatus)) {
+          this.lalamoveStatus = lalamove.orderFullDetails.status;
+          this.lalamoveOrder = {};
+          this.lalamoveDriver = {};
+        }
       });
   }
 
